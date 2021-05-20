@@ -1,3 +1,15 @@
+"""
+# Copyright 2020 by Vihangam Yoga Karnataka.
+# All rights reserved.
+# This file is part of the Vihangan Yoga Operations of Ashram Management Software Package(VYOAM),
+# and is released under the "VY License Agreement". Please see the LICENSE
+# file that should have been included as part of this package.
+# Vihangan Yoga Operations  of Ashram Management Software
+# File Name : Inventory_Entry.py
+# Developer : Sant Anurag Deo
+# Version : 1.0
+"""
+
 from app_defines import *
 from app_common import *
 from init_database import *
