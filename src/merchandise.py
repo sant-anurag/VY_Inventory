@@ -13,7 +13,7 @@ class NewMerchandise:
         self.dateTimeOp = DatetimeOperation()
         self.merchandise_window = Toplevel(master)
         self.merchandise_window.title("Inventory Operations")
-        self.merchandise_window.geometry('970x750+700+150')
+        self.merchandise_window.geometry('970x470+700+260')
         self.merchandise_window.configure(background='wheat')
         self.merchandise_window.resizable(width=False, height=False)
         self.merchandise_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -36,7 +36,6 @@ class NewMerchandise:
         self.dataSearchFrame.pack()
 
         self.btn_submit = Button(self.merchandise_window)
-        # Bottom button panel - start
 
         self.btn_submit.configure(text="Save", fg="Black", font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel = Button(self.merchandise_window, text="Close", fg="Black",
@@ -45,9 +44,6 @@ class NewMerchandise:
         self.btn_clear = Button(self.merchandise_window, text="Reset", fg="Black",
                                 font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
 
-        # Bottom button panel - end
-
-        # Side button panel - start
         search_result = partial(self.search_merchandise_details, master)
         self.btn_search = Button(self.merchandise_window, text="Search", fg="Black", command=search_result,
                                  font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
@@ -58,15 +54,14 @@ class NewMerchandise:
         add_result = partial(self.add_new_center, master)
         self.btn_add = Button(self.merchandise_window, text="Add", fg="Black", command=add_result,
                               font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
-        # Side button panel - end
 
-        self.btn_add.place(x=7, y=200)
-        self.btn_modify.place(x=7, y=270)
-        self.btn_search.place(x=7, y=340)
+        self.btn_add.place(x=7, y=100)
+        self.btn_modify.place(x=7, y=170)
+        self.btn_search.place(x=7, y=240)
 
-        self.btn_submit.place(x=150, y=675)
-        self.btn_clear.place(x=420, y=675)
-        self.btn_cancel.place(x=690, y=675)
+        self.btn_submit.place(x=150, y=395)
+        self.btn_clear.place(x=420, y=395)
+        self.btn_cancel.place(x=690, y=395)
         print("constructor called for newInventory Addition ")
 
         # default window is "Add New Inventor" when window opens
@@ -75,7 +70,7 @@ class NewMerchandise:
     def add_new_center(self, master):
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.dataEntryFrame = Frame(self.merchandise_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataEntryFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
 
@@ -151,7 +146,7 @@ class NewMerchandise:
         panno.place(x=240, y=230)
         address.place(x=240, y=280)
 
-        insert_result = partial(self.center_operations,'NA', center_name, manager_name,
+        insert_result = partial(self.center_operations, 'NA', center_name, manager_name,
                                 inaugdate,
                                 regisno,
                                 panno, address, OPERATION_ADD)
@@ -279,13 +274,14 @@ class NewMerchandise:
 
     def edit_merchandise(self, master):
         self.dataEntryFrame.destroy()
-        self.dataModifyFrame = Frame(self.merchandise_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame.destroy()
+        self.dataModifyFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
         frameSearch = Frame(self.dataModifyFrame, width=780, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataModifyFrame, width=780, height=580, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataModifyFrame, width=780, height=290, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -405,13 +401,13 @@ class NewMerchandise:
     def search_merchandise_details(self, master):
         self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
-        self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
         frameSearch = Frame(self.dataSearchFrame, width=780, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=780, height=580, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataSearchFrame, width=780, height=290, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -458,29 +454,28 @@ class NewMerchandise:
         btn_search = Button(frameSearch)
 
         center_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'),
-                          bg='light cyan')
-
-        manager_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
                             font=('times new roman', 20, 'normal'),
                             bg='light cyan')
+
+        manager_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
+                             font=('times new roman', 20, 'normal'),
+                             bg='light cyan')
 
         cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
                     font=('times new roman', 20, 'normal'),
                     bg='light cyan')
 
         regisNo = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'),
-                                 bg='light cyan')
+                        font=('times new roman', 20, 'normal'),
+                        bg='light cyan')
 
         panno = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
-                              bg='light cyan')
-
+                      font=('times new roman', 20, 'normal'),
+                      bg='light cyan')
 
         address = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
-                              bg='light cyan')
+                        font=('times new roman', 20, 'normal'),
+                        bg='light cyan')
 
         center_name.place(x=240, y=5)
         manager_name.place(x=240, y=50)
@@ -490,7 +485,7 @@ class NewMerchandise:
         address.place(x=240, y=235)
 
         search_result = partial(self.search_centerId, center_idforSearch, center_name, manager_name,
-                        cal, regisNo, panno, address, OPERATION_SEARCH)
+                                cal, regisNo, panno, address, OPERATION_SEARCH)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
                              font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')

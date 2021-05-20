@@ -18,7 +18,6 @@ from babel.numbers import *
 from init_database import *
 import ctypes
 # import for non commercial data operations
-from stocksales_statement import *
 import MySQLdb as sql_db
 from Inventory_Entry import *
 from merchandise import *

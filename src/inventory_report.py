@@ -163,6 +163,7 @@ class InventoryReport:
         template_sheet.cell(row=3, column=8).value = str(dict_index - 5)
 
         if bValidRecord:
+            self.info_label.configure(text="Statement Generation in progress...", fg='purple')
             now = datetime.now()
             dt_string = now.strftime("%d_%b_%Y_%H%M%S")
             dateForSheet = now.strftime("%d-%b-%Y")
@@ -239,7 +240,8 @@ class InventoryReport:
                                           (localcenter_menu.get(), item_Typemenu.get()))
         elif search_type == CRITICAL_STOCK:
             # CRITICAL STOCK is defined Quantity < 5 for an inventory item
-            result_query = cursor.execute("SELECT * FROM inventory_stock where Center_Name = %s and Quantity < '5'",
+            result_query = cursor.execute("SELECT * FROM inventory_stock where Center_Name = %s and Stock_Type = "
+                                          "'Commercial' and Quantity < '5'",
                                           (localcenter_menu.get(),))
         result = cursor.fetchall()
         return result
