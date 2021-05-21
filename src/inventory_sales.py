@@ -1,6 +1,5 @@
 from app_defines import *
 from app_common import *
-from init_database import *
 from app_thread import *
 import MySQLdb as sql_db
 
@@ -10,7 +9,6 @@ class InventorySales:
     # constructor for Library class
     def __init__(self, master):
         self.obj_commonUtil = CommonUtil()
-        self.obj_initDatabase = InitDatabase()
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")

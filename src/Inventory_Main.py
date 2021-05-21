@@ -15,7 +15,6 @@
 """
 from app_defines import *
 from babel.numbers import *
-from init_database import *
 import ctypes
 # import for non commercial data operations
 import MySQLdb as sql_db
