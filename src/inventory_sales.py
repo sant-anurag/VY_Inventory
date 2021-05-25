@@ -12,12 +12,12 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1000x750+700+150')
+        self.sales_window.geometry('1300x750+300+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
-        canvas_width, canvas_height = 1000, 750
+        canvas_width, canvas_height = 1300, 750
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
             PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg"))
@@ -55,10 +55,10 @@ class InventorySales:
                                 font=XXL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
 
         # Bottom button panel - end
-        self.btn_addToCart.place(x=5, y=675)
-        self.btn_submit.place(x=253, y=675)
-        self.btn_clear.place(x=500, y=675)
-        self.btn_cancel.place(x=748, y=675)
+        self.btn_addToCart.place(x=50, y=675)
+        self.btn_submit.place(x=298, y=675)
+        self.btn_clear.place(x=545, y=675)
+        self.btn_cancel.place(x=783, y=675)
         print("constructor called for sales ")
 
         # default window is "Add New Inventor" when window opens
@@ -75,7 +75,7 @@ class InventorySales:
                                      bg='snow')
         self.dataSearchFrame.pack()
 
-        salesSummaryframe = Frame(self.sales_window, width=230, height=650, bd=4, relief='ridge',
+        salesSummaryframe = Frame(self.sales_window, width=500, height=650, bd=4, relief='ridge',
                                   bg='light yellow')
         salesSummaryframe.pack()
 
@@ -132,6 +132,20 @@ class InventorySales:
         purchase_Addresslbl = Label(framepurchase, text="Address", width=13, anchor=W, justify=LEFT,
                                     font=('times new roman', 20, 'normal'), bg='snow')
 
+        # =====================================================billarea==============================================================================
+        billarea = Frame(salesSummaryframe, bd=10, relief=GROOVE, bg="#E5B4F3")
+        billarea.place(x=5, y=2, width=490, height=372)
+
+        bill_title = Label(billarea, text="Bill Area", font=("Times New Roman", 17), bd=7, relief=GROOVE, bg="#E5B4F3",
+                           fg="#6C3483").pack(fill=X)
+
+        scrol_y = Scrollbar(billarea, orient=VERTICAL)
+        self.txtarea = Text(billarea, yscrollcommand=scrol_y.set)
+        scrol_y.pack(side=RIGHT, fill=Y)
+        scrol_y.config(command=self.txtarea.yview)
+        self.txtarea.pack(fill=BOTH, expand=1)
+        
+        # =================================================billing menu=====================================
         self.dataSearchFrame.place(x=5, y=20)
         salesSummaryframe.place(x=765, y=20)
         frameSearch.place(x=10, y=5)
@@ -235,11 +249,21 @@ class InventorySales:
         self.sales_window.bind('<Alt-b>', lambda event=None: self.btn_submit.invoke())
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
-
+        self.initialize_billArea()
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
 
+    def initialize_billArea(self):
+        print("Initializing the  bill area with default template")
+        self.txtarea.delete(1.0, END)
+        self.txtarea.insert(END, "\t  Sukrit Publication\n\tPhone-No.9900019361")
+        self.txtarea.insert(END, f"\n\nBill no. :")# {self.bill_no.get()}")
+        self.txtarea.insert(END, f"\nCustomer Name :")# {self.c_name.get()}")
+        self.txtarea.insert(END, f"\nPhone No. :")# {self.phone.get()}")
+        self.txtarea.insert(END, "\n====================================\n")
+        self.txtarea.insert(END, "\nProduct\t\tQty\tPrice\n")
+        self.txtarea.insert(END, "\n====================================\n")
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
         bItemExists = False
