@@ -12,19 +12,19 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1300x750+300+150')
+        self.sales_window.geometry('1400x740+200+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
-        canvas_width, canvas_height = 1300, 750
+        canvas_width, canvas_height = 1400, 750
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
             PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg"))
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
-        self.dataEntryFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
+        self.dataEntryFrame = Frame(self.sales_window, width=900, height=500, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
         self.dataModifyFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
@@ -37,117 +37,127 @@ class InventorySales:
         self.authorFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
                                  bg='snow')
         self.authorFrame.pack()
-
-        self.btn_addToCart = Button(self.sales_window)
-        self.btn_addToCart.configure(text="Add To Cart", fg="Black", font=XXL_FONT, width=13, state=NORMAL,
+        
+        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
+        self.MainbtnFrame = Frame(self.sales_window, width=575, height=65, bd=4, relief='ridge',
+                              bg='light yellow')
+        self.btn_addToCart = Button(self.MainbtnFrame)
+        self.btn_addToCart.configure(text="+ Cart", fg="Black", font=XL_FONT, width=9, state=NORMAL,
                                      bg='RosyBrown1')
-        self.btn_print = Button(self.sales_window)
-        self.btn_print.configure(text="Print", fg="Black", font=XXL_FONT, width=13, state=NORMAL,
+        self.btn_print = Button(self.MainbtnFrame)
+        self.btn_print.configure(text="Print", fg="Black", font=XL_FONT, width=9, state=NORMAL,
                                  bg='RosyBrown1')
 
-        self.btn_submit = Button(self.sales_window)
-        self.btn_submit.configure(text="Buy", fg="Black", font=XXL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
-
-        self.btn_cancel = Button(self.sales_window, text="Exit", fg="Black",
-                                 font=XXL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+        self.btn_submit = Button(self.MainbtnFrame)
+        self.btn_submit.configure(text="Bill", fg="Black", font=XL_FONT, width=9, state=NORMAL,
+                                  bg='RosyBrown1')
+        self.btn_clear = Button(self.MainbtnFrame, text="Reset", fg="Black",
+                                font=XL_FONT, width=9, state=NORMAL, bg='RosyBrown1')
+        self.btn_cancel = Button(self.MainbtnFrame, text="Print", fg="Black",
+                                 font=XL_FONT, width=9, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel.configure(command=self.sales_window.destroy)
-        self.btn_clear = Button(self.sales_window, text="Reset", fg="Black",
-                                font=XXL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
 
         # Bottom button panel - end
-        self.btn_addToCart.place(x=50, y=675)
-        self.btn_submit.place(x=298, y=675)
-        self.btn_clear.place(x=545, y=675)
-        self.btn_cancel.place(x=783, y=675)
+        self.MainbtnFrame.place(x=5, y=672)
+        self.btn_addToCart.place(x=2, y=1)
+        self.btn_submit.place(x=147, y=1)
+        self.btn_clear.place(x=285, y=1)
+        self.btn_cancel.place(x=423, y=1)
+        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
+        
+        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
+        self.AdditionalbtnFrame = Frame(self.sales_window, width=815, height=65, bd=4, relief='ridge',
+                              bg='purple')
+        self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
+        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=XL_FONT, width=13, state=NORMAL,
+                                     bg='RosyBrown1')
+        self.btn_discount = Button(self.AdditionalbtnFrame)
+        self.btn_discount.configure(text="Discount", fg="Black", font=XL_FONT, width=13, state=NORMAL,
+                                  bg='RosyBrown1')
+        self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
+                                font=XL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+        self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
+                                 font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+        self.btn_print.configure(command=self.sales_window.destroy)
+
+        # Bottom button panel - end
+        self.AdditionalbtnFrame.place(x=580, y=672)
+        self.btn_chgQuantity.place(x=2, y=1)
+        self.btn_discount.place(x=208, y=1)
+        self.btn_remItem.place(x=414, y=1)
+        self.btn_print.place(x=620, y=1)
+        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
+        
         print("constructor called for sales ")
 
         # default window is "Add New Inventor" when window opens
         self.sales_inventory_item(master)
 
-    def myfunction(self, mycanvas, frame, event):
-        print("Scroll Encountered")
-        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=722, height=400)
-
     def sales_inventory_item(self, master):
         self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
-        self.dataSearchFrame = Frame(self.sales_window, width=760, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame = Frame(self.sales_window, width=1390, height=650, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
 
-        salesSummaryframe = Frame(self.sales_window, width=500, height=650, bd=4, relief='ridge',
-                                  bg='light yellow')
-        salesSummaryframe.pack()
-
-        frameSearch = Frame(self.dataSearchFrame, width=735, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataSearchFrame, width=560, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=735, height=300, bd=4, relief='ridge',
+        btn_search = Button(frameSearch)
+        btn_search.configure(text="Search", fg="Black",
+                             font=('arial narrow', 12, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=410, y=2)
+        framedisplay = Frame(self.dataSearchFrame, width=560, height=300, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
-        framepurchase = Frame(self.dataSearchFrame, width=735, height=250, bd=4, relief='ridge',
+        framepurchase = Frame(self.dataSearchFrame, width=560, height=250, bd=4, relief='ridge',
                               bg='snow')
         framepurchase.pack()
 
-        framelower = Frame(self.dataSearchFrame, width=735, height=90, bd=4, relief='ridge',
+        framelower = Frame(self.dataSearchFrame, width=560, height=90, bd=4, relief='ridge',
                            bg='snow')
         framelower.pack()
 
         # create a item Name label
 
         item_SearchId = Label(frameSearch, text="Search Item Id", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
-        item_namelabel = Label(framedisplay, text="Item Name", width=11, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+        item_namelabel = Label(framedisplay, text="Item Name", width=10, anchor=W, justify=LEFT,
+                               font=L_FONT,
                                bg='snow')
 
-        author = Label(framedisplay, text="Author", width=11, anchor=W, justify=LEFT,
-                       font=('times new roman', 20, 'normal'),
+        author = Label(framedisplay, text="Author", width=10, anchor=W, justify=LEFT,
+                       font=L_FONT,
                        bg='snow')
 
         # create a Price label
-        price = Label(framedisplay, text="Price(Rs.)", width=13, anchor=W, justify=LEFT,
-                      font=('times new roman', 20, 'normal'), bg='snow')
+        price = Label(framedisplay, text="Price(Rs.)", width=12, anchor=W, justify=LEFT,
+                      font=L_FONT, bg='snow')
 
         # create a Quantity label
-        quantity = Label(framedisplay, text="Quantity", width=13, anchor=W, justify=LEFT,
-                         font=('times new roman', 20, 'normal'), bg='snow')
+        quantity = Label(framedisplay, text="Quantity", width=12, anchor=W, justify=LEFT,
+                         font=L_FONT, bg='snow')
 
         # create a borrow fee label
-        borrowFee = Label(framedisplay, text="Center", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+        borrowFee = Label(framedisplay, text="Center", width=12, anchor=W, justify=LEFT,
+                          font=L_FONT, bg='snow')
 
         purchase_headline = Label(framepurchase, text="Purchase Details", width=13, anchor=W, justify=LEFT,
-                                  font=('times new roman', 20, 'normal'), bg='snow', fg='red')
+                                  font=L_FONT, bg='snow', fg='red')
 
         purchase_quantitylbl = Label(framepurchase, text="Quantity", width=13, anchor=W, justify=LEFT,
-                                     font=('times new roman', 20, 'normal'), bg='snow')
+                                     font=L_FONT, bg='snow')
         purchase_CustomerNamelbl = Label(framepurchase, text="Name", width=13, anchor=W, justify=LEFT,
-                                         font=('times new roman', 20, 'normal'), bg='snow')
+                                         font=L_FONT, bg='snow')
         purchase_ContactNolbl = Label(framepurchase, text="Contact Number", width=13, anchor=W, justify=LEFT,
-                                      font=('times new roman', 20, 'normal'), bg='snow')
+                                      font=L_FONT, bg='snow')
         purchase_Addresslbl = Label(framepurchase, text="Address", width=13, anchor=W, justify=LEFT,
-                                    font=('times new roman', 20, 'normal'), bg='snow')
+                                    font=L_FONT, bg='snow')
 
-        # =====================================================billarea==============================================================================
-        billarea = Frame(salesSummaryframe, bd=10, relief=GROOVE, bg="#E5B4F3")
-        billarea.place(x=5, y=2, width=490, height=372)
-
-        bill_title = Label(billarea, text="Bill Area", font=("Times New Roman", 17), bd=7, relief=GROOVE, bg="#E5B4F3",
-                           fg="#6C3483").pack(fill=X)
-
-        scrol_y = Scrollbar(billarea, orient=VERTICAL)
-        self.txtarea = Text(billarea, yscrollcommand=scrol_y.set)
-        scrol_y.pack(side=RIGHT, fill=Y)
-        scrol_y.config(command=self.txtarea.yview)
-        self.txtarea.pack(fill=BOTH, expand=1)
-        
-        # =================================================billing menu=====================================
         self.dataSearchFrame.place(x=5, y=20)
-        salesSummaryframe.place(x=765, y=20)
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
         framepurchase.place(x=10, y=300)
@@ -166,76 +176,73 @@ class InventorySales:
         purchase_ContactNolbl.place(x=30, y=140)
         purchase_Addresslbl.place(x=30, y=195)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=('times new roman', 20, 'normal'), bg='light cyan')
-        btn_search = Button(frameSearch)
+        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
 
-        item_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'),
+        item_name = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                          font=L_FONT,
                           bg='light cyan')
 
-        author_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'),
+        author_menu = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                            font=L_FONT,
                             bg='light cyan')
 
-        item_price = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'),
+        item_price = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                           font=L_FONT,
                            bg='light cyan')
 
-        item_quantity = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+        item_quantity = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                              font=L_FONT,
                               bg='light cyan')
-        item_borrowfee = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+        item_borrowfee = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                               font=L_FONT,
                                bg='light cyan')
-        localcenter_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'),
+        localcenter_menu = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+                                 font=L_FONT,
                                  bg='light cyan')
-        item_idforSearch.place(x=240, y=5)
-        item_name.place(x=240, y=5)
-        author_menu.place(x=240, y=50)
-        item_price.place(x=240, y=100)
-        item_quantity.place(x=240, y=145)
-        item_borrowfee.place(x=240, y=190)
-        localcenter_menu.place(x=240, y=235)
+        item_idforSearch.place(x=200, y=5)
+        item_name.place(x=200, y=5)
+        author_menu.place(x=200, y=50)
+        item_price.place(x=200, y=100)
+        item_quantity.place(x=200, y=145)
+        item_borrowfee.place(x=200, y=190)
+        localcenter_menu.place(x=200, y=235)
 
-        quantity_entry = Entry(framepurchase, width=34,font=('times new roman', 20, 'normal'), bg='light cyan')
+        quantity_entry = Entry(framepurchase, width=34, font=L_FONT, bg='light cyan')
 
-        name_entry = Entry(framepurchase, width=34, font=('times new roman', 20, 'normal'), bg='light cyan')
+        name_entry = Entry(framepurchase, width=34, font=L_FONT, bg='light cyan')
 
-        contact_entry = Entry(framepurchase, width=34, font=('times new roman', 20, 'normal'), bg='light cyan')
-        address_entry = Entry(framepurchase, width=34, text='0', font=('times new roman', 20, 'normal'),
+        contact_entry = Entry(framepurchase, width=34, font=L_FONT, bg='light cyan')
+        address_entry = Entry(framepurchase, width=34, text='0', font=L_FONT,
                               bg='light cyan')
 
-        quantity_entry.place(x=240, y=50)
-        name_entry.place(x=240, y=100)
-        contact_entry.place(x=240, y=145)
-        address_entry.place(x=240, y=190)
+        quantity_entry.place(x=200, y=50)
+        name_entry.place(x=200, y=100)
+        contact_entry.place(x=200, y=145)
+        address_entry.place(x=200, y=190)
 
         cartCount_label = Label(framelower, text="Cart Count", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
         billAmount_label = Label(framelower, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'), bg='snow')
+                                 font=L_FONT, bg='snow')
 
         cartCount_text = Label(framelower, width=10, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='light cyan')
         billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'),
+                                font=L_FONT,
                                 bg='light cyan')
 
         cartCount_label.place(x=30, y=15)
-        cartCount_text.place(x=170, y=15)
-        billAmount_label.place(x=330, y=15)
-        billAmount_text.place(x=500, y=15)
+        cartCount_text.place(x=130, y=15)
+        billAmount_label.place(x=250, y=15)
+        billAmount_text.place(x=380, y=15)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
                                 item_borrowfee,
                                 item_quantity, OPERATION_SEARCH)
 
-        btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+        btn_search.configure(command=search_result)
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
                                    cartCount_text, billAmount_text)
         self.btn_addToCart.configure(command=addToCart_result)
@@ -249,21 +256,119 @@ class InventorySales:
         self.sales_window.bind('<Alt-b>', lambda event=None: self.btn_submit.invoke())
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
-        self.initialize_billArea()
+        # self.initialize_billArea()
+        self.display_billArea(self.dataSearchFrame, 572, 5, 780, 625)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
+
+    def display_billArea(self, split_open_window, startx, starty, xwidth, xheight):
+        myframe = Frame(split_open_window, relief=GROOVE, width=520, height=407, bd=4)
+        myframe.place(x=startx, y=starty)
+
+        mycanvas = Canvas(myframe)
+        frame = Frame(mycanvas, width=200, height=100, bg='light yellow')
+        myscrollbar = Scrollbar(myframe, orient="vertical", command=mycanvas.yview)
+        mycanvas.configure(yscrollcommand=myscrollbar.set)
+
+        myscrollbar.pack(side="right", fill="y")
+        mycanvas.pack(side="left")
+        mycanvas.create_window((0, 0), window=frame, anchor='nw')
+
+        result = partial(self.myfunction, xwidth, xheight, mycanvas)
+
+        frame.bind("<Configure>", result)
+
+        label_Sno = Label(frame, text="S.No", width=5, height=1, anchor='center',
+                          justify=CENTER,
+                          font=('times new roman', 13, 'normal'),
+                          bg='light yellow')
+
+        label_detail1 = Label(frame, text="Item Id", width=10, height=1, anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow')
+
+        label_detail2 = Label(frame, text="Item Name", width=30, height=1, anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow')
+
+        label_detail3 = Label(frame, text="Unit Price(Rs.)", width=13, height=1,
+                              anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow')
+
+        label_detail4 = Label(frame, text="Quantity", width=10, height=1,
+                              anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow')
+        label_detail5 = Label(frame, text="Total Amt.(Rs.)", width=12, height=1,
+                              anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow')
+
+        label_Sno.grid(row=0, column=1, padx=2, pady=5)
+        label_detail1.grid(row=0, column=2, padx=2, pady=5)
+        label_detail2.grid(row=0, column=3, padx=2, pady=5)
+        label_detail3.grid(row=0, column=4, padx=2, pady=5)
+        label_detail4.grid(row=0, column=5, padx=2, pady=5)
+        label_detail5.grid(row=0, column=6, padx=2, pady=5)
+        # open_split_records = self.retrieveOpenSplitRecords()
+
+        for row_index in range(0, len(self.list_InvoicePrint)):
+            # critical stock ->stock with quantity is 0 or 1
+            for column_index in range(1, 7):
+                if column_index == 5:
+                    width_column = 11
+                elif column_index == 2:
+                    width_column = 11
+                elif column_index == 3:
+                    width_column = 33
+                elif column_index == 1:
+                    width_column = 5
+                elif column_index == 6:
+                    width_column = 13
+                else:
+                    width_column = 15
+
+                label_detail = Label(frame, text="No Data", width=width_column, height=1,
+                                     anchor='center', justify=LEFT,
+                                     font=('arial narrow', 13, 'normal'),
+                                     bg='light yellow')
+                label_detail.grid(row=row_index + 1, column=column_index, padx=2, pady=3, sticky=W)
+
+                if column_index == 1:
+                    label_detail['text'] = str(row_index + 1)
+                elif column_index == 2:
+                    label_detail['text'] = self.list_InvoicePrint[row_index][0]
+                elif column_index == 3:
+                    label_detail['text'] = self.list_InvoicePrint[row_index][1]
+                elif column_index == 4:
+                    label_detail['text'] = self.list_InvoicePrint[row_index][3]
+                elif column_index == 5:
+                    label_detail['text'] = self.list_InvoicePrint[row_index][2]
+                elif column_index == 6:
+                    label_detail['text'] = (int(self.list_InvoicePrint[row_index][2]) * int(
+                        self.list_InvoicePrint[row_index][3]))
+
+    def myfunction(self, xwidth, yheight, mycanvas, event):
+        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
 
     def initialize_billArea(self):
         print("Initializing the  bill area with default template")
         self.txtarea.delete(1.0, END)
         self.txtarea.insert(END, "\t  Sukrit Publication\n\tPhone-No.9900019361")
-        self.txtarea.insert(END, f"\n\nBill no. :")# {self.bill_no.get()}")
-        self.txtarea.insert(END, f"\nCustomer Name :")# {self.c_name.get()}")
-        self.txtarea.insert(END, f"\nPhone No. :")# {self.phone.get()}")
+        self.txtarea.insert(END, f"\n\nBill no. :")  # {self.bill_no.get()}")
+        self.txtarea.insert(END, f"\nCustomer Name :")  # {self.c_name.get()}")
+        self.txtarea.insert(END, f"\nPhone No. :")  # {self.phone.get()}")
         self.txtarea.insert(END, "\n====================================\n")
         self.txtarea.insert(END, "\nProduct\t\tQty\tPrice\n")
         self.txtarea.insert(END, "\n====================================\n")
+
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
         bItemExists = False
@@ -297,6 +402,7 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='light cyan')
                 print("Added to Cart Item Id :", item_idforSearch)
+                self.display_billArea(self.dataSearchFrame, 572, 5, 780, 625)
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 

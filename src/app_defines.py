@@ -94,7 +94,7 @@ BOLD_VERDANA_FONT = ('verdana', 11, 'normal')
 LARGE_VERDANA_FONT = ('verdana', 13, 'normal')
 XXL_FONT = ('times new roman', 25, 'normal')
 XL_FONT = ('times new roman', 20, 'normal')
-L_FONT = ('times new roman', 20, 'normal')
+L_FONT = ('times new roman', 15, 'normal')
 
 # Path for databases
 PATH_STOCK = "..\\Library_Stock\\Commercial_stock\\Commercial_Stock.xlsx"
