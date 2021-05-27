@@ -65,7 +65,7 @@ class InventorySales:
         self.btn_cancel.place(x=423, y=1)
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
         
-        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
+        # Support button frame design -start
         self.AdditionalbtnFrame = Frame(self.sales_window, width=815, height=65, bd=4, relief='ridge',
                               bg='purple')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
@@ -86,7 +86,7 @@ class InventorySales:
         self.btn_discount.place(x=208, y=1)
         self.btn_remItem.place(x=414, y=1)
         self.btn_print.place(x=620, y=1)
-        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
+        # Support button frame design-End
         
         print("constructor called for sales ")
 
@@ -111,11 +111,11 @@ class InventorySales:
                              bg='snow')
         framedisplay.pack()
 
-        framepurchase = Frame(self.dataSearchFrame, width=560, height=250, bd=4, relief='ridge',
+        framepurchase = Frame(self.dataSearchFrame, width=560, height=230, bd=4, relief='ridge',
                               bg='snow')
         framepurchase.pack()
 
-        framelower = Frame(self.dataSearchFrame, width=560, height=90, bd=4, relief='ridge',
+        framelower = Frame(self.dataSearchFrame, width=805, height=90, bd=4, relief='ridge',
                            bg='snow')
         framelower.pack()
 
@@ -225,17 +225,32 @@ class InventorySales:
         billAmount_label = Label(framelower, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
                                  font=L_FONT, bg='snow')
 
-        cartCount_text = Label(framelower, width=10, anchor=W, justify=LEFT,
+        cartCount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                                font=L_FONT,
                                bg='light cyan')
         billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                                 font=L_FONT,
                                 bg='light cyan')
+        discount_label = Label(framelower, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
+                                font=L_FONT, bg='snow')
+        billNo_label = Label(framelower, text="Bill No.", width=14, anchor=W, justify=LEFT,
+                                 font=L_FONT, bg='snow')
 
-        cartCount_label.place(x=30, y=15)
-        cartCount_text.place(x=130, y=15)
-        billAmount_label.place(x=250, y=15)
-        billAmount_text.place(x=380, y=15)
+        discount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='light cyan')
+        billNo_text = Label(framelower, width=14, anchor=W, justify=LEFT,
+                                font=L_FONT,
+                                bg='light cyan')
+
+        cartCount_label.place(x=30, y=12)
+        cartCount_text.place(x=165, y=12)
+        billAmount_label.place(x=370, y=12)
+        billAmount_text.place(x=530, y=12)
+        discount_label.place(x=30, y=45)
+        discount_text.place(x=165, y=45)
+        billNo_label.place(x=370, y=45)
+        billNo_text.place(x=530, y=45)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
@@ -249,7 +264,7 @@ class InventorySales:
         purchase_result = partial(self.purchase_stock_item, name_entry, contact_entry, address_entry)
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
-        framelower.place(x=10, y=550)
+        framelower.place(x=572, y=530)
         # Bottom button panel - start
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
@@ -257,7 +272,7 @@ class InventorySales:
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
         # self.initialize_billArea()
-        self.display_billArea(self.dataSearchFrame, 572, 5, 780, 625)
+        self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
@@ -402,7 +417,7 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='light cyan')
                 print("Added to Cart Item Id :", item_idforSearch)
-                self.display_billArea(self.dataSearchFrame, 572, 5, 780, 625)
+                self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 
