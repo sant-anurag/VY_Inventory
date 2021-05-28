@@ -38,11 +38,11 @@ class accountControl:
         canvas.pack()
 
         self.userInfoFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
-                                    bg='snow')
+                                   bg='snow')
         self.userInfoFrame.pack()
-        self.dataModifyFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
+        self.newpasswordFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
                                      bg='snow')
-        self.dataModifyFrame.pack()
+        self.newpasswordFrame.pack()
         self.dataSearchFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
@@ -72,8 +72,8 @@ class accountControl:
                               font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_remove = Button(self.account_control_window, text="Remove Account", fg="Black", command=None,
                                  font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
-        # edit_result = partial(self.edit_inventory_item, master)
-        self.btn_modify = Button(self.account_control_window, text="Edit Password", fg="Black", command=None,
+        edit_result = partial(self.set_new_password, master)
+        self.btn_modify = Button(self.account_control_window, text="Edit Password", fg="Black", command=edit_result,
                                  font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
 
         # Side button panel - end
@@ -92,12 +92,12 @@ class accountControl:
         self.current_user_info_display(master)
 
     def current_user_info_display(self, master):
-        self.dataModifyFrame.destroy()
+        self.newpasswordFrame.destroy()
         self.dataSearchFrame.destroy()
         self.new_authorFrame.destroy()
 
         self.userInfoFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
-                                    bg='wheat')
+                                   bg='wheat')
         self.userInfoFrame.pack()
         now = datetime.now()
         timeinfo = now.strftime("%H-%M-%S")
@@ -113,29 +113,29 @@ class accountControl:
         mainloop()
 
     def add_new_account(self, master):
-        self.dataModifyFrame.destroy()
+        self.newpasswordFrame.destroy()
         self.dataSearchFrame.destroy()
         self.userInfoFrame.destroy()
 
-        self.new_authorFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
+        self.newpasswordFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
                                      bg='wheat')
-        self.new_authorFrame.pack()
+        self.newpasswordFrame.pack()
 
-        self.default_text2 = StringVar(self.new_authorFrame, value='')
-        self.default_text1 = StringVar(self.new_authorFrame, value='')
-        self.new_authorFrame.place(x=160, y=5)
+        self.default_text2 = StringVar(self.newpasswordFrame, value='')
+        self.default_text1 = StringVar(self.newpasswordFrame, value='')
+        self.newpasswordFrame.place(x=160, y=5)
         # create a item Name label
 
-        username_label = Label(self.new_authorFrame, text="Account Name", width=11, anchor=W, justify=LEFT,
+        username_label = Label(self.newpasswordFrame, text="Account Name", width=11, anchor=W, justify=LEFT,
                                font=L_FONT,
                                bg='wheat')
 
         # create a Author label
-        password_label = Label(self.new_authorFrame, text="Password", width=11, anchor=W, justify=LEFT,
+        password_label = Label(self.newpasswordFrame, text="Password", width=11, anchor=W, justify=LEFT,
                                font=L_FONT,
                                bg='wheat')
 
-        role_label = Label(self.new_authorFrame, text="Role", width=11, anchor=W, justify=LEFT,
+        role_label = Label(self.newpasswordFrame, text="Role", width=11, anchor=W, justify=LEFT,
                            font=L_FONT,
                            bg='wheat')
 
@@ -143,17 +143,17 @@ class accountControl:
         password_label.place(x=30, y=65)
         role_label.place(x=30, y=115)
 
-        username_text = Entry(self.new_authorFrame, width=35, font=L_FONT, bg='light cyan',
+        username_text = Entry(self.newpasswordFrame, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text1, justify=LEFT)
 
-        password_text = Entry(self.new_authorFrame, width=35, font=L_FONT, bg='light cyan',
+        password_text = Entry(self.newpasswordFrame, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text2, justify=LEFT)
 
         roleText = StringVar(self.userInfoFrame)
         role_list = ['Admin', 'User']
         print("Role list  - ", role_list)
         roleText.set(role_list[0])
-        role_TypeMenu = OptionMenu(self.new_authorFrame, roleText, *role_list)
+        role_TypeMenu = OptionMenu(self.newpasswordFrame, roleText, *role_list)
         role_TypeMenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
 
@@ -161,7 +161,82 @@ class accountControl:
         password_text.place(x=240, y=60)
         role_TypeMenu.place(x=240, y=110)
 
-        insert_result = partial(self.register_account, self.account_control_window, username_text, password_text,roleText)
+        insert_result = partial(self.register_account, username_text, password_text,
+                                roleText)
+
+        # create a Save Button and place into the self.account_control_window window
+
+        self.btn_submit.configure(state=NORMAL, bg='RosyBrown1', command=insert_result)
+
+        # self.default_text1.trace("w", self.check_SaveItemBtn_state)
+
+        # clear_result = partial(self.clear_form, nam, authorText, item_price, item_borrowfee, item_quantity)
+
+        # self.btn_clear.configure(command=clear_result)
+        self.btn_cancel.configure(command=self.account_control_window.destroy)
+        # cancel.grid(row=0, column=2)
+
+        # ---------------------------------Button Frame End----------------------------------------
+
+        self.account_control_window.bind('<Return>', lambda event=None: self.btn_submit.invoke())
+        self.account_control_window.bind('<Alt-c>', lambda event=None: self.btn_cancel.invoke())
+        self.account_control_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
+
+        self.account_control_window.focus()
+        self.account_control_window.grab_set()
+        mainloop()
+
+    def set_new_password(self, master):
+        self.newpasswordFrame.destroy()
+        self.dataSearchFrame.destroy()
+        self.userInfoFrame.destroy()
+
+        self.newpasswordFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
+                                     bg='wheat')
+        self.newpasswordFrame.pack()
+
+        self.default_text2 = StringVar(self.newpasswordFrame, value='')
+        self.default_text1 = StringVar(self.newpasswordFrame, value='')
+        self.newpasswordFrame.place(x=160, y=5)
+        # create a item Name label
+
+        username_label = Label(self.newpasswordFrame, text="Account Name", width=11, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
+
+        # create a Author label
+        password_label = Label(self.newpasswordFrame, text="New Password", width=11, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
+
+        role_label = Label(self.newpasswordFrame, text="Role", width=11, anchor=W, justify=LEFT,
+                           font=L_FONT,
+                           bg='wheat')
+
+        username_label.place(x=30, y=10)
+        password_label.place(x=30, y=65)
+        role_label.place(x=30, y=115)
+
+        username_text = Entry(self.newpasswordFrame, width=35, font=L_FONT, bg='light cyan',
+                              textvariable=self.default_text1, justify=LEFT)
+
+        password_text = Entry(self.newpasswordFrame, width=35, font=L_FONT, bg='light cyan',
+                              textvariable=self.default_text2, justify=LEFT)
+
+        roleText = StringVar(self.newpasswordFrame)
+        role_list = ['Admin', 'User']
+        print("Role list  - ", role_list)
+        roleText.set(role_list[0])
+        role_TypeMenu = OptionMenu(self.newpasswordFrame, roleText, *role_list)
+        role_TypeMenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+                                justify=LEFT)
+
+        username_text.place(x=240, y=10)
+        password_text.place(x=240, y=60)
+        role_TypeMenu.place(x=240, y=110)
+
+        insert_result = partial(self.edit_account_password, username_text, password_text,
+                                roleText)
 
         # create a Save Button and place into the self.account_control_window window
 
@@ -187,13 +262,13 @@ class accountControl:
 
     def edit_inventory_item(self, master):
         self.userInfoFrame.destroy()
-        self.dataModifyFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
+        self.newpasswordFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
                                      bg='snow')
-        self.dataModifyFrame.pack()
-        frameSearch = Frame(self.dataModifyFrame, width=780, height=50, bd=4, relief='ridge',
+        self.newpasswordFrame.pack()
+        frameSearch = Frame(self.newpasswordFrame, width=780, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataModifyFrame, width=780, height=580, bd=4, relief='ridge',
+        framedisplay = Frame(self.newpasswordFrame, width=780, height=580, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -250,7 +325,7 @@ class accountControl:
         orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
                         font=('times new roman', 20, 'normal'), bg='snow')
 
-        self.dataModifyFrame.place(x=150, y=20)
+        self.newpasswordFrame.place(x=150, y=20)
 
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
@@ -389,7 +464,7 @@ class accountControl:
 
     def search_inventory_item(self, master):
         self.userInfoFrame.destroy()
-        self.dataModifyFrame.destroy()
+        self.newpasswordFrame.destroy()
         self.dataSearchFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
@@ -760,16 +835,6 @@ class accountControl:
         conn.close()
         return result[0]
 
-    def generate_authorId(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-        total_records = cursor.execute("SELECT * FROM author")
-        conn.close()
-        authorId = total_records + 100
-        return "ATH" + str(authorId)  # Author Id
-
     def validate_account(self, name_text):
         print("validate_author--> validate for Name : ", name_text)
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
@@ -783,7 +848,7 @@ class accountControl:
         conn.close()
         return result[0]
 
-    def register_account(self, account_control_window, username_text, password_text,roleText):
+    def register_account(self,username_text, password_text, roleText):
         """ register the author"""
         if username_text.get() == "" or password_text.get() == "":
             messagebox.showinfo("Data Entry Error", "All fields are mandatory !!!")
@@ -831,6 +896,44 @@ class accountControl:
                 # destroy the data entry form , if user do not want to add more records
                 if user_choice == 'no':
                     print("Do nothing")
+
+    def edit_account_password(self, username_text, password_text, roleText):
+        """ register the author"""
+        if username_text.get() == "" or password_text.get() == "":
+            messagebox.showinfo("Data Entry Error", "All fields are mandatory !!!")
+        else:
+            bitemExists = self.validate_account(username_text.get())
+            print("Account Exists :", bitemExists)
+            if not bitemExists:
+                messagebox.showwarning("No Data !", "Account Unavailable !!")
+                username_text.configure(bd=2, fg='red')
+                return
+            else:
+                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+                # Creating a cursor object using the cursor() method
+                cursor = conn.cursor()
+                total_records = cursor.execute("SELECT * FROM userlogin")
+                conn.close()
+
+                # establishing the connection
+
+                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+                # Creating a cursor object using the cursor() method
+                cursor = conn.cursor()
+
+                sql = "UPDATE userlogin set password = %s,category = %s where username = %s "
+                values = (
+                    password_text.get(),roleText.get(), username_text.get())
+                cursor.execute(sql, values)
+
+                conn.commit()
+                conn.close()
+                print("Password changed !!! ")
+
+                self.btn_submit.configure(state=DISABLED, bg='light grey')
+                messagebox.showinfo("Success", "Password change success")
 
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
