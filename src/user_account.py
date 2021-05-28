@@ -19,7 +19,7 @@ import MySQLdb as sql_db
 class accountControl:
 
     # constructor for Library class
-    def __init__(self, master,currentuser):
+    def __init__(self, master, currentuser):
         self.currentuser = currentuser
         self.obj_commonUtil = CommonUtil()
         self.dateTimeOp = DatetimeOperation()
@@ -37,9 +37,9 @@ class accountControl:
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
-        self.dataEntryFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
+        self.userInfoFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
                                     bg='snow')
-        self.dataEntryFrame.pack()
+        self.userInfoFrame.pack()
         self.dataModifyFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
@@ -47,9 +47,9 @@ class accountControl:
                                      bg='snow')
         self.dataSearchFrame.pack()
 
-        self.authorFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
-                                 bg='snow')
-        self.authorFrame.pack()
+        self.new_authorFrame = Frame(self.account_control_window, width=800, height=500, bd=4, relief='ridge',
+                                     bg='snow')
+        self.new_authorFrame.pack()
         self.btn_submit = Button(self.account_control_window)
         # Bottom button panel - start
 
@@ -67,12 +67,12 @@ class accountControl:
         self.btn_userinfo = Button(self.account_control_window, text="User Info", fg="Black", command=author_result,
                                    font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
 
-        #add_result = partial(self.add_inventory_item, master)
-        self.btn_add = Button(self.account_control_window, text="New Account", fg="Black", command=None,
+        add_result = partial(self.add_new_account, master)
+        self.btn_add = Button(self.account_control_window, text="New Account", fg="Black", command=add_result,
                               font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_remove = Button(self.account_control_window, text="Remove Account", fg="Black", command=None,
                                  font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
-        #edit_result = partial(self.edit_inventory_item, master)
+        # edit_result = partial(self.edit_inventory_item, master)
         self.btn_modify = Button(self.account_control_window, text="Edit Password", fg="Black", command=None,
                                  font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
 
@@ -94,64 +94,74 @@ class accountControl:
     def current_user_info_display(self, master):
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.authorFrame.destroy()
+        self.new_authorFrame.destroy()
 
-        self.dataEntryFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
+        self.userInfoFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
                                     bg='wheat')
-        self.dataEntryFrame.pack()
+        self.userInfoFrame.pack()
         now = datetime.now()
         timeinfo = now.strftime("%H-%M-%S")
         date_info = now.strftime("%d-%b-%Y")
         info_text = "\nCurrent User :" + self.currentuser + "\n" + "Logged Date: " + date_info + "\n" + "At : " + timeinfo
-        userInfo_label = Label(self.dataEntryFrame, text=info_text, width=60,  justify=CENTER,
+        userInfo_label = Label(self.userInfoFrame, text=info_text, width=60, justify=CENTER,
                                font=('times new roman', 17, 'normal'),
                                bg='wheat')
-        self.dataEntryFrame.place(x=160, y=5)
+        self.userInfoFrame.place(x=160, y=5)
         userInfo_label.place(x=5, y=5)
         self.account_control_window.focus()
         self.account_control_window.grab_set()
         mainloop()
 
-    def add_author(self, master):
+    def add_new_account(self, master):
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.dataEntryFrame.destroy()
+        self.userInfoFrame.destroy()
 
-        self.authorFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
-                                 bg='snow')
-        self.authorFrame.pack()
+        self.new_authorFrame = Frame(self.account_control_window, width=800, height=159, bd=4, relief='ridge',
+                                     bg='wheat')
+        self.new_authorFrame.pack()
 
-        self.default_text2 = StringVar(self.authorFrame, value='')
-        self.default_text1 = StringVar(self.authorFrame, value='')
-
+        self.default_text2 = StringVar(self.new_authorFrame, value='')
+        self.default_text1 = StringVar(self.new_authorFrame, value='')
+        self.new_authorFrame.place(x=160, y=5)
         # create a item Name label
 
-        name = Label(self.authorFrame, text="Author Name", width=11, anchor=W, justify=LEFT,
-                     font=('times new roman', 20, 'normal'),
-                     bg='snow')
+        username_label = Label(self.new_authorFrame, text="Account Name", width=11, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
 
         # create a Author label
-        dor = Label(self.authorFrame, text="DOR", width=11, anchor=W, justify=LEFT,
-                    font=('times new roman', 20, 'normal'),
-                    bg='snow')
+        password_label = Label(self.new_authorFrame, text="Password", width=11, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
 
-        self.authorFrame.place(x=150, y=20)
+        role_label = Label(self.new_authorFrame, text="Role", width=11, anchor=W, justify=LEFT,
+                           font=L_FONT,
+                           bg='wheat')
 
-        name.place(x=30, y=10)
-        dor.place(x=30, y=65)
+        username_label.place(x=30, y=10)
+        password_label.place(x=30, y=65)
+        role_label.place(x=30, y=115)
 
-        name_text = Entry(self.authorFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
-                          textvariable=self.default_text1)
+        username_text = Entry(self.new_authorFrame, width=35, font=L_FONT, bg='light cyan',
+                              textvariable=self.default_text1, justify=LEFT)
 
-        dor_text = DateEntry(self.authorFrame, width=39, date_pattern='dd/MM/yyyy',
-                             font=('times new roman', 18, 'normal'),
-                             bg='light cyan',
-                             justify='left')
+        password_text = Entry(self.new_authorFrame, width=35, font=L_FONT, bg='light cyan',
+                              textvariable=self.default_text2, justify=LEFT)
 
-        name_text.place(x=240, y=10)
-        dor_text.place(x=240, y=60)
+        roleText = StringVar(self.userInfoFrame)
+        role_list = ['Admin', 'User']
+        print("Role list  - ", role_list)
+        roleText.set(role_list[0])
+        role_TypeMenu = OptionMenu(self.new_authorFrame, roleText, *role_list)
+        role_TypeMenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+                                justify=LEFT)
 
-        insert_result = partial(self.register_author, self.account_control_window, name_text, dor_text)
+        username_text.place(x=240, y=10)
+        password_text.place(x=240, y=60)
+        role_TypeMenu.place(x=240, y=110)
+
+        insert_result = partial(self.register_account, self.account_control_window, username_text, password_text,roleText)
 
         # create a Save Button and place into the self.account_control_window window
 
@@ -170,107 +180,13 @@ class accountControl:
         self.account_control_window.bind('<Return>', lambda event=None: self.btn_submit.invoke())
         self.account_control_window.bind('<Alt-c>', lambda event=None: self.btn_cancel.invoke())
         self.account_control_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
-        self.display_currentAuthorList(self.account_control_window, self.authorFrame)
+
         self.account_control_window.focus()
         self.account_control_window.grab_set()
         mainloop()
 
-    def myfunction(self, mycanvas, frame, event):
-        print("Scroll Encountered")
-        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=722, height=400)
-
-    def display_currentAuthorList(self, account_control_window, authorFrame):
-        author_listFrm = Frame(authorFrame, width=750, height=63, bd=4, relief='ridge',
-                               bg='snow')
-        author_listFrm.place(x=30, y=110)
-
-        label_sno = Label(author_listFrm, text="S.No", width=10, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-
-        label_authId = Label(author_listFrm, text="Author Id", width=12, height=2, borderwidth=1, relief="solid",
-                             anchor='center',
-                             justify=CENTER,
-                             font=('times new roman', 16, 'normal'),
-                             bg='light grey')
-
-        label_AuthName = Label(author_listFrm, text="Author Name", width=28, height=2, borderwidth=1, relief="solid",
-                               anchor='center',
-                               justify=CENTER,
-                               font=('times new roman', 16, 'normal'),
-                               bg='light grey')
-
-        label_dor = Label(author_listFrm, text="DOR", width=11, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-        label_sno.place(x=5, y=5)
-        label_authId.place(x=125, y=5)
-        label_AuthName.place(x=255, y=5)
-        label_dor.place(x=580, y=5)
-
-        myframe = Frame(authorFrame, width=722, height=400, bd=4, relief='ridge',
-                        bg='snow')
-        myframe.place(x=30, y=170)
-
-        mycanvas = Canvas(myframe)
-        frame = Frame(mycanvas, width=722, height=900)
-        myscrollbar = Scrollbar(myframe, orient="vertical")
-        mycanvas.config(yscrollcommand=myscrollbar.set)
-
-        myscrollbar.pack(side="right", fill="y")
-        myscrollbar.config(command=mycanvas.yview)
-        mycanvas.pack(side="left", fill='both', expand='yes')
-        mycanvas.create_window((0, 0), window=frame, anchor='nw')
-
-        result_scrll = partial(self.myfunction, mycanvas, frame)
-
-        frame.bind("<Configure>", result_scrll)
-
-        # fetch the complete author table
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT * FROM author")
-        result = cursor.fetchall()
-        print(result[0][1])
-        print("Total records = ", result_query)
-        conn.close()
-
-        y_pos = 3
-        for row_count in range(0, result_query):
-            for column_count in range(0, 4):
-                if column_count == 0:
-                    width_label = 10
-                    start_pos = 5
-                elif column_count == 1 or column_count == 3:
-                    width_label = 12
-                    start_pos = 125
-                    if column_count == 3:
-                        start_pos = 580
-                        width_label = 11
-                elif column_count == 2:
-                    width_label = 28
-                    start_pos = 255
-                else:
-                    '''Not possible'''
-                label_display = Label(frame, width=width_label, height=2, borderwidth=1, relief="solid",
-                                      anchor='center',
-                                      justify=CENTER,
-                                      font=('times new roman', 16, 'normal'),
-                                      bg='light cyan')
-                print("row_count : ", row_count, "column_count :", column_count)
-                label_display['text'] = result[row_count][column_count]
-                label_display.place(x=start_pos, y=y_pos)
-            y_pos = y_pos + 51
-
     def edit_inventory_item(self, master):
-        self.dataEntryFrame.destroy()
+        self.userInfoFrame.destroy()
         self.dataModifyFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
@@ -442,7 +358,8 @@ class accountControl:
                              font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
         btn_search.place(x=540, y=2)
 
-        insert_result = partial(self.stock_operations, self.account_control_window, item_name, item_idforSearch, authorText,
+        insert_result = partial(self.stock_operations, self.account_control_window, item_name, item_idforSearch,
+                                authorText,
                                 item_price,
                                 item_borrowfee,
                                 item_quantity, rack_location, cal, local_centerText, item_TypeText, OPERATION_EDIT,
@@ -471,7 +388,7 @@ class accountControl:
         mainloop()
 
     def search_inventory_item(self, master):
-        self.dataEntryFrame.destroy()
+        self.userInfoFrame.destroy()
         self.dataModifyFrame.destroy()
         self.dataSearchFrame = Frame(self.account_control_window, width=800, height=650, bd=4, relief='ridge',
                                      bg='snow')
@@ -657,7 +574,8 @@ class accountControl:
         borrowFee.delete(0, END)
         borrowFee.configure(fg='black')
 
-    def stock_operations(self, account_control_window, item_name, item_idforSearch, author_name, item_price, item_borrowfee,
+    def stock_operations(self, account_control_window, item_name, item_idforSearch, author_name, item_price,
+                         item_borrowfee,
                          item_quantity,
                          rack_location, cal, local_centerText, item_TypeText, op_type, receiver_name, order_id,
                          sender_name):
@@ -852,41 +770,36 @@ class accountControl:
         authorId = total_records + 100
         return "ATH" + str(authorId)  # Author Id
 
-    def validate_author(self, name_text):
+    def validate_account(self, name_text):
         print("validate_author--> validate for Name : ", name_text)
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
-        bItemExist = cursor.execute("SELECT EXISTS(SELECT * FROM author WHERE author_Name = %s)", (name_text,))
+        bItemExist = cursor.execute("SELECT EXISTS(SELECT * FROM userlogin WHERE username = %s)", (name_text,))
         result = cursor.fetchone()
-        print("result :", result[0])
+        print("validate_account :", result[0])
         conn.close()
         return result[0]
 
-    def register_author(self, account_control_window, name_text, dor_text):
+    def register_account(self, account_control_window, username_text, password_text,roleText):
         """ register the author"""
-        dateTimeObj = dor_text.get_date()
-
-        dor_date = dateTimeObj.strftime("%Y-%m-%d")
-
-        if name_text.get() == "":
+        if username_text.get() == "" or password_text.get() == "":
             messagebox.showinfo("Data Entry Error", "All fields are mandatory !!!")
         else:
-            item_id = self.generate_authorId()  # generates a unique item id
-            bitemExists = self.validate_author(name_text.get())
-            print("Author Exists :", bitemExists)
+            bitemExists = self.validate_account(username_text.get())
+            print("Account Exists :", bitemExists)
             if bitemExists:
                 messagebox.showwarning("Duplicate Entry Error !", "Author already exists !!")
-                name_text.configure(bd=2, fg='red')
+                username_text.configure(bd=2, fg='red')
                 return
             else:
                 conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
-                total_records = cursor.execute("SELECT * FROM author")
+                total_records = cursor.execute("SELECT * FROM userlogin")
                 conn.close()
 
                 if total_records is 0:
@@ -895,28 +808,26 @@ class accountControl:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                print("debug 1")
+
                 conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-                print("debug 2")
+
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
-                print("debug 3")
-                authorname = str(name_text.get())
 
-                print("\n", serial_no, item_id, name_text, dor_date)
-                print("\n Add Author")
-                sql = "INSERT INTO author VALUES(%s, %s, %s, %s)"
+                username = str(username_text.get())
+
+                sql = "INSERT INTO userlogin VALUES(%s, %s, %s, %s)"
                 values = (
-                    serial_no, item_id, authorname, dor_date)
+                    serial_no, username, password_text.get(), roleText.get())
                 cursor.execute(sql, values)
 
                 conn.commit()
                 conn.close()
-                print("Author inserted !!! ")
+                print("Account created !!! ")
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-                user_choice = messagebox.askquestion("Author registered", "Do you want to register new  ? ")
+                user_choice = messagebox.askquestion("Success", "Want to create new ?")
                 # destroy the data entry form , if user do not want to add more records
                 if user_choice == 'no':
                     print("Do nothing")
