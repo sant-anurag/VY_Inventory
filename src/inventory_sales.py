@@ -73,8 +73,9 @@ class InventorySales:
         self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=XL_FONT, width=13, state=NORMAL,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
-        self.btn_discount.configure(text="Discount", fg="Black", font=XL_FONT, width=13, state=NORMAL,
-                                    bg='RosyBrown1')
+        discount_result = partial(self.discount_display)
+        self.btn_discount.configure(text="Discount %", fg="Black", font=XL_FONT, width=13, state=NORMAL,
+                                    bg='RosyBrown1', command = discount_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
                                   font=XL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
@@ -229,7 +230,7 @@ class InventorySales:
         cartCount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                                font=L_FONT,
                                bg='light cyan')
-        billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
+        self.billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                                 font=L_FONT,
                                 bg='light cyan')
         discount_label = Label(framelower, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
@@ -247,7 +248,7 @@ class InventorySales:
         cartCount_label.place(x=30, y=12)
         cartCount_text.place(x=165, y=12)
         billAmount_label.place(x=370, y=12)
-        billAmount_text.place(x=530, y=12)
+        self.billAmount_text.place(x=530, y=12)
         discount_label.place(x=30, y=45)
         discount_text.place(x=165, y=45)
         billNo_label.place(x=370, y=45)
@@ -260,7 +261,7 @@ class InventorySales:
 
         btn_search.configure(command=search_result)
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
-                                   cartCount_text, billAmount_text)
+                                   cartCount_text, self.billAmount_text)
         self.btn_addToCart.configure(command=addToCart_result)
         purchase_result = partial(self.purchase_stock_item, name_entry, contact_entry, address_entry)
         self.btn_submit.configure(command=purchase_result)
@@ -364,14 +365,15 @@ class InventorySales:
                 elif column_index == 3:
                     label_detail['text'] = self.list_InvoicePrint[row_index][1]
                 elif column_index == 4:
-                    label_detail['text'] = self.list_InvoicePrint[row_index][3]
+                    label_detail['text'] = round(float(self.list_InvoicePrint[row_index][3]),2)
                 elif column_index == 5:
                     label_detail['text'] = self.list_InvoicePrint[row_index][2]
                 elif column_index == 6:
-                    label_detail['text'] = (int(self.list_InvoicePrint[row_index][2]) * int(
-                        self.list_InvoicePrint[row_index][3]))
+                    label_detail['text'] = round((int(self.list_InvoicePrint[row_index][2]) * float(
+                        self.list_InvoicePrint[row_index][3])),2)
                 else:
                     print("this value doesn't exists")
+        self.calculateAndDisplayTotalBillAmt()
 
     def change_quantity_display(self):
         change_quantity_window = Toplevel(self.dataSearchFrame)
@@ -393,8 +395,9 @@ class InventorySales:
         btn_frame = Frame(change_quantity_window, width=230, height=50, bd=4, relief='ridge',
                           bg='purple')
         btn_changeQuantity = Button(btn_frame)
+        change_result = partial(self.change_quantity, sno_entry, quantity_entry, change_quantity_window)
         btn_changeQuantity.configure(text="Change", fg="Black", font=L_FONT, width=9, state=NORMAL,
-                                     bg='RosyBrown1')
+                                     bg='RosyBrown1', command=change_result)
         btn_cancelQuantity = Button(btn_frame)
         btn_cancelQuantity.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
                                      bg='RosyBrown1', command=change_quantity_window.destroy)
@@ -406,11 +409,85 @@ class InventorySales:
         btn_frame.place(x=50, y=90)
         btn_changeQuantity.place(x=3, y=2)
         btn_cancelQuantity.place(x=110, y=2)
-        self.sales_window.bind('<Return>', lambda event=None: btn_changeQuantity.invoke())
-        self.sales_window.bind('<Escape>', lambda event=None: btn_cancelQuantity.invoke())
+        change_quantity_window.bind('<Return>', lambda event=None: btn_changeQuantity.invoke())
+        change_quantity_window.bind('<Escape>', lambda event=None: btn_cancelQuantity.invoke())
+
+    def discount_display(self):
+        discount_display_window = Toplevel(self.dataSearchFrame)
+        discount_display_window.title("Apply Discount")
+        discount_display_window.geometry('320x150+950+380')
+        discount_display_window.configure(background='wheat')
+        discount_display_window.resizable(width=False, height=False)
+        discount_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_itemSerialNo = Label(discount_display_window, text="Bill S.No.", width=7, height=1, anchor=W,
+                                   justify=LEFT,
+                                   font=L_FONT,
+                                   bg='wheat')
+        sno_entry = Entry(discount_display_window, width=15, font=L_FONT, bg='light cyan')
+
+        label_discount = Label(discount_display_window, text="Discount %", width=8, height=1, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
+        discount_entry = Entry(discount_display_window, width=15, font=L_FONT, bg='light cyan')
+        btn_frame = Frame(discount_display_window, width=230, height=50, bd=4, relief='ridge',
+                          bg='purple')
+        btn_changediscount = Button(btn_frame)
+        change_result = partial(self.apply_discount, sno_entry, discount_entry, discount_display_window)
+        btn_changediscount.configure(text="Apply", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1', command=change_result)
+        btn_canceldiscount = Button(btn_frame)
+        btn_canceldiscount.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1', command=discount_display_window.destroy)
+
+        label_itemSerialNo.place(x=30, y=20)
+        sno_entry.place(x=130, y=20)
+        label_discount.place(x=30, y=55)
+        discount_entry.place(x=130, y=55)
+        btn_frame.place(x=50, y=90)
+        btn_changediscount.place(x=3, y=2)
+        btn_canceldiscount.place(x=110, y=2)
+        discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
+        discount_display_window.bind('<Escape>', lambda event=None: btn_canceldiscount.invoke())
 
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
+
+    def change_quantity(self, serialNo, newQuanity, change_quantity_window):
+        print("Quantity change started for the serial no :", serialNo.get())
+        bSerialValid = False
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            if iLoop + 1 == int(serialNo.get()):
+                bSerialValid = True
+                self.list_InvoicePrint[iLoop][2] = int(newQuanity.get())
+                break
+
+        if bSerialValid:
+            print("Quantity has been changed")
+            change_quantity_window.destroy()
+            self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
+        else:
+            print("Invalid Serial no")
+            messagebox.showwarning("Invalid Quantity", "Check the serial no.")
+
+    def apply_discount(self, serialNo, discountAmt, discount_window):
+        print("Apply discount started for the serial no :", serialNo.get())
+        bSerialValid = False
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            if iLoop + 1 == int(serialNo.get()):
+                bSerialValid = True
+                discounted_price = float((int(discountAmt.get())/100)*float(self.list_InvoicePrint[iLoop][3]))
+                self.list_InvoicePrint[iLoop][3] = discounted_price
+                print("Discounted price is :",discounted_price)
+                break
+
+        if bSerialValid:
+            print("Quantity has been changed")
+            discount_window.destroy()
+            self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
+        else:
+            print("Invalid Serial no")
+            messagebox.showwarning("Invalid Quantity", "Check the serial no.")
 
     def initialize_billArea(self):
         print("Initializing the  bill area with default template")
@@ -587,6 +664,15 @@ class InventorySales:
             self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
         else:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
+
+    def calculateAndDisplayTotalBillAmt(self):
+        # calculate the total mrp
+        total_cart_mrp = 0
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            total_cart_mrp = total_cart_mrp + round((int(self.list_InvoicePrint[iLoop][2]) * float(
+                self.list_InvoicePrint[iLoop][3])),2)
+
+        self.billAmount_text['text'] = str(total_cart_mrp)
 
     # Function for clearing the
     # contents of text entry boxes
