@@ -90,7 +90,14 @@ class Inventory:
         )'''
         cursor.execute(sql)
 
-        print("Table Created !!! ")
+        sql = '''CREATE TABLE IF NOT EXISTS invoice(
+            S_no int,
+            invoice_id VARCHAR(255) NOT NULL,
+            author_date DATE NOT NULL
+        )'''
+        cursor.execute(sql)
+
+        print("Tables Created !!! ")
         conn.close()
 
     def new_inventory_view(self):
