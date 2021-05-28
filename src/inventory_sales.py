@@ -37,10 +37,10 @@ class InventorySales:
         self.authorFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
                                  bg='snow')
         self.authorFrame.pack()
-        
+
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
         self.MainbtnFrame = Frame(self.sales_window, width=575, height=65, bd=4, relief='ridge',
-                              bg='light yellow')
+                                  bg='light yellow')
         self.btn_addToCart = Button(self.MainbtnFrame)
         self.btn_addToCart.configure(text="+ Cart", fg="Black", font=XL_FONT, width=9, state=NORMAL,
                                      bg='RosyBrown1')
@@ -64,20 +64,21 @@ class InventorySales:
         self.btn_clear.place(x=285, y=1)
         self.btn_cancel.place(x=423, y=1)
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
-        
+
         # Support button frame design -start
         self.AdditionalbtnFrame = Frame(self.sales_window, width=815, height=65, bd=4, relief='ridge',
-                              bg='purple')
+                                        bg='purple')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
+        chngQuantity_result = partial(self.change_quantity_display)
         self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=XL_FONT, width=13, state=NORMAL,
-                                     bg='RosyBrown1')
+                                       bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
         self.btn_discount.configure(text="Discount", fg="Black", font=XL_FONT, width=13, state=NORMAL,
-                                  bg='RosyBrown1')
+                                    bg='RosyBrown1')
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                font=XL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+                                  font=XL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
-                                 font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+                                font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         self.btn_print.configure(command=self.sales_window.destroy)
 
         # Bottom button panel - end
@@ -87,7 +88,7 @@ class InventorySales:
         self.btn_remItem.place(x=414, y=1)
         self.btn_print.place(x=620, y=1)
         # Support button frame design-End
-        
+
         print("constructor called for sales ")
 
         # default window is "Add New Inventor" when window opens
@@ -232,16 +233,16 @@ class InventorySales:
                                 font=L_FONT,
                                 bg='light cyan')
         discount_label = Label(framelower, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
-                                font=L_FONT, bg='snow')
+                               font=L_FONT, bg='snow')
         billNo_label = Label(framelower, text="Bill No.", width=14, anchor=W, justify=LEFT,
-                                 font=L_FONT, bg='snow')
+                             font=L_FONT, bg='snow')
 
         discount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                               font=L_FONT,
-                               bg='light cyan')
+                              font=L_FONT,
+                              bg='light cyan')
         billNo_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                                font=L_FONT,
-                                bg='light cyan')
+                            font=L_FONT,
+                            bg='light cyan')
 
         cartCount_label.place(x=30, y=12)
         cartCount_text.place(x=165, y=12)
@@ -369,6 +370,44 @@ class InventorySales:
                 elif column_index == 6:
                     label_detail['text'] = (int(self.list_InvoicePrint[row_index][2]) * int(
                         self.list_InvoicePrint[row_index][3]))
+                else:
+                    print("this value doesn't exists")
+
+    def change_quantity_display(self):
+        change_quantity_window = Toplevel(self.dataSearchFrame)
+        change_quantity_window.title("Change Quantity")
+        change_quantity_window.geometry('320x150+950+380')
+        change_quantity_window.configure(background='wheat')
+        change_quantity_window.resizable(width=False, height=False)
+        change_quantity_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_itemSerialNo = Label(change_quantity_window, text="Bill S.No.", width=7, height=1, anchor=W, justify=LEFT,
+                                   font=L_FONT,
+                                   bg='wheat')
+        sno_entry = Entry(change_quantity_window, width=15, font=L_FONT, bg='light cyan')
+
+        label_quantity = Label(change_quantity_window, text="Quantity", width=7, height=1, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='wheat')
+        quantity_entry = Entry(change_quantity_window, width=15, font=L_FONT, bg='light cyan')
+        btn_frame = Frame(change_quantity_window, width=230, height=50, bd=4, relief='ridge',
+                          bg='purple')
+        btn_changeQuantity = Button(btn_frame)
+        btn_changeQuantity.configure(text="Change", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1')
+        btn_cancelQuantity = Button(btn_frame)
+        btn_cancelQuantity.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1', command=change_quantity_window.destroy)
+
+        label_itemSerialNo.place(x=30, y=20)
+        sno_entry.place(x=130, y=20)
+        label_quantity.place(x=30, y=55)
+        quantity_entry.place(x=130, y=55)
+        btn_frame.place(x=50, y=90)
+        btn_changeQuantity.place(x=3, y=2)
+        btn_cancelQuantity.place(x=110, y=2)
+        self.sales_window.bind('<Return>', lambda event=None: btn_changeQuantity.invoke())
+        self.sales_window.bind('<Escape>', lambda event=None: btn_cancelQuantity.invoke())
 
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
