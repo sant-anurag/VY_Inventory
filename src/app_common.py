@@ -19,89 +19,7 @@ class CommonUtil:
     def __init__(self):
         print("constructor called for CommonUtil edit ")
         self._new_member_id = 0
-
-    def retrieve_MemberRecords(self, memberId, memtype, search_criteria):
-        print("retrieve_MemberRecords->Start")
-        bMemberExists = True
-        recordList = []
-        if not bMemberExists:
-            if search_criteria == SEARCH_BY_MEMBERID:
-                messagebox.showwarning("Member Id Error ", "Oops !!! Member Id is doesnot exists  ....")
-            elif search_criteria == SEARCH_BY_CONTACTNO:
-                messagebox.showwarning("Member Id Error ", "Oops !!! Contact Number is not valid  ....")
-            else:
-                pass
-        else:
-            if memtype == 1:
-                file_name = PATH_MEMBER
-            if memtype == 2:
-                file_name = PATH_STAFF
-            # Fail-safe protection  - if database is deleted anonmously at back end while reaching here
-            if not os.path.isfile(file_name):
-                messagebox.showerror("Database error", "No Members available ....")
-                return
-            # To open the workbook
-            # workbook object is created
-            wb_obj = openpyxl.load_workbook(file_name)
-            print(" Data extraction logic will be excuted for : ", memtype, " memberid :", memberId,
-                  " and search criteria as:", search_criteria)
-            # Get workbook active sheet object
-            # from the active attribute
-            sheet_obj = wb_obj.active
-            total_records = self.totalrecords_excelDataBase(file_name)
-            if search_criteria == SEARCH_BY_MEMBERID:
-                for iLoop in range(1, total_records + 1):
-                    cell_obj = sheet_obj.cell(row=iLoop + 1, column=2)
-                    if cell_obj.value == memberId:
-                        for iColumn in range(2, MAX_RECORD_ENTRY + 1):
-                            cell_value = sheet_obj.cell(row=iLoop + 1, column=iColumn).value
-                            print("record[", iColumn, "] :", cell_value)
-                            recordList.append(cell_value)
-                        break
-            elif search_criteria == SEARCH_BY_CONTACTNO:
-                print("Executing search criteria :", search_criteria)
-                for iLoop in range(1, total_records + 1):
-                    cell_obj = sheet_obj.cell(row=iLoop + 1, column=13)
-                    if cell_obj.value == memberId:
-                        for iColumn in range(2, MAX_RECORD_ENTRY + 1):
-                            cell_value = sheet_obj.cell(row=iLoop + 1, column=iColumn).value
-                            print("record[", iColumn, "] :", cell_value)
-                            recordList.append(cell_value)
-                        break
-            else:
-                print("Please specify search_criteria")
-
-        print("retrieve_MemberRecords->End")
-        return recordList
-
-    def validate_memberId_Excel(self, memberId, memberType):
-        bLibExist = False
-        print("Member id: ", memberId)
-        if memberType == 1:
-            path = PATH_MEMBER
-        elif memberType == 2:
-            path = PATH_STAFF
-        else:
-            pass
-
-        # To open the workbook
-        # workbook object is created
-        wb_obj = openpyxl.load_workbook(path)
-
-        # Get workbook active sheet object
-        # from the active attribute
-        sheet_obj = wb_obj.active
-        totalrecords = self.totalrecords_excelDataBase(path)
-        print("total records :", totalrecords)
-
-        for iLoop in range(1, totalrecords + 1):
-            print("Entering loop")
-            cell_obj = sheet_obj.cell(row=iLoop + 1, column=2)
-            print("cell_obj.value : ", cell_obj.value)
-            if cell_obj.value == memberId:
-                bLibExist = True
-                break
-        return bLibExist
+        self.currentUser = ""
 
     def totalrecords_excelDataBase(self, path):
         # to open the workbook
@@ -177,13 +95,6 @@ class CommonUtil:
         shutil.copytree(src_folder, destination_copy_folder)
         # self.change_permissions_recursive(src_folder, 0o777)
         # self.change_permissions_recursive(destination_copy_folder,0o777)
-
-    def change_permissions_recursive(self, path, mode):
-        for root, dirs, files in os.walk(self, path):
-            for dir in [os.path.join(root, d) for d in dirs]:
-                os.chmod(dir, mode)
-            for file in [os.path.join(root, f) for f in files]:
-                os.chmod(file, mode)
 
     def donothing(self, event=None):
         print("Button is disabled")
@@ -418,7 +329,6 @@ class CommonUtil:
         infile.close()
         print("addTrustName -->end")
 
-
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
@@ -442,3 +352,10 @@ class CommonUtil:
         result = cursor.fetchall()
         conn.close()
         return result
+
+    def setCurrentUser(self, userName):
+        print("Store user as current user :", userName)
+        self.currentUser = userName
+
+    def getCurrentUser(self):
+        return self.currentUser
