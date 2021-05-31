@@ -134,25 +134,25 @@ class Inventory:
         # labelFrame.place(x=200, y=10)
         result_btnInv = partial(self.new_inventory_view)
         btn_inventory = Button(master, text="Inventory", fg="Black", command=result_btnInv,
-                               font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                               font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
         # button_load = Image.open('..//Images//Logos//button bg 2.jfif').resize((400, 110))
         # button_img = ImageTk.PhotoImage(button_load)
         # btn_inventory.config(image=button_img, text="Inventory")
         result_sales = partial(self.sales_operations)
         btn_sales = Button(master, text="Sales", fg="Black", command=result_sales,
-                           font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                           font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
         result_btnMchd = partial(self.new_center_registration)
         btn_merchandise = Button(master, text="Merchandise", fg="Black", command=result_btnMchd,
-                                 font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                                 font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
         result_btnReport = partial(self.inventory_report)
         btn_reports = Button(master, text="Reports", fg="Black", command=result_btnReport,
-                             font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                             font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
         result_usrLogin = partial(self.user_login_screen)
         btn_usrCtrl = Button(master, text="User Control", fg="Black", command=result_usrLogin,
-                             font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                             font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
         btn_exit = Button(master, text="Exit", fg="Black", command=master.destroy,
-                          font=XXL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+                          font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
         btn_inventory.place(x=65, y=240)
         btn_sales.place(x=65, y=310)

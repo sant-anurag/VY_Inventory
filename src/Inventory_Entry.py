@@ -54,27 +54,27 @@ class NewInventory:
 
         self.btn_submit.configure(text="Save", fg="Black", font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel = Button(self.newItem_window, text="Close", fg="Black",
-                                 font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                 font=L_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel.configure(command=self.newItem_window.destroy)
         self.btn_clear = Button(self.newItem_window, text="Reset", fg="Black",
-                                font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                font=L_FONT, width=14, state=NORMAL, bg='RosyBrown1')
 
         # Bottom button panel - end
 
         # Side button panel - start
         author_result = partial(self.add_author, master)
         self.btn_author = Button(self.newItem_window, text="Author", fg="Black", command=author_result,
-                                 font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
         search_result = partial(self.search_inventory_item, master)
         self.btn_search = Button(self.newItem_window, text="Search", fg="Black", command=search_result,
-                                 font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
 
         edit_result = partial(self.edit_inventory_item, master)
         self.btn_modify = Button(self.newItem_window, text="Modify", fg="Black", command=edit_result,
-                                 font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
         add_result = partial(self.add_inventory_item, master)
         self.btn_add = Button(self.newItem_window, text="Add", fg="Black", command=add_result,
-                              font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+                              font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
         # Side button panel - end
 
         self.btn_add.place(x=7, y=200)
@@ -109,49 +109,49 @@ class NewInventory:
         # create a item Name label
 
         name = Label(self.dataEntryFrame, text="Item Name", width=11, anchor=W, justify=LEFT,
-                     font=('times new roman', 20, 'normal'),
+                     font=L_FONT,
                      bg='snow')
 
         # create a Author label
         author = Label(self.dataEntryFrame, text="Author", width=11, anchor=W, justify=LEFT,
-                       font=('times new roman', 20, 'normal'),
+                       font=L_FONT,
                        bg='snow')
 
         # create a Price label
         price = Label(self.dataEntryFrame, text="Price(Rs.)", width=13, anchor=W, justify=LEFT,
-                      font=('times new roman', 20, 'normal'), bg='snow')
+                      font=L_FONT, bg='snow')
 
         # create a Quantity label
         quantity = Label(self.dataEntryFrame, text="Quantity", width=13, anchor=W, justify=LEFT,
-                         font=('times new roman', 20, 'normal'), bg='snow')
+                         font=L_FONT, bg='snow')
 
         # create a borrow fee label
         borrowFee = Label(self.dataEntryFrame, text="Borrow Fee(Rs.)", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
 
         # create a borrow fee label
         rackNumber = Label(self.dataEntryFrame, text="Rack Number", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         # create a borrow fee label
         date_label = Label(self.dataEntryFrame, text="Received On", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         center_location = Label(self.dataEntryFrame, text="Center Name", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
         item_type = Label(self.dataEntryFrame, text="Item Type", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
 
         receivedBy = Label(self.dataEntryFrame, text="Received By", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         # create a Quantity label
         sendername = Label(self.dataEntryFrame, text="Sender Name", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         # create a borrow fee label
         orderId = Label(self.dataEntryFrame, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
-                        font=('times new roman', 20, 'normal'), bg='snow')
+                        font=L_FONT, bg='snow')
 
         self.dataEntryFrame.place(x=150, y=20)
 
@@ -168,7 +168,7 @@ class NewInventory:
         orderId.place(x=30, y=540)
         sendername.place(x=30, y=590)
 
-        item_name = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                           textvariable=self.default_text1)
 
         authorText = StringVar(self.dataEntryFrame)
@@ -181,21 +181,21 @@ class NewInventory:
         print("Author list  - ", newAutorList)
         authorText.set(newAutorList[0])
         author_menu = OptionMenu(self.dataEntryFrame, authorText, *newAutorList)
-        author_menu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        author_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                               justify=LEFT)
 
-        item_price = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_price = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                            textvariable=self.default_text3)
 
-        item_quantity = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_quantity = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text4)
         item_borrowfee = Entry(self.dataEntryFrame, width=35, text='0', state=DISABLED,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='light grey', textvariable=self.default_text5)
-        rack_location = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan')
+        rack_location = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan')
 
         cal = DateEntry(self.dataEntryFrame, width=39, date_pattern='dd/MM/yyyy',
-                        font=('times new roman', 18, 'normal'),
+                        font=L_FONT,
                         bg='light cyan',
                         justify='left')
         local_centerText = StringVar(self.dataEntryFrame)
@@ -210,7 +210,7 @@ class NewInventory:
         print("Center list  - ", newCenterList)
         local_centerText.set(newCenterList[0])
         localcenter_menu = OptionMenu(self.dataEntryFrame, local_centerText, *newCenterList)
-        localcenter_menu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        localcenter_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                                    justify=LEFT)
 
         item_TypeText = StringVar(self.dataEntryFrame)
@@ -218,16 +218,16 @@ class NewInventory:
         print("Item Type list  - ", itemtypeList)
         item_TypeText.set(itemtypeList[0])
         item_Typemenu = OptionMenu(self.dataEntryFrame, item_TypeText, *itemtypeList)
-        item_Typemenu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        item_Typemenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
 
-        receiver_name = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        receiver_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text6)
 
-        order_id = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        order_id = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                          textvariable=self.default_text7)
         sender_name = Entry(self.dataEntryFrame, width=35, text='0',
-                            font=('times new roman', 20, 'normal'),
+                            font=L_FONT,
                             bg='light cyan', textvariable=self.default_text8)
 
         item_name.place(x=240, y=10)
@@ -289,12 +289,12 @@ class NewInventory:
         # create a item Name label
 
         name = Label(self.authorFrame, text="Author Name", width=11, anchor=W, justify=LEFT,
-                     font=('times new roman', 20, 'normal'),
+                     font=L_FONT,
                      bg='snow')
 
         # create a Author label
         dor = Label(self.authorFrame, text="DOR", width=11, anchor=W, justify=LEFT,
-                    font=('times new roman', 20, 'normal'),
+                    font=L_FONT,
                     bg='snow')
 
         self.authorFrame.place(x=150, y=20)
@@ -302,11 +302,11 @@ class NewInventory:
         name.place(x=30, y=10)
         dor.place(x=30, y=65)
 
-        name_text = Entry(self.authorFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        name_text = Entry(self.authorFrame, width=35, font=L_FONT, bg='light cyan',
                           textvariable=self.default_text1)
 
         dor_text = DateEntry(self.authorFrame, width=39, date_pattern='dd/MM/yyyy',
-                             font=('times new roman', 18, 'normal'),
+                             font=L_FONT,
                              bg='light cyan',
                              justify='left')
 
@@ -454,47 +454,47 @@ class NewInventory:
         # create a item Name label
 
         item_SearchId = Label(frameSearch, text="Item Id", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
         item_namelabel = Label(framedisplay, text="Item Name", width=11, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='snow')
 
         author = Label(framedisplay, text="Author", width=11, anchor=W, justify=LEFT,
-                       font=('times new roman', 20, 'normal'),
+                       font=L_FONT,
                        bg='snow')
 
         # create a Price label
         price = Label(framedisplay, text="Price(Rs.)", width=13, anchor=W, justify=LEFT,
-                      font=('times new roman', 20, 'normal'), bg='snow')
+                      font=L_FONT, bg='snow')
 
         # create a Quantity label
         quantity = Label(framedisplay, text="Quantity", width=13, anchor=W, justify=LEFT,
-                         font=('times new roman', 20, 'normal'), bg='snow')
+                         font=L_FONT, bg='snow')
 
         # create a borrow fee label
         borrowFee = Label(framedisplay, text="Borrow Fee(Rs.)", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
 
         # create a borrow fee label
         rackNumber = Label(framedisplay, text="Rack Number", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         # create a borrow fee label
         date_label = Label(framedisplay, text="Received On", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         center_location = Label(framedisplay, text="Center Name", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
         item_type = Label(framedisplay, text="Item Type", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
         receivedBy = Label(framedisplay, text="Received By", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
         sendername = Label(framedisplay, text="Sender Name", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
         orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
-                        font=('times new roman', 20, 'normal'), bg='snow')
+                        font=L_FONT, bg='snow')
 
         self.dataModifyFrame.place(x=150, y=20)
 
@@ -516,10 +516,10 @@ class NewInventory:
         sendername.place(x=30, y=480)
         orderId.place(x=30, y=530)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=('times new roman', 20, 'normal'), bg='light yellow')
+        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light yellow')
         btn_search = Button(frameSearch)
 
-        item_name = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_name = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                           textvariable=self.default_text1)
 
         authorText = StringVar(framedisplay)
@@ -533,21 +533,21 @@ class NewInventory:
         authorText.set(newAutorList[0])
         author_menu = OptionMenu(framedisplay, authorText, *newAutorList)
 
-        author_menu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        author_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                               justify=LEFT)
 
-        item_price = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_price = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                            textvariable=self.default_text3)
 
-        item_quantity = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        item_quantity = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text4)
         item_borrowfee = Entry(framedisplay, width=35, text='0', state=DISABLED,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='light grey', textvariable=self.default_text5)
-        rack_location = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan')
+        rack_location = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan')
 
         cal = DateEntry(framedisplay, width=39, date_pattern='dd/MM/yyyy',
-                        font=('times new roman', 18, 'normal'),
+                        font=L_FONT,
                         bg='light cyanw',
                         justify='left')
         local_centerText = StringVar(framedisplay)
@@ -562,7 +562,7 @@ class NewInventory:
         local_centerText.set(newCenterList[0])
 
         localcenter_menu = OptionMenu(framedisplay, local_centerText, *newCenterList)
-        localcenter_menu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        localcenter_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                                    justify=LEFT)
 
         item_TypeText = StringVar(framedisplay)
@@ -570,16 +570,16 @@ class NewInventory:
         print("Item Type list  - ", itemtypeList)
         item_TypeText.set(itemtypeList[0])
         item_Typemenu = OptionMenu(framedisplay, item_TypeText, *itemtypeList)
-        item_Typemenu.configure(width=41, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        item_Typemenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
         item_idforSearch.place(x=240, y=5)
 
-        receiver_name = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        receiver_name = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                               textvariable=self.default_text6)
 
-        order_id = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        order_id = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                          textvariable=self.default_text7)
-        sender_name = Entry(framedisplay, width=35, text='0', font=('times new roman', 20, 'normal'),
+        sender_name = Entry(framedisplay, width=35, text='0', font=L_FONT,
                             bg='light cyan', textvariable=self.default_text8)
         item_name.place(x=240, y=5)
         author_menu.place(x=240, y=50)
@@ -648,47 +648,47 @@ class NewInventory:
         # create a item Name label
 
         item_SearchId = Label(frameSearch, text="Search Item Id", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
         item_namelabel = Label(framedisplay, text="Item Name", width=11, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='snow')
 
         author = Label(framedisplay, text="Author", width=11, anchor=W, justify=LEFT,
-                       font=('times new roman', 20, 'normal'),
+                       font=L_FONT,
                        bg='snow')
 
         # create a Price label
         price = Label(framedisplay, text="Price(Rs.)", width=13, anchor=W, justify=LEFT,
-                      font=('times new roman', 20, 'normal'), bg='snow')
+                      font=L_FONT, bg='snow')
 
         # create a Quantity label
         quantity = Label(framedisplay, text="Quantity", width=13, anchor=W, justify=LEFT,
-                         font=('times new roman', 20, 'normal'), bg='snow')
+                         font=L_FONT, bg='snow')
 
         # create a borrow fee label
         borrowFee = Label(framedisplay, text="Borrow Fee(Rs.)", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
 
         # create a borrow fee label
         rackNumber = Label(framedisplay, text="Rack Number", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         # create a borrow fee label
         date_label = Label(framedisplay, text="Received On", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
 
         center_location = Label(framedisplay, text="Center Name", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
         item_type = Label(framedisplay, text="Item Type", width=13, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'), bg='snow')
+                          font=L_FONT, bg='snow')
         receivedBy = Label(framedisplay, text="Received By", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
         sendername = Label(framedisplay, text="Sender Name", width=13, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'), bg='snow')
+                           font=L_FONT, bg='snow')
         orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
-                        font=('times new roman', 20, 'normal'), bg='snow')
+                        font=L_FONT, bg='snow')
 
         self.dataSearchFrame.place(x=150, y=20)
 
@@ -710,54 +710,54 @@ class NewInventory:
         sendername.place(x=30, y=480)
         orderId.place(x=30, y=530)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=('times new roman', 20, 'normal'), bg='light cyan')
+        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
         btn_search = Button(frameSearch)
 
         item_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                          font=('times new roman', 20, 'normal'),
+                          font=L_FONT,
                           bg='light cyan')
 
         author_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'),
+                            font=L_FONT,
                             bg='light cyan')
 
         item_price = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'),
+                           font=L_FONT,
                            bg='light cyan')
 
         item_quantity = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='light cyan')
         item_borrowfee = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                               font=('times new roman', 20, 'normal'),
+                               font=L_FONT,
                                bg='light cyan')
         rack_location = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='light cyan')
 
         cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                    font=('times new roman', 20, 'normal'),
+                    font=L_FONT,
                     bg='light cyan')
 
         localcenter_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'),
+                                 font=L_FONT,
                                  bg='light cyan')
 
         item_Typemenu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='light cyan')
 
         item_idforSearch.place(x=240, y=5)
 
         receiver_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='light cyan')
 
         order_id = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                         font=('times new roman', 20, 'normal'),
+                         font=L_FONT,
                          bg='light cyan')
         sender_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'),
+                            font=L_FONT,
                             bg='light cyan')
         item_name.place(x=240, y=5)
         author_menu.place(x=240, y=50)
