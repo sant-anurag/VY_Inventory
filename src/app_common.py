@@ -7,10 +7,11 @@
 # Vihangan Yoga Operations  of Ashram Management Software
 # File Name : app_common.py
 # Developer : Sant Anurag Deo
-# Version : 2.0
+# Version : 1.0
 """
 
 from app_defines import *
+import socket
 import MySQLdb as sql_db
 
 
@@ -20,7 +21,6 @@ class CommonUtil:
         print("constructor called for CommonUtil edit ")
         self._new_member_id = 0
         self.currentUser = ""
-
 
     def print_statement_file(self, src_file, pathToPrint, starting_index):
         # if pdf doesn't exists ,convert to pdf
@@ -186,6 +186,27 @@ class CommonUtil:
         result = cursor.fetchall()
         conn.close()
         return result
+
+    def logActivity(self, username,activity_details):
+        print("logging Activity --> ")
+        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+        now = datetime.now()
+        hostname = socket.gethostname()
+        ipaddress = socket.gethostbyname(socket.gethostname())
+
+        dateForLogging = now.strftime("%d-%b-%Y")
+        timeForLogging = now.strftime("%H-%M-%S")
+
+        sql = "INSERT INTO activity_logs VALUES(%s,%s,%s,%s,%s,%s)"
+        values = (dateForLogging,timeForLogging,hostname,ipaddress,username,activity_details)
+        cursor.execute(sql, values)
+
+        conn.commit()
+        conn.close()
+        print("Activity Logged !!! ")
 
     def setCurrentUser(self, userName):
         print("Store user as current user :", userName)

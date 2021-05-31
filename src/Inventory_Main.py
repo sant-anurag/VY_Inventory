@@ -94,11 +94,6 @@ class Inventory:
         )'''
         cursor.execute(sql)
 
-        sql = '''CREATE TABLE IF NOT EXISTS invoice(
-            S_no int,
-            invoice_id VARCHAR(255) NOT NULL,
-            author_date DATE NOT NULL
-        )'''
         cursor.execute(sql)
 
         sql = '''CREATE TABLE IF NOT EXISTS userlogin(
@@ -109,11 +104,30 @@ class Inventory:
         )'''
         cursor.execute(sql)
 
+        sql = '''CREATE TABLE IF NOT EXISTS invoices(
+            S_no int,
+            invoice_id VARCHAR(255) NOT NULL,
+            invoice_date DATE NOT NULL,
+            invoice_amount int,
+            category VARCHAR(255) NOT NULL
+        )'''
+        cursor.execute(sql)
+
+        sql = '''CREATE TABLE IF NOT EXISTS activity_logs(
+            activity_date VARCHAR(50) NOT NULL,
+            activity_time VARCHAR(50) NOT NULL,
+            activity_terminal VARCHAR(50),
+            terminal_ip VARCHAR(50),
+            user_logged VARCHAR(50) NOT NULL,
+            user_action VARCHAR(255) NOT NULL
+        )'''
+        cursor.execute(sql)
+
         print("Tables Created !!! ")
         conn.close()
 
     def new_inventory_view(self):
-        obj_newInventory = NewInventory(root)
+        obj_newInventory = NewInventory(root,self.currentUser)
 
     def new_center_registration(self):
         obj_newMchd = NewMerchandise(root)
@@ -285,11 +299,15 @@ class Inventory:
                 break;
 
         if bLoginValid:
+            self.obj_commonUtil.logActivity(self.currentUser, "Login Success")
             print("Authentication Success for user :", userNameText.get())
             login_window.destroy()
             self.currentUser = username
             self.designMainScreen(root)
+
         else:
+            # log the user action
+            self.obj_commonUtil.logActivity(self.currentUser, "Login failure")
             labelLogin.configure(fg='red')
             labelLogin['text'] = "Login Failed !! Try Again"
             self.clear_loginForm(userNameText, passwordText)
@@ -298,9 +316,9 @@ class Inventory:
     def clear_loginForm(self, userNameText, passwordText):
         userNameText.delete(0, END)
         userNameText.configure(fg='black')
-        userNameText.focus_set()
         passwordText.delete(0, END)
         passwordText.configure(fg='black')
+        userNameText.focus_set()
 
 
 # obj_animation = LoadingAnimation()

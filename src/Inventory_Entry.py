@@ -19,7 +19,8 @@ import MySQLdb as sql_db
 class NewInventory:
 
     # constructor for Library class
-    def __init__(self, master):
+    def __init__(self, master, loggeduser):
+        self.currentuser = loggeduser
         self.obj_commonUtil = CommonUtil()
         self.dateTimeOp = DatetimeOperation()
         self.newItem_window = Toplevel(master)
@@ -617,7 +618,7 @@ class NewInventory:
         search_result = partial(self.search_itemId, item_idforSearch, item_name, authorText,
                                 item_price,
                                 item_quantity, rack_location, cal, local_centerText, item_TypeText, receiver_name,
-                                sender_name,order_id,OPERATION_EDIT)
+                                sender_name, order_id, OPERATION_EDIT)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
                              font=NORM_FONT, width=15, state=NORMAL, bg='RosyBrown1')
@@ -891,6 +892,7 @@ class NewInventory:
                         serial_no, item_id, itemname, author, price, borrow_fee, quantity, location, receival_date,
                         localcenter, stocktype, receiver, orderid, sendername)
                     cursor.execute(sql, values)
+                    logInfo = str(item_id) + " added" + " successfully"
                 elif op_type is OPERATION_EDIT:
                     print("\n Edit operation type")
                     sql = "UPDATE inventory_stock set Item_name = %s, Author_Name = %s, Price = %s, Borrow_Fee = %s, " \
@@ -901,12 +903,14 @@ class NewInventory:
                         itemname, author, price, borrow_fee, quantity, location, cal.get_date(), localcenter, stocktype,
                         item_id)
                     cursor.execute(sql, values)
+                    logInfo = str(item_id) + " modified" + " successfully" + " to " + itemname + " " + author + " " + str(price) + " " + str(borrow_fee) + " " + str(quantity) + " " + location + " " + str(cal.get_date()) + " " + localcenter + " " + stocktype
                 else:
                     '''do nothing'''
 
                 # execute the query
                 conn.commit()
                 conn.close()
+                self.obj_commonUtil.logActivity(self.currentuser, logInfo)
                 print("Record inserted !!! ")
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
