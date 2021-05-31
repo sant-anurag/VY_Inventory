@@ -155,11 +155,11 @@ class Inventory:
                           font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
         btn_inventory.place(x=65, y=240)
-        btn_sales.place(x=65, y=310)
-        btn_merchandise.place(x=65, y=380)
-        btn_reports.place(x=65, y=450)
-        btn_usrCtrl.place(x=65, y=520)
-        btn_exit.place(x=65, y=590)
+        btn_sales.place(x=65, y=295)
+        btn_merchandise.place(x=65, y=350)
+        btn_reports.place(x=65, y=405)
+        btn_usrCtrl.place(x=65, y=460)
+        btn_exit.place(x=65, y=515)
 
         master.bind('<Escape>', lambda event=None: btn_exit.invoke())
 

@@ -85,6 +85,7 @@ REGULAR_STOCK = 1
 CRITICAL_STOCK = 2
 
 # defining fonts for usage in project
+MEDIUM_FONT = ('times new roman', 12, 'normal')
 NORM_FONT = ('times new roman', 13, 'normal')
 NORM_FONT_MEDIUM_HIGH = ('times new roman', 15, 'normal')
 NORM_FONT_MEDIUM_LOW = ('times new roman', 14, 'normal')

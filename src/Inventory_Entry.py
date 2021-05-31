@@ -23,8 +23,11 @@ class NewInventory:
         self.obj_commonUtil = CommonUtil()
         self.dateTimeOp = DatetimeOperation()
         self.newItem_window = Toplevel(master)
+        width, height = pyautogui.size()
         self.newItem_window.title("Inventory Operations")
-        self.newItem_window.geometry('970x750+700+150')
+        self.newItem_window.geometry(
+            '{}x{}+{}+{}'.format(int('770'), int('450'), int(width / 2.82), int(height / 3.6)))
+
         self.newItem_window.configure(background='wheat')
         self.newItem_window.resizable(width=False, height=False)
         self.newItem_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -36,10 +39,20 @@ class NewInventory:
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
-        self.dataEntryFrame = Frame(self.newItem_window, width=800, height=500, bd=4, relief='ridge',
+        self.mainMenuFrame = Frame(self.newItem_window, width=153, height=215, bd=4, relief='ridge',
+                                   bg='wheat')
+        self.opMenuFrame = Frame(self.newItem_window, width=153, height=215, bd=4, relief='ridge',
+                                 bg='wheat')
+        mainmenu_label = Label(self.mainMenuFrame, text="Main Menu", width=12, justify=CENTER,
+                               font=L_FONT,
+                               bg='wheat')
+        opmenu_label = Label(self.opMenuFrame, text="Context Menu", width=12, justify=CENTER,
+                             font=L_FONT,
+                             bg='wheat')
+        self.dataEntryFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
-        self.dataModifyFrame = Frame(self.newItem_window, width=800, height=500, bd=4, relief='ridge',
+        self.dataModifyFrame = Frame(self.newItem_window, width=600, height=400, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
         self.dataSearchFrame = Frame(self.newItem_window, width=800, height=500, bd=4, relief='ridge',
@@ -49,50 +62,56 @@ class NewInventory:
         self.authorFrame = Frame(self.newItem_window, width=800, height=500, bd=4, relief='ridge',
                                  bg='snow')
         self.authorFrame.pack()
-        self.btn_submit = Button(self.newItem_window)
-        # Bottom button panel - start
-
-        self.btn_submit.configure(text="Save", fg="Black", font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
-        self.btn_cancel = Button(self.newItem_window, text="Close", fg="Black",
-                                 font=L_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        self.btn_submit = Button(self.opMenuFrame, text="Save", fg="Black",
+                                 font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
+        self.btn_print = Button(self.opMenuFrame, text="Print", fg="Black",
+                                font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
+        self.btn_clear = Button(self.opMenuFrame, text="Reset", fg="Black",
+                                font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+        self.btn_cancel = Button(self.opMenuFrame, text="Close", fg="Black",
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel.configure(command=self.newItem_window.destroy)
-        self.btn_clear = Button(self.newItem_window, text="Reset", fg="Black",
-                                font=L_FONT, width=14, state=NORMAL, bg='RosyBrown1')
-
-        # Bottom button panel - end
 
         # Side button panel - start
         author_result = partial(self.add_author, master)
-        self.btn_author = Button(self.newItem_window, text="Author", fg="Black", command=author_result,
-                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        self.btn_author = Button(self.mainMenuFrame, text="Add Author", fg="Black", command=author_result,
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         search_result = partial(self.search_inventory_item, master)
-        self.btn_search = Button(self.newItem_window, text="Search", fg="Black", command=search_result,
-                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        self.btn_search = Button(self.mainMenuFrame, text="Search Item", fg="Black", command=search_result,
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
 
         edit_result = partial(self.edit_inventory_item, master)
-        self.btn_modify = Button(self.newItem_window, text="Modify", fg="Black", command=edit_result,
-                                 font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        self.btn_modify = Button(self.mainMenuFrame, text="Modify Item", fg="Black", command=edit_result,
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         add_result = partial(self.add_inventory_item, master)
-        self.btn_add = Button(self.newItem_window, text="Add", fg="Black", command=add_result,
-                              font=L_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        self.btn_add = Button(self.mainMenuFrame, text="Add Item", fg="Black", command=add_result,
+                              font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         # Side button panel - end
+        self.mainMenuFrame.place(x=5, y=5)
+        mainmenu_label.place(x=2, y=5)
+        self.btn_add.place(x=1, y=40)
+        self.btn_modify.place(x=1, y=80)
+        self.btn_search.place(x=1, y=120)
+        self.btn_author.place(x=1, y=160)
 
-        self.btn_add.place(x=7, y=200)
-        self.btn_modify.place(x=7, y=270)
-        self.btn_search.place(x=7, y=340)
-        self.btn_author.place(x=7, y=410)
-
-        self.btn_submit.place(x=150, y=675)
-        self.btn_clear.place(x=420, y=675)
-        self.btn_cancel.place(x=690, y=675)
+        self.opMenuFrame.place(x=5, y=230)
+        opmenu_label.place(x=2, y=5)
+        self.btn_submit.place(x=1, y=40)
+        self.btn_print.place(x=1, y=80)
+        self.btn_clear.place(x=1, y=120)
+        self.btn_cancel.place(x=1, y=160)
         print("constructor called for newInventory Addition ")
 
         # default window is "Add New Inventor" when window opens
         self.add_inventory_item(master)
 
     def add_inventory_item(self, master):
+        self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
-        self.dataEntryFrame = Frame(self.newItem_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame.destroy()
+        self.authorFrame.destroy()
+
+        self.dataEntryFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
         heading = Label(self.newItem_window, text="New item/Sukrit Product Entry", font=('ariel narrow', 15, 'bold'),
@@ -105,8 +124,6 @@ class NewInventory:
         self.default_text6 = StringVar(self.dataEntryFrame, value='')
         self.default_text7 = StringVar(self.dataEntryFrame, value='')
         self.default_text8 = StringVar(self.dataEntryFrame, value='')
-
-        # create a item Name label
 
         name = Label(self.dataEntryFrame, text="Item Name", width=11, anchor=W, justify=LEFT,
                      font=L_FONT,
@@ -153,22 +170,22 @@ class NewInventory:
         orderId = Label(self.dataEntryFrame, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
                         font=L_FONT, bg='snow')
 
-        self.dataEntryFrame.place(x=150, y=20)
+        self.dataEntryFrame.place(x=160, y=5)
 
         name.place(x=30, y=10)
-        author.place(x=30, y=65)
-        price.place(x=30, y=115)
-        quantity.place(x=30, y=170)
-        borrowFee.place(x=30, y=225)
-        rackNumber.place(x=30, y=275)
-        date_label.place(x=30, y=330)
-        center_location.place(x=30, y=385)
-        item_type.place(x=30, y=440)
-        receivedBy.place(x=30, y=490)
-        orderId.place(x=30, y=540)
-        sendername.place(x=30, y=590)
+        author.place(x=30, y=45)
+        price.place(x=30, y=80)
+        quantity.place(x=30, y=115)
+        borrowFee.place(x=30, y=150)
+        rackNumber.place(x=30, y=185)
+        date_label.place(x=30, y=220)
+        center_location.place(x=30, y=255)
+        item_type.place(x=30, y=290)
+        receivedBy.place(x=30, y=325)
+        orderId.place(x=30, y=360)
+        sendername.place(x=30, y=395)
 
-        item_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
+        item_name = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan',
                           textvariable=self.default_text1)
 
         authorText = StringVar(self.dataEntryFrame)
@@ -181,21 +198,21 @@ class NewInventory:
         print("Author list  - ", newAutorList)
         authorText.set(newAutorList[0])
         author_menu = OptionMenu(self.dataEntryFrame, authorText, *newAutorList)
-        author_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        author_menu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                               justify=LEFT)
 
-        item_price = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
+        item_price = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan',
                            textvariable=self.default_text3)
 
-        item_quantity = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
+        item_quantity = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan',
                               textvariable=self.default_text4)
         item_borrowfee = Entry(self.dataEntryFrame, width=35, text='0', state=DISABLED,
-                               font=L_FONT,
+                               font=NORM_FONT,
                                bg='light grey', textvariable=self.default_text5)
-        rack_location = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan')
+        rack_location = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan')
 
-        cal = DateEntry(self.dataEntryFrame, width=39, date_pattern='dd/MM/yyyy',
-                        font=L_FONT,
+        cal = DateEntry(self.dataEntryFrame, width=33, date_pattern='dd/MM/yyyy',
+                        font=NORM_FONT,
                         bg='light cyan',
                         justify='left')
         local_centerText = StringVar(self.dataEntryFrame)
@@ -210,7 +227,7 @@ class NewInventory:
         print("Center list  - ", newCenterList)
         local_centerText.set(newCenterList[0])
         localcenter_menu = OptionMenu(self.dataEntryFrame, local_centerText, *newCenterList)
-        localcenter_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        localcenter_menu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                                    justify=LEFT)
 
         item_TypeText = StringVar(self.dataEntryFrame)
@@ -218,30 +235,30 @@ class NewInventory:
         print("Item Type list  - ", itemtypeList)
         item_TypeText.set(itemtypeList[0])
         item_Typemenu = OptionMenu(self.dataEntryFrame, item_TypeText, *itemtypeList)
-        item_Typemenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        item_Typemenu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
 
-        receiver_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
+        receiver_name = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan',
                               textvariable=self.default_text6)
 
-        order_id = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
+        order_id = Entry(self.dataEntryFrame, width=35, font=NORM_FONT, bg='light cyan',
                          textvariable=self.default_text7)
         sender_name = Entry(self.dataEntryFrame, width=35, text='0',
-                            font=L_FONT,
+                            font=NORM_FONT,
                             bg='light cyan', textvariable=self.default_text8)
 
         item_name.place(x=240, y=10)
-        author_menu.place(x=240, y=60)
-        item_price.place(x=240, y=120)
-        item_quantity.place(x=240, y=170)
-        item_borrowfee.place(x=240, y=230)
-        rack_location.place(x=240, y=280)
-        cal.place(x=240, y=330)
-        localcenter_menu.place(x=240, y=380)
-        item_Typemenu.place(x=240, y=430)
-        receiver_name.place(x=240, y=490)
-        order_id.place(x=240, y=540)
-        sender_name.place(x=240, y=590)
+        author_menu.place(x=240, y=40)
+        item_price.place(x=240, y=80)
+        item_quantity.place(x=240, y=115)
+        item_borrowfee.place(x=240, y=150)
+        rack_location.place(x=240, y=185)
+        cal.place(x=240, y=220)
+        localcenter_menu.place(x=240, y=255)
+        item_Typemenu.place(x=240, y=290)
+        receiver_name.place(x=240, y=325)
+        order_id.place(x=240, y=360)
+        sender_name.place(x=240, y=395)
 
         insert_result = partial(self.stock_operations, self.newItem_window, item_name, 'NA', authorText,
                                 item_price,
@@ -275,9 +292,10 @@ class NewInventory:
         mainloop()
 
     def add_author(self, master):
+        self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.dataEntryFrame.destroy()
+        self.authorFrame.destroy()
 
         self.authorFrame = Frame(self.newItem_window, width=800, height=650, bd=4, relief='ridge',
                                  bg='snow')
@@ -433,13 +451,17 @@ class NewInventory:
 
     def edit_inventory_item(self, master):
         self.dataEntryFrame.destroy()
-        self.dataModifyFrame = Frame(self.newItem_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataModifyFrame.destroy()
+        self.dataSearchFrame.destroy()
+        self.authorFrame.destroy()
+
+        self.dataModifyFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
-        frameSearch = Frame(self.dataModifyFrame, width=780, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataModifyFrame, width=580, height=40, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataModifyFrame, width=780, height=580, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataModifyFrame, width=580, height=387, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -496,30 +518,29 @@ class NewInventory:
         orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
                         font=L_FONT, bg='snow')
 
-        self.dataModifyFrame.place(x=150, y=20)
+        self.dataModifyFrame.place(x=160, y=5)
 
         frameSearch.place(x=10, y=5)
-        framedisplay.place(x=10, y=60)
+        framedisplay.place(x=10, y=45)
 
-        item_SearchId.place(x=30, y=5)
+        item_SearchId.place(x=30, y=2)
 
         item_namelabel.place(x=30, y=5)
-        author.place(x=30, y=50)
-        price.place(x=30, y=100)
-        quantity.place(x=30, y=140)
-        borrowFee.place(x=30, y=185)
-        rackNumber.place(x=30, y=230)
-        date_label.place(x=30, y=285)
-        center_location.place(x=30, y=330)
-        item_type.place(x=30, y=380)
-        receivedBy.place(x=30, y=430)
-        sendername.place(x=30, y=480)
-        orderId.place(x=30, y=530)
+        author.place(x=30, y=38)
+        price.place(x=30, y=70)
+        quantity.place(x=30, y=105)
+        rackNumber.place(x=30, y=140)
+        date_label.place(x=30, y=175)
+        center_location.place(x=30, y=210)
+        item_type.place(x=30, y=245)
+        receivedBy.place(x=30, y=280)
+        sendername.place(x=30, y=315)
+        orderId.place(x=30, y=350)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light yellow')
+        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
         btn_search = Button(frameSearch)
 
-        item_name = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
+        item_name = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan',
                           textvariable=self.default_text1)
 
         authorText = StringVar(framedisplay)
@@ -533,21 +554,21 @@ class NewInventory:
         authorText.set(newAutorList[0])
         author_menu = OptionMenu(framedisplay, authorText, *newAutorList)
 
-        author_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        author_menu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                               justify=LEFT)
 
-        item_price = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
+        item_price = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan',
                            textvariable=self.default_text3)
 
-        item_quantity = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
+        item_quantity = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan',
                               textvariable=self.default_text4)
         item_borrowfee = Entry(framedisplay, width=35, text='0', state=DISABLED,
-                               font=L_FONT,
+                               font=NORM_FONT,
                                bg='light grey', textvariable=self.default_text5)
-        rack_location = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan')
+        rack_location = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan')
 
-        cal = DateEntry(framedisplay, width=39, date_pattern='dd/MM/yyyy',
-                        font=L_FONT,
+        cal = DateEntry(framedisplay, width=33, date_pattern='dd/MM/yyyy',
+                        font=NORM_FONT,
                         bg='light cyanw',
                         justify='left')
         local_centerText = StringVar(framedisplay)
@@ -562,7 +583,7 @@ class NewInventory:
         local_centerText.set(newCenterList[0])
 
         localcenter_menu = OptionMenu(framedisplay, local_centerText, *newCenterList)
-        localcenter_menu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        localcenter_menu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                                    justify=LEFT)
 
         item_TypeText = StringVar(framedisplay)
@@ -570,39 +591,37 @@ class NewInventory:
         print("Item Type list  - ", itemtypeList)
         item_TypeText.set(itemtypeList[0])
         item_Typemenu = OptionMenu(framedisplay, item_TypeText, *itemtypeList)
-        item_Typemenu.configure(width=41, font=L_FONT, bg='light cyan', anchor=W,
+        item_Typemenu.configure(width=31, font=NORM_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
-        item_idforSearch.place(x=240, y=5)
-
-        receiver_name = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
+        receiver_name = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan',
                               textvariable=self.default_text6)
 
-        order_id = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
+        order_id = Entry(framedisplay, width=35, font=NORM_FONT, bg='light cyan',
                          textvariable=self.default_text7)
-        sender_name = Entry(framedisplay, width=35, text='0', font=L_FONT,
+        sender_name = Entry(framedisplay, width=35, text='0', font=NORM_FONT,
                             bg='light cyan', textvariable=self.default_text8)
-        item_name.place(x=240, y=5)
-        author_menu.place(x=240, y=50)
-        item_price.place(x=240, y=100)
-        item_quantity.place(x=240, y=145)
-        item_borrowfee.place(x=240, y=190)
-        rack_location.place(x=240, y=235)
-        cal.place(x=240, y=280)
-        localcenter_menu.place(x=240, y=325)
-        item_Typemenu.place(x=240, y=380)
-        receiver_name.place(x=240, y=435)
-        order_id.place(x=240, y=480)
-        sender_name.place(x=240, y=525)
+
+        item_idforSearch.place(x=200, y=5)
+        item_name.place(x=200, y=5)
+        author_menu.place(x=197, y=34)
+        item_price.place(x=200, y=75)
+        item_quantity.place(x=200, y=105)
+        rack_location.place(x=200, y=138)
+        cal.place(x=200, y=173)
+        localcenter_menu.place(x=197, y=205)
+        item_Typemenu.place(x=197, y=245)
+        receiver_name.place(x=200, y=285)
+        sender_name.place(x=200, y=318)
+        order_id.place(x=200, y=353)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, authorText,
                                 item_price,
-                                item_borrowfee,
                                 item_quantity, rack_location, cal, local_centerText, item_TypeText, receiver_name,
-                                order_id, sender_name, OPERATION_EDIT)
+                                sender_name,order_id,OPERATION_EDIT)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+                             font=NORM_FONT, width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=420, y=1)
 
         insert_result = partial(self.stock_operations, self.newItem_window, item_name, item_idforSearch, authorText,
                                 item_price,
@@ -635,13 +654,15 @@ class NewInventory:
     def search_inventory_item(self, master):
         self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
-        self.dataSearchFrame = Frame(self.newItem_window, width=800, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame.destroy()
+        self.authorFrame.destroy()
+        self.dataSearchFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-        frameSearch = Frame(self.dataSearchFrame, width=780, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataSearchFrame, width=580, height=40, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=780, height=580, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataSearchFrame, width=580, height=387, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -668,10 +689,6 @@ class NewInventory:
                          font=L_FONT, bg='snow')
 
         # create a borrow fee label
-        borrowFee = Label(framedisplay, text="Borrow Fee(Rs.)", width=13, anchor=W, justify=LEFT,
-                          font=L_FONT, bg='snow')
-
-        # create a borrow fee label
         rackNumber = Label(framedisplay, text="Rack Number", width=13, anchor=W, justify=LEFT,
                            font=L_FONT, bg='snow')
 
@@ -690,97 +707,90 @@ class NewInventory:
         orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
                         font=L_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=150, y=20)
+        self.dataSearchFrame.place(x=160, y=5)
 
         frameSearch.place(x=10, y=5)
-        framedisplay.place(x=10, y=60)
+        framedisplay.place(x=10, y=45)
 
-        item_SearchId.place(x=30, y=5)
-
+        item_SearchId.place(x=30, y=2)
         item_namelabel.place(x=30, y=5)
-        author.place(x=30, y=50)
-        price.place(x=30, y=100)
-        quantity.place(x=30, y=140)
-        borrowFee.place(x=30, y=185)
-        rackNumber.place(x=30, y=230)
-        date_label.place(x=30, y=285)
-        center_location.place(x=30, y=330)
-        item_type.place(x=30, y=380)
-        receivedBy.place(x=30, y=430)
-        sendername.place(x=30, y=480)
-        orderId.place(x=30, y=530)
+        author.place(x=30, y=38)
+        price.place(x=30, y=70)
+        quantity.place(x=30, y=105)
+        rackNumber.place(x=30, y=140)
+        date_label.place(x=30, y=175)
+        center_location.place(x=30, y=210)
+        item_type.place(x=30, y=245)
+        receivedBy.place(x=30, y=280)
+        sendername.place(x=30, y=315)
+        orderId.place(x=30, y=350)
 
         item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
         btn_search = Button(frameSearch)
 
         item_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                          font=L_FONT,
+                          font=NORM_FONT,
                           bg='light cyan')
 
         author_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=L_FONT,
+                            font=NORM_FONT,
                             bg='light cyan')
 
         item_price = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                           font=L_FONT,
+                           font=NORM_FONT,
                            bg='light cyan')
 
         item_quantity = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=L_FONT,
+                              font=NORM_FONT,
                               bg='light cyan')
-        item_borrowfee = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                               font=L_FONT,
-                               bg='light cyan')
+
         rack_location = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=L_FONT,
+                              font=NORM_FONT,
                               bg='light cyan')
 
         cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                    font=L_FONT,
+                    font=NORM_FONT,
                     bg='light cyan')
 
         localcenter_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                                 font=L_FONT,
+                                 font=NORM_FONT,
                                  bg='light cyan')
 
         item_Typemenu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=L_FONT,
+                              font=NORM_FONT,
                               bg='light cyan')
-
-        item_idforSearch.place(x=240, y=5)
-
         receiver_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=L_FONT,
+                              font=NORM_FONT,
                               bg='light cyan')
 
         order_id = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                         font=L_FONT,
+                         font=NORM_FONT,
                          bg='light cyan')
         sender_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=L_FONT,
+                            font=NORM_FONT,
                             bg='light cyan')
-        item_name.place(x=240, y=5)
-        author_menu.place(x=240, y=50)
-        item_price.place(x=240, y=100)
-        item_quantity.place(x=240, y=145)
-        item_borrowfee.place(x=240, y=190)
-        rack_location.place(x=240, y=235)
-        cal.place(x=240, y=280)
-        localcenter_menu.place(x=240, y=325)
-        item_Typemenu.place(x=240, y=380)
-        receiver_name.place(x=240, y=435)
-        order_id.place(x=240, y=480)
-        sender_name.place(x=240, y=525)
+
+        item_idforSearch.place(x=200, y=5)
+        item_name.place(x=200, y=7)
+        author_menu.place(x=200, y=40)
+        item_price.place(x=200, y=73)
+        item_quantity.place(x=200, y=106)
+        rack_location.place(x=200, y=139)
+        cal.place(x=200, y=172)
+        localcenter_menu.place(x=200, y=211)
+        item_Typemenu.place(x=200, y=245)
+        receiver_name.place(x=200, y=280)
+        sender_name.place(x=200, y=313)
+        order_id.place(x=200, y=347)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
-                                item_borrowfee,
                                 item_quantity, rack_location, cal, localcenter_menu, item_Typemenu, receiver_name,
                                 order_id, sender_name, OPERATION_SEARCH)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+                             font=NORM_FONT, width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=420, y=1)
 
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
@@ -908,9 +918,8 @@ class NewInventory:
 
     def search_itemId(self, item_idforSearch, item_name, authorText,
                       item_price,
-                      item_borrowfee,
-                      item_quantity, rack_location, cal, local_centerText, item_TypeText, receiver_name, order_id,
-                      sender_name, op_type):
+                      item_quantity, rack_location, cal, local_centerText, item_TypeText, receiver_name, sender_name,
+                      order_id, op_type):
 
         # search started -------------
         print("search_itemId--> Start for item name: ", item_idforSearch.get())
@@ -932,8 +941,6 @@ class NewInventory:
                 authorText.set(result[3])
                 item_price.delete(0, END)
                 item_price.insert(0, result[4])
-                item_borrowfee.delete(0, END)
-                item_borrowfee.insert(0, result[5])
                 item_quantity.delete(0, END)
                 item_quantity.insert(0, result[6])
                 rack_location.delete(0, END)
@@ -952,7 +959,6 @@ class NewInventory:
                 item_name['text'] = result[2]
                 authorText['text'] = result[3]
                 item_price['text'] = result[4]
-                item_borrowfee['text'] = result[5]
                 item_quantity['text'] = result[6]
                 rack_location['text'] = result[7]
                 local_centerText['text'] = result[9]
