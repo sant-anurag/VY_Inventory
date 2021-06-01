@@ -12,7 +12,7 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1400x740+200+150')
+        self.sales_window.geometry('1350x575+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -33,61 +33,59 @@ class InventorySales:
         self.dataSearchFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
+        self.myframe = Frame(self.dataSearchFrame, relief=GROOVE, width=520, height=407, bd=4)
+        self.myframe.pack()
 
         self.authorFrame = Frame(self.sales_window, width=800, height=500, bd=4, relief='ridge',
                                  bg='snow')
         self.authorFrame.pack()
 
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
-        self.MainbtnFrame = Frame(self.sales_window, width=575, height=65, bd=4, relief='ridge',
+        self.MainbtnFrame = Frame(self.sales_window, width=540, height=50, bd=4, relief='ridge',
                                   bg='light yellow')
         self.btn_addToCart = Button(self.MainbtnFrame)
-        self.btn_addToCart.configure(text="+ Cart", fg="Black", font=XL_FONT, width=9, state=NORMAL,
+        self.btn_addToCart.configure(text="+ Cart", fg="Black", font=L_FONT, width=11, state=NORMAL,
                                      bg='RosyBrown1')
-        self.btn_print = Button(self.MainbtnFrame)
-        self.btn_print.configure(text="Print", fg="Black", font=XL_FONT, width=9, state=NORMAL,
-                                 bg='RosyBrown1')
-
         self.btn_submit = Button(self.MainbtnFrame)
-        self.btn_submit.configure(text="Bill", fg="Black", font=XL_FONT, width=9, state=NORMAL,
+        self.btn_submit.configure(text="Bill", fg="Black", font=L_FONT, width=11, state=NORMAL,
                                   bg='RosyBrown1')
         self.btn_clear = Button(self.MainbtnFrame, text="Reset", fg="Black",
-                                font=XL_FONT, width=9, state=NORMAL, bg='RosyBrown1')
+                                font=L_FONT, width=11, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel = Button(self.MainbtnFrame, text="Print", fg="Black",
-                                 font=XL_FONT, width=9, state=NORMAL, bg='RosyBrown1')
+                                 font=L_FONT, width=11, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel.configure(command=self.sales_window.destroy)
 
         # Bottom button panel - end
-        self.MainbtnFrame.place(x=5, y=672)
-        self.btn_addToCart.place(x=2, y=1)
-        self.btn_submit.place(x=147, y=1)
-        self.btn_clear.place(x=285, y=1)
-        self.btn_cancel.place(x=423, y=1)
+        self.MainbtnFrame.place(x=5, y=520)
+        self.btn_addToCart.place(x=7, y=1)
+        self.btn_submit.place(x=137, y=1)
+        self.btn_clear.place(x=265, y=1)
+        self.btn_cancel.place(x=395, y=1)
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
 
         # Support button frame design -start
-        self.AdditionalbtnFrame = Frame(self.sales_window, width=815, height=65, bd=4, relief='ridge',
-                                        bg='purple')
+        self.AdditionalbtnFrame = Frame(self.sales_window, width=815, height=50, bd=4, relief='ridge',
+                                        bg='light yellow')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
         chngQuantity_result = partial(self.change_quantity_display)
-        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=XL_FONT, width=13, state=NORMAL,
+        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=L_FONT, width=18, state=NORMAL,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
         discount_result = partial(self.discount_display)
-        self.btn_discount.configure(text="Discount %", fg="Black", font=XL_FONT, width=13, state=NORMAL,
+        self.btn_discount.configure(text="Discount %", fg="Black", font=L_FONT, width=18, state=NORMAL,
                                     bg='RosyBrown1', command = discount_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=XL_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+                                  font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
         self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
-                                font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+                                font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
         self.btn_print.configure(command=self.sales_window.destroy)
 
         # Bottom button panel - end
-        self.AdditionalbtnFrame.place(x=580, y=672)
+        self.AdditionalbtnFrame.place(x=540, y=520)
         self.btn_chgQuantity.place(x=2, y=1)
-        self.btn_discount.place(x=208, y=1)
-        self.btn_remItem.place(x=414, y=1)
-        self.btn_print.place(x=620, y=1)
+        self.btn_discount.place(x=210, y=1)
+        self.btn_remItem.place(x=409, y=1)
+        self.btn_print.place(x=600, y=1)
         # Support button frame design-End
 
         print("constructor called for sales ")
@@ -98,22 +96,22 @@ class InventorySales:
     def sales_inventory_item(self, master):
         self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
-        self.dataSearchFrame = Frame(self.sales_window, width=1390, height=650, bd=4, relief='ridge',
+        self.dataSearchFrame = Frame(self.sales_window, width=1350, height=517, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
 
-        frameSearch = Frame(self.dataSearchFrame, width=560, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
         btn_search = Button(frameSearch)
         btn_search.configure(text="Search", fg="Black",
                              font=('arial narrow', 12, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=410, y=2)
-        framedisplay = Frame(self.dataSearchFrame, width=560, height=300, bd=4, relief='ridge',
+        btn_search.place(x=370, y=2)
+        framedisplay = Frame(self.dataSearchFrame, width=520, height=195, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
-        framepurchase = Frame(self.dataSearchFrame, width=560, height=230, bd=4, relief='ridge',
+        framepurchase = Frame(self.dataSearchFrame, width=520, height=195, bd=4, relief='ridge',
                               bg='snow')
         framepurchase.pack()
 
@@ -154,29 +152,30 @@ class InventorySales:
                                      font=L_FONT, bg='snow')
         purchase_CustomerNamelbl = Label(framepurchase, text="Name", width=13, anchor=W, justify=LEFT,
                                          font=L_FONT, bg='snow')
-        purchase_ContactNolbl = Label(framepurchase, text="Contact Number", width=13, anchor=W, justify=LEFT,
+        purchase_ContactNolbl = Label(framepurchase, text="Contact No.", width=13, anchor=W, justify=LEFT,
                                       font=L_FONT, bg='snow')
         purchase_Addresslbl = Label(framepurchase, text="Address", width=13, anchor=W, justify=LEFT,
                                     font=L_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=5, y=20)
+        self.dataSearchFrame.place(x=5, y=5)
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
-        framepurchase.place(x=10, y=300)
+        framepurchase.place(x=10, y=220)
+        framelower.place(x=532, y=417)
 
         item_SearchId.place(x=30, y=5)
 
         item_namelabel.place(x=30, y=5)
-        author.place(x=30, y=50)
-        price.place(x=30, y=100)
-        quantity.place(x=30, y=140)
-        borrowFee.place(x=30, y=185)
+        author.place(x=30, y=40)
+        price.place(x=30, y=80)
+        quantity.place(x=30, y=120)
+        borrowFee.place(x=30, y=160)
 
-        purchase_headline.place(x=30, y=5)
-        purchase_quantitylbl.place(x=30, y=50)
-        purchase_CustomerNamelbl.place(x=30, y=95)
-        purchase_ContactNolbl.place(x=30, y=140)
-        purchase_Addresslbl.place(x=30, y=195)
+        purchase_headline.place(x=25, y=5)
+        purchase_quantitylbl.place(x=30, y=35)
+        purchase_CustomerNamelbl.place(x=30, y=70)
+        purchase_ContactNolbl.place(x=30, y=110)
+        purchase_Addresslbl.place(x=30, y=150)
 
         item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
 
@@ -201,13 +200,13 @@ class InventorySales:
         localcenter_menu = Label(framedisplay, width=31, anchor=W, justify=LEFT,
                                  font=L_FONT,
                                  bg='light cyan')
-        item_idforSearch.place(x=200, y=5)
-        item_name.place(x=200, y=5)
-        author_menu.place(x=200, y=50)
-        item_price.place(x=200, y=100)
-        item_quantity.place(x=200, y=145)
-        item_borrowfee.place(x=200, y=190)
-        localcenter_menu.place(x=200, y=235)
+        item_idforSearch.place(x=160, y=5)
+        item_name.place(x=160, y=5)
+        author_menu.place(x=160, y=40)
+        item_price.place(x=160, y=80)
+        item_quantity.place(x=160, y=120)
+        item_borrowfee.place(x=160, y=160)
+        localcenter_menu.place(x=160, y=235)
 
         quantity_entry = Entry(framepurchase, width=34, font=L_FONT, bg='light cyan')
 
@@ -217,10 +216,10 @@ class InventorySales:
         address_entry = Entry(framepurchase, width=34, text='0', font=L_FONT,
                               bg='light cyan')
 
-        quantity_entry.place(x=200, y=50)
-        name_entry.place(x=200, y=100)
-        contact_entry.place(x=200, y=145)
-        address_entry.place(x=200, y=190)
+        quantity_entry.place(x=160, y=35)
+        name_entry.place(x=160, y=70)
+        contact_entry.place(x=160, y=110)
+        address_entry.place(x=160, y=150)
 
         cartCount_label = Label(framelower, text="Cart Count", width=13, anchor=W, justify=LEFT,
                                 font=L_FONT, bg='snow')
@@ -266,7 +265,7 @@ class InventorySales:
         purchase_result = partial(self.purchase_stock_item, name_entry, contact_entry, address_entry)
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
-        framelower.place(x=572, y=530)
+
         # Bottom button panel - start
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
@@ -274,18 +273,19 @@ class InventorySales:
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
         # self.initialize_billArea()
-        self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
+        self.display_billArea(self.dataSearchFrame, 532, 5, 780, 400)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
 
     def display_billArea(self, split_open_window, startx, starty, xwidth, xheight):
-        myframe = Frame(split_open_window, relief=GROOVE, width=520, height=407, bd=4)
-        myframe.place(x=startx, y=starty)
+        self.myframe.destroy()
+        self.myframe = Frame(split_open_window, relief=GROOVE, width=520, height=407, bd=4)
+        self.myframe.place(x=startx, y=starty)
 
-        mycanvas = Canvas(myframe)
+        mycanvas = Canvas(self.myframe)
         frame = Frame(mycanvas, width=200, height=100, bg='light yellow')
-        myscrollbar = Scrollbar(myframe, orient="vertical", command=mycanvas.yview)
+        myscrollbar = Scrollbar(self.myframe, orient="vertical", command=mycanvas.yview)
         mycanvas.configure(yscrollcommand=myscrollbar.set)
 
         myscrollbar.pack(side="right", fill="y")
@@ -533,7 +533,7 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='light cyan')
                 print("Added to Cart Item Id :", item_idforSearch)
-                self.display_billArea(self.dataSearchFrame, 572, 5, 780, 513)
+                self.display_billArea(self.dataSearchFrame, 532, 5, 780, 400)
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 

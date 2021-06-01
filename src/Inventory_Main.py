@@ -192,7 +192,7 @@ class Inventory:
     def main_menu(self):
         width, height = pyautogui.size()
         self.master.geometry(
-            '{}x{}+{}+{}'.format(int(width / 1.25), int(height / 1.25), int(width / 9), int(height / 12)))
+            '{}x{}+{}+{}'.format(int(width / 1.35), int(height / 1.25), int(width / 9), int(height / 12)))
         self.master.configure(bg='AntiqueWhite1')
         # canvas designed to display the library image on main screen
 
