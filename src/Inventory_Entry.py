@@ -9,6 +9,7 @@
 # Developer : Sant Anurag Deo
 # Version : 1.0
 """
+import os
 
 from app_defines import *
 from app_common import *
@@ -66,7 +67,7 @@ class NewInventory:
         self.btn_submit = Button(self.opMenuFrame, text="Save", fg="Black",
                                  font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
         self.btn_print = Button(self.opMenuFrame, text="Print", fg="Black",
-                                font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
+                                font=L_FONT, width=12, state=DISABLED, bg='Light Grey')
         self.btn_clear = Button(self.opMenuFrame, text="Reset", fg="Black",
                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel = Button(self.opMenuFrame, text="Close", fg="Black",
@@ -903,7 +904,10 @@ class NewInventory:
                         itemname, author, price, borrow_fee, quantity, location, cal.get_date(), localcenter, stocktype,
                         item_id)
                     cursor.execute(sql, values)
-                    logInfo = str(item_id) + " modified" + " successfully" + " to " + itemname + " " + author + " " + str(price) + " " + str(borrow_fee) + " " + str(quantity) + " " + location + " " + str(cal.get_date()) + " " + localcenter + " " + stocktype
+                    logInfo = str(
+                        item_id) + " modified" + " successfully" + " to " + itemname + " " + author + " " + str(
+                        price) + " " + str(borrow_fee) + " " + str(quantity) + " " + location + " " + str(
+                        cal.get_date()) + " " + localcenter + " " + stocktype
                 else:
                     '''do nothing'''
 
@@ -971,11 +975,33 @@ class NewInventory:
                 receiver_name['text'] = result[11]
                 order_id['text'] = result[13]
                 sender_name['text'] = result[12]
+                print_result = partial(self.print_item_description, result)
+                self.btn_print.configure(state=NORMAL, bg='RosyBrown1',command = print_result)
             else:
                 ''' do nothing '''
 
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
+
+    def print_item_description(self,result):
+        """ prints the item description to pdf form"""
+        wb_template = openpyxl.load_workbook(PATH_ITEM_DETAILS_TEMPLATE)
+        template_sheet = wb_template.active
+        template_sheet.cell(row=1, column=3).value = result[1]
+        template_sheet.cell(row=4, column=2).value = result[2]
+        template_sheet.cell(row=6, column=2).value = result[3]
+        template_sheet.cell(row=8, column=2).value = result[4]
+        template_sheet.cell(row=10, column=2).value = result[6]
+        template_sheet.cell(row=12, column=2).value = result[7]
+
+        template_sheet.cell(row=4, column=3).value = result[9]
+        template_sheet.cell(row=4, column=4).value = result[11]
+        template_sheet.cell(row=6, column=3).value = result[10]
+        template_sheet.cell(row=6, column=4).value = result[8]
+        template_sheet.cell(row=8, column=3).value = result[12]
+        template_sheet.cell(row=8, column=4).value = result[13]
+        wb_template.save(PATH_ITEM_DETAILS_TEMPLATE)
+        os.startfile(PATH_ITEM_DETAILS_TEMPLATE) # prints the file on standard output printer
 
     def generate_itemId(self, local_centerText):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')

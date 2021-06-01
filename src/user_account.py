@@ -508,26 +508,29 @@ class accountControl:
                 infoText = "Account deletion was success for: " + username_text.get()
                 self.obj_commonUtil.logActivity(self.currentUser, infoText)
 
-    def get_authorNames(self):
-        print("get_authorNames--> Start for item name: ")
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT author_Name FROM author")
-        result = cursor.fetchall()
-        conn.close()
-        return result
-
-    def get_centerNames(self):
-        print("get_centerNames--> Start ")
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT merchandise_Name FROM merchandise")
-        result = cursor.fetchall()
-        conn.close()
-        return result
+    def password_validity(self, password):
+        print("password_validity -> start :", password)
+        valid_flg = 0
+        while True:
+            if len(password) < 8:
+                valid_flg = -1
+                break
+            elif not re.search("[a-z]", password):
+                valid_flg = -1
+                break
+            elif not re.search("[A-Z]", password):
+                valid_flg = -1
+                break
+            elif not re.search("[0-9]", password):
+                valid_flg = -1
+                break
+            elif not re.search("[_@$]", password):
+                valid_flg = -1
+                break
+            elif re.search("\s", password):
+                valid_flg = -1
+                break
+            else:
+                valid_flg = 0
+                break
+        return valid_flg

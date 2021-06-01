@@ -320,7 +320,6 @@ class Inventory:
         passwordText.configure(fg='black')
         userNameText.focus_set()
 
-
 # obj_animation = LoadingAnimation()
 root = Tk()
 
