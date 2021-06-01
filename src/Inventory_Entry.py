@@ -68,7 +68,7 @@ class NewInventory:
                                  font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
         self.btn_print = Button(self.opMenuFrame, text="Print", fg="Black",
                                 font=L_FONT, width=12, state=DISABLED, bg='Light Grey')
-        self.btn_clear = Button(self.opMenuFrame, text="Reset", fg="Black",
+        self.btn_reset = Button(self.opMenuFrame, text="Reset", fg="Black",
                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel = Button(self.opMenuFrame, text="Close", fg="Black",
                                  font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
@@ -100,7 +100,7 @@ class NewInventory:
         opmenu_label.place(x=2, y=5)
         self.btn_submit.place(x=1, y=40)
         self.btn_print.place(x=1, y=80)
-        self.btn_clear.place(x=1, y=120)
+        self.btn_reset.place(x=1, y=120)
         self.btn_cancel.place(x=1, y=160)
         print("constructor called for newInventory Addition ")
 
@@ -277,9 +277,11 @@ class NewInventory:
         self.default_text3.trace("w", self.check_SaveItemBtn_state)
         self.default_text4.trace("w", self.check_SaveItemBtn_state)
         self.default_text5.trace("w", self.check_SaveItemBtn_state)
-        clear_result = partial(self.clear_form, item_name, authorText, item_price, item_borrowfee, item_quantity)
+        clear_result = partial(self.clear_form_addInventory, item_name, authorText, item_price, item_borrowfee,
+                               item_quantity, rack_location,
+                               receiver_name, order_id, sender_name)
 
-        self.btn_clear.configure(command=clear_result)
+        self.btn_reset.configure(state=NORMAL, bg='RosyBrown1', command=clear_result)
         self.btn_cancel.configure(command=self.newItem_window.destroy)
         # cancel.grid(row=0, column=2)
 
@@ -287,169 +289,11 @@ class NewInventory:
 
         self.newItem_window.bind('<Return>', lambda event=None: self.btn_submit.invoke())
         self.newItem_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
-        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
+        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
 
         self.newItem_window.focus()
         self.newItem_window.grab_set()
         mainloop()
-
-    def add_author(self, master):
-        self.dataEntryFrame.destroy()
-        self.dataModifyFrame.destroy()
-        self.dataSearchFrame.destroy()
-        self.authorFrame.destroy()
-
-        self.authorFrame = Frame(self.newItem_window, width=800, height=650, bd=4, relief='ridge',
-                                 bg='snow')
-        self.authorFrame.pack()
-
-        self.default_text2 = StringVar(self.authorFrame, value='')
-        self.default_text1 = StringVar(self.authorFrame, value='')
-
-        # create a item Name label
-
-        name = Label(self.authorFrame, text="Author Name", width=11, anchor=W, justify=LEFT,
-                     font=L_FONT,
-                     bg='snow')
-
-        # create a Author label
-        dor = Label(self.authorFrame, text="DOR", width=11, anchor=W, justify=LEFT,
-                    font=L_FONT,
-                    bg='snow')
-
-        self.authorFrame.place(x=150, y=20)
-
-        name.place(x=30, y=10)
-        dor.place(x=30, y=65)
-
-        name_text = Entry(self.authorFrame, width=35, font=L_FONT, bg='light cyan',
-                          textvariable=self.default_text1)
-
-        dor_text = DateEntry(self.authorFrame, width=39, date_pattern='dd/MM/yyyy',
-                             font=L_FONT,
-                             bg='light cyan',
-                             justify='left')
-
-        name_text.place(x=240, y=10)
-        dor_text.place(x=240, y=60)
-
-        insert_result = partial(self.register_author, self.newItem_window, name_text, dor_text)
-
-        # create a Save Button and place into the self.newItem_window window
-
-        self.btn_submit.configure(state=NORMAL, bg='RosyBrown1', command=insert_result)
-
-        # self.default_text1.trace("w", self.check_SaveItemBtn_state)
-
-        # clear_result = partial(self.clear_form, nam, authorText, item_price, item_borrowfee, item_quantity)
-
-        # self.btn_clear.configure(command=clear_result)
-        self.btn_cancel.configure(command=self.newItem_window.destroy)
-        # cancel.grid(row=0, column=2)
-
-        # ---------------------------------Button Frame End----------------------------------------
-
-        self.newItem_window.bind('<Return>', lambda event=None: self.btn_submit.invoke())
-        self.newItem_window.bind('<Alt-c>', lambda event=None: self.btn_cancel.invoke())
-        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
-        self.display_currentAuthorList(self.newItem_window, self.authorFrame)
-        self.newItem_window.focus()
-        self.newItem_window.grab_set()
-        mainloop()
-
-    def myfunction(self, mycanvas, frame, event):
-        print("Scroll Encountered")
-        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=722, height=400)
-
-    def display_currentAuthorList(self, newItem_window, authorFrame):
-        author_listFrm = Frame(authorFrame, width=750, height=63, bd=4, relief='ridge',
-                               bg='snow')
-        author_listFrm.place(x=30, y=110)
-
-        label_sno = Label(author_listFrm, text="S.No", width=10, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-
-        label_authId = Label(author_listFrm, text="Author Id", width=12, height=2, borderwidth=1, relief="solid",
-                             anchor='center',
-                             justify=CENTER,
-                             font=('times new roman', 16, 'normal'),
-                             bg='light grey')
-
-        label_AuthName = Label(author_listFrm, text="Author Name", width=28, height=2, borderwidth=1, relief="solid",
-                               anchor='center',
-                               justify=CENTER,
-                               font=('times new roman', 16, 'normal'),
-                               bg='light grey')
-
-        label_dor = Label(author_listFrm, text="DOR", width=11, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-        label_sno.place(x=5, y=5)
-        label_authId.place(x=125, y=5)
-        label_AuthName.place(x=255, y=5)
-        label_dor.place(x=580, y=5)
-
-        myframe = Frame(authorFrame, width=722, height=400, bd=4, relief='ridge',
-                        bg='snow')
-        myframe.place(x=30, y=170)
-
-        mycanvas = Canvas(myframe)
-        frame = Frame(mycanvas, width=722, height=900)
-        myscrollbar = Scrollbar(myframe, orient="vertical")
-        mycanvas.config(yscrollcommand=myscrollbar.set)
-
-        myscrollbar.pack(side="right", fill="y")
-        myscrollbar.config(command=mycanvas.yview)
-        mycanvas.pack(side="left", fill='both', expand='yes')
-        mycanvas.create_window((0, 0), window=frame, anchor='nw')
-
-        result_scrll = partial(self.myfunction, mycanvas, frame)
-
-        frame.bind("<Configure>", result_scrll)
-
-        # fetch the complete author table
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT * FROM author")
-        result = cursor.fetchall()
-        print(result[0][1])
-        print("Total records = ", result_query)
-        conn.close()
-
-        y_pos = 3
-        for row_count in range(0, result_query):
-            for column_count in range(0, 4):
-                if column_count == 0:
-                    width_label = 10
-                    start_pos = 5
-                elif column_count == 1 or column_count == 3:
-                    width_label = 12
-                    start_pos = 125
-                    if column_count == 3:
-                        start_pos = 580
-                        width_label = 11
-                elif column_count == 2:
-                    width_label = 28
-                    start_pos = 255
-                else:
-                    '''Not possible'''
-                label_display = Label(frame, width=width_label, height=2, borderwidth=1, relief="solid",
-                                      anchor='center',
-                                      justify=CENTER,
-                                      font=('times new roman', 16, 'normal'),
-                                      bg='light cyan')
-                print("row_count : ", row_count, "column_count :", column_count)
-                label_display['text'] = result[row_count][column_count]
-                label_display.place(x=start_pos, y=y_pos)
-            y_pos = y_pos + 51
 
     def edit_inventory_item(self, master):
         self.dataEntryFrame.destroy()
@@ -639,15 +483,14 @@ class NewInventory:
         self.default_text3.trace("w", self.check_SaveItemBtn_state)
         self.default_text4.trace("w", self.check_SaveItemBtn_state)
         self.default_text5.trace("w", self.check_SaveItemBtn_state)
-        clear_result = partial(self.clear_form, item_name, authorText, item_price, item_borrowfee, item_quantity)
 
-        self.btn_clear.configure(command=clear_result)
+        self.btn_reset.configure(state=DISABLED, bg='light grey')
 
         # ---------------------------------Button Frame End----------------------------------------
 
         self.newItem_window.bind('<Return>', lambda event=None: btn_search.invoke())
         self.newItem_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
-        self.newItem_window.bind('<F9>', lambda event=None: self.btn_clear.invoke())
+        self.newItem_window.bind('<F9>', lambda event=None: self.btn_reset.invoke())
 
         self.newItem_window.focus()
         self.newItem_window.grab_set()
@@ -798,11 +641,149 @@ class NewInventory:
 
         self.newItem_window.bind('<Return>', lambda event=None: btn_search.invoke())
         self.newItem_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
-        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
+        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
 
         self.newItem_window.focus()
         self.newItem_window.grab_set()
         mainloop()
+
+    def add_author(self, master):
+        self.dataEntryFrame.destroy()
+        self.dataModifyFrame.destroy()
+        self.dataSearchFrame.destroy()
+        self.authorFrame.destroy()
+
+        self.authorFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
+                                 bg='snow')
+        self.authorFrame.pack()
+
+        self.default_text1 = StringVar(self.authorFrame, value='')
+
+        # create a item Name label
+
+        name = Label(self.authorFrame, text="Author Name", width=11, anchor=W, justify=LEFT,
+                     font=L_FONT,
+                     bg='snow')
+
+        # create a Author label
+        dor = Label(self.authorFrame, text="DOR", width=9, anchor=W, justify=LEFT,
+                    font=L_FONT,
+                    bg='snow')
+
+        self.authorFrame.place(x=160, y=5)
+
+        name.place(x=30, y=10)
+        dor.place(x=30, y=65)
+
+        name_text = Entry(self.authorFrame, width=30, font=L_FONT, bg='light cyan',
+                          textvariable=self.default_text1)
+
+        dor_text = DateEntry(self.authorFrame, width=31, date_pattern='dd/MM/yyyy',
+                             font=L_FONT,
+                             bg='light cyan',
+                             justify='left')
+
+        name_text.place(x=240, y=10)
+        dor_text.place(x=240, y=60)
+
+        insert_result = partial(self.register_author, self.newItem_window, name_text, dor_text)
+
+        self.btn_submit.configure(state=NORMAL, bg='RosyBrown1', command=insert_result)
+
+        self.default_text1.trace("w", self.check_SaveItemBtn_author)
+
+        clear_result = partial(self.clear_form_author, name_text)
+
+        self.btn_reset.configure(command=clear_result)
+        self.btn_cancel.configure(command=self.newItem_window.destroy)
+
+        self.newItem_window.bind('<Return>', lambda event=None: self.btn_submit.invoke())
+        self.newItem_window.bind('<Alt-c>', lambda event=None: self.btn_cancel.invoke())
+        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
+        self.display_currentAuthorList(self.authorFrame, 5, 100, 550, 320)
+        self.newItem_window.focus()
+        self.newItem_window.grab_set()
+        mainloop()
+
+    def myfunction(self, xwidth, yheight, mycanvas, event):
+        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
+
+    def display_currentAuthorList(self, split_open_window, startx, starty, xwidth, xheight):
+        myframe = Frame(split_open_window, relief=GROOVE, width=400, height=55, bd=4)
+        myframe.place(x=startx, y=starty)
+
+        mycanvas = Canvas(myframe)
+        frame = Frame(mycanvas, width=200, height=100, bg='light yellow')
+        myscrollbar = Scrollbar(myframe, orient="vertical", command=mycanvas.yview)
+        mycanvas.configure(yscrollcommand=myscrollbar.set)
+
+        myscrollbar.pack(side="right", fill="y")
+        mycanvas.pack(side="left")
+        mycanvas.create_window((0, 0), window=frame, anchor='nw')
+
+        result = partial(self.myfunction, xwidth, xheight, mycanvas)
+
+        frame.bind("<Configure>", result)
+
+        label_sno = Label(frame, text="S.No", width=5, height=1, anchor='center',
+                          justify=CENTER,
+                          font=('times new roman', 13, 'normal'),
+                          bg='light yellow')
+
+        label_authId = Label(frame, text="Author Id", width=10, height=1, anchor='center',
+                             justify=CENTER,
+                             font=('times new roman', 13, 'normal'),
+                             bg='light yellow')
+
+        label_AuthName = Label(frame, text="Author Name", width=30, height=1, anchor='center',
+                               justify=CENTER,
+                               font=('times new roman', 13, 'normal'),
+                               bg='light yellow')
+
+        label_dor = Label(frame, text="DOR", width=10, height=1,
+                          anchor='center',
+                          justify=CENTER,
+                          font=('times new roman', 13, 'normal'),
+                          bg='light yellow')
+
+        label_sno.grid(row=0, column=1, padx=2, pady=5)
+        label_authId.grid(row=0, column=2, padx=2, pady=5)
+        label_AuthName.grid(row=0, column=3, padx=2, pady=5)
+        label_dor.grid(row=0, column=4, padx=2, pady=5)
+
+        # fetch the complete author table
+        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        result_query = cursor.execute("SELECT * FROM author")
+        result = cursor.fetchall()
+        print(result[0][1])
+        print("Total records = ", result_query)
+        conn.close()
+
+        for row_index in range(0, result_query):
+            # critical stock ->stock with quantity is 0 or 1
+            for column_index in range(1, 5):
+                if column_index == 1:
+                    width_column = 5
+                elif column_index == 2:
+                    width_column = 10
+                elif column_index == 3:
+                    width_column = 35
+                elif column_index == 4:
+                    width_column = 10
+                else:
+                    print("Column doesn't exists")
+
+                label_detail = Label(frame, text="No Data", width=width_column, height=1,
+                                     anchor='center', justify=LEFT,
+                                     font=('arial narrow', 13, 'normal'),
+                                     bg='light yellow')
+                label_detail.grid(row=row_index + 1, column=column_index, padx=2, pady=3, sticky=W)
+
+                label_detail['text'] = result[row_index][column_index - 1]
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
@@ -816,20 +797,40 @@ class NewInventory:
         else:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
 
+    def check_SaveItemBtn_author(self, *args):
+        print("Tracing  entry input")
+
+        if self.default_text1.get() != "":
+            self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
+        else:
+            self.btn_submit.configure(state=DISABLED, bg='light grey')
+
     # Function for clearing the
     # contents of text entry boxes
-    def clear_form(self, name, author, price, quantity, borrowFee):
+    def clear_form_addInventory(self, name, author, price, quantity, borrowFee, rack_location,
+                                receiver_name, order_id, sender_name):
         # clear the content of text entry box
         name.delete(0, END)
         name.configure(fg='black')
-        # author.delete(0, END)
-        # author.configure(fg='black')
         price.delete(0, END)
         price.configure(fg='black')
         quantity.delete(0, END)
         quantity.configure(fg='black')
         borrowFee.delete(0, END)
         borrowFee.configure(fg='black')
+        rack_location.delete(0, END)
+        rack_location.configure(fg='black')
+        receiver_name.delete(0, END)
+        receiver_name.configure(fg='black')
+        order_id.delete(0, END)
+        order_id.configure(fg='black')
+        sender_name.delete(0, END)
+        sender_name.configure(fg='black')
+
+    def clear_form_author(self, name):
+        # clear the content of text entry box
+        name.delete(0, END)
+        name.configure(fg='black')
 
     def stock_operations(self, newItem_window, item_name, item_idforSearch, author_name, item_price, item_borrowfee,
                          item_quantity,
@@ -976,14 +977,14 @@ class NewInventory:
                 order_id['text'] = result[13]
                 sender_name['text'] = result[12]
                 print_result = partial(self.print_item_description, result)
-                self.btn_print.configure(state=NORMAL, bg='RosyBrown1',command = print_result)
+                self.btn_print.configure(state=NORMAL, bg='RosyBrown1', command=print_result)
             else:
                 ''' do nothing '''
 
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
 
-    def print_item_description(self,result):
+    def print_item_description(self, result):
         """ prints the item description to pdf form"""
         wb_template = openpyxl.load_workbook(PATH_ITEM_DETAILS_TEMPLATE)
         template_sheet = wb_template.active
@@ -1001,7 +1002,7 @@ class NewInventory:
         template_sheet.cell(row=8, column=3).value = result[12]
         template_sheet.cell(row=8, column=4).value = result[13]
         wb_template.save(PATH_ITEM_DETAILS_TEMPLATE)
-        os.startfile(PATH_ITEM_DETAILS_TEMPLATE) # prints the file on standard output printer
+        os.startfile(PATH_ITEM_DETAILS_TEMPLATE)  # prints the file on standard output printer
 
     def generate_itemId(self, local_centerText):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
@@ -1115,6 +1116,7 @@ class NewInventory:
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
 
                 user_choice = messagebox.askquestion("Author registered", "Do you want to register new  ? ")
+                self.display_currentAuthorList(self.authorFrame, 5, 100, 550, 320)
                 # destroy the data entry form , if user do not want to add more records
                 if user_choice == 'no':
                     print("Do nothing")
