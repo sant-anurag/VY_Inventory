@@ -12,7 +12,7 @@ class NewMerchandise:
         self.dateTimeOp = DatetimeOperation()
         self.merchandise_window = Toplevel(master)
         self.merchandise_window.title("Inventory Operations")
-        self.merchandise_window.geometry('970x470+700+260')
+        self.merchandise_window.geometry('800x390+700+300')
         self.merchandise_window.configure(background='wheat')
         self.merchandise_window.resizable(width=False, height=False)
         self.merchandise_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -24,44 +24,66 @@ class NewMerchandise:
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
-        self.dataEntryFrame = Frame(self.merchandise_window, width=800, height=500, bd=4, relief='ridge',
+        self.mainMenuFrame = Frame(self.merchandise_window, width=153, height=170, bd=4, relief='ridge',
+                                   bg='wheat')
+        self.opMenuFrame = Frame(self.merchandise_window, width=153, height=210, bd=4, relief='ridge',
+                                 bg='wheat')
+        mainmenu_label = Label(self.mainMenuFrame, text="Main Menu", width=12, justify=CENTER,
+                               font=L_FONT,
+                               bg='wheat')
+        opmenu_label = Label(self.opMenuFrame, text="Context Menu", width=12, justify=CENTER,
+                             font=L_FONT,
+                             bg='wheat')
+        self.dataEntryFrame = Frame(self.merchandise_window, width=600, height=440, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
-        self.dataModifyFrame = Frame(self.merchandise_window, width=800, height=500, bd=4, relief='ridge',
+        self.dataModifyFrame = Frame(self.merchandise_window, width=600, height=400, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
         self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=500, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
 
-        self.btn_submit = Button(self.merchandise_window)
-
-        self.btn_submit.configure(text="Save", fg="Black", font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
-        self.btn_cancel = Button(self.merchandise_window, text="Close", fg="Black",
-                                 font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        self.authorFrame = Frame(self.merchandise_window, width=800, height=500, bd=4, relief='ridge',
+                                 bg='snow')
+        self.authorFrame.pack()
+        self.btn_submit = Button(self.opMenuFrame, text="Save", fg="Black",
+                                 font=L_FONT, width=12, state=DISABLED, bg='RosyBrown1')
+        self.btn_print = Button(self.opMenuFrame, text="Print", fg="Black",
+                                font=L_FONT, width=12, state=DISABLED, bg='Light Grey')
+        self.btn_clear = Button(self.opMenuFrame, text="Reset", fg="Black",
+                                font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+        self.btn_cancel = Button(self.opMenuFrame, text="Close", fg="Black",
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         self.btn_cancel.configure(command=self.merchandise_window.destroy)
-        self.btn_clear = Button(self.merchandise_window, text="Reset", fg="Black",
-                                font=XXL_FONT, width=14, state=NORMAL, bg='RosyBrown1')
 
-        search_result = partial(self.search_merchandise_details, master)
-        self.btn_search = Button(self.merchandise_window, text="Search", fg="Black", command=search_result,
-                                 font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        # Side button panel - start
+        add_result = partial(self.add_new_center, master)
+        self.btn_add = Button(self.mainMenuFrame, text="Add Center", fg="Black", command=add_result,
+                              font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
 
         edit_result = partial(self.edit_merchandise, master)
-        self.btn_modify = Button(self.merchandise_window, text="Modify", fg="Black", command=edit_result,
-                                 font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
-        add_result = partial(self.add_new_center, master)
-        self.btn_add = Button(self.merchandise_window, text="Add", fg="Black", command=add_result,
-                              font=XXL_FONT, width=7, state=NORMAL, bg='RosyBrown1')
+        self.btn_modify = Button(self.mainMenuFrame, text="Modify Center", fg="Black", command=edit_result,
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
 
-        self.btn_add.place(x=7, y=100)
-        self.btn_modify.place(x=7, y=170)
-        self.btn_search.place(x=7, y=240)
+        search_result = partial(self.search_merchandise_details, master)
+        self.btn_search = Button(self.mainMenuFrame, text="Search Center", fg="Black", command=search_result,
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
 
-        self.btn_submit.place(x=150, y=395)
-        self.btn_clear.place(x=420, y=395)
-        self.btn_cancel.place(x=690, y=395)
-        print("constructor called for newInventory Addition ")
+        # Side button panel - end
+        self.mainMenuFrame.place(x=5, y=5)
+        mainmenu_label.place(x=2, y=5)
+        self.btn_add.place(x=1, y=40)
+        self.btn_modify.place(x=1, y=80)
+        self.btn_search.place(x=1, y=120)
+
+        self.opMenuFrame.place(x=5, y=175)
+        opmenu_label.place(x=2, y=5)
+        self.btn_submit.place(x=1, y=40)
+        self.btn_print.place(x=1, y=80)
+        self.btn_clear.place(x=1, y=120)
+        self.btn_cancel.place(x=1, y=160)
+        print("constructor called for merchandise Addition ")
 
         # default window is "Add New Inventor" when window opens
         self.add_new_center(master)
@@ -69,7 +91,9 @@ class NewMerchandise:
     def add_new_center(self, master):
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.dataEntryFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
+        self.dataEntryFrame.destroy()
+
+        self.dataEntryFrame = Frame(self.merchandise_window, width=635, height=380, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
 
@@ -84,66 +108,71 @@ class NewMerchandise:
 
         # create a item Name label
 
+        self.info_label = Label(self.dataEntryFrame, text="Press <Save> to register the merchandise", width=49,
+                           justify=CENTER,
+                           font=L_FONT, bg='light yellow', fg='purple',bd=2,relief='ridge')
+
         name_label = Label(self.dataEntryFrame, text="Center Name", width=11, anchor=W, justify=LEFT,
-                           font=('times new roman', 20, 'normal'),
+                           font=L_FONT,
                            bg='snow')
 
         # create a Author label
         manager_label = Label(self.dataEntryFrame, text="Manager", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
         # create a Price label
         inaugdate_label = Label(self.dataEntryFrame, text="Opening Date", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
 
         # create a Quantity label
         regisno_label = Label(self.dataEntryFrame, text="Regis. No", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
 
         # create a borrow fee label
         panNo_label = Label(self.dataEntryFrame, text="PAN No.", width=13, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'), bg='snow')
+                            font=L_FONT, bg='snow')
 
         # create a borrow fee label
         address_label = Label(self.dataEntryFrame, text="Address", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
 
-        self.dataEntryFrame.place(x=150, y=20)
+        self.dataEntryFrame.place(x=160, y=5)
 
-        name_label.place(x=30, y=10)
+        name_label.place(x=30, y=20)
         manager_label.place(x=30, y=65)
-        inaugdate_label.place(x=30, y=115)
-        regisno_label.place(x=30, y=170)
-        panNo_label.place(x=30, y=225)
-        address_label.place(x=30, y=275)
+        inaugdate_label.place(x=30, y=110)
+        regisno_label.place(x=30, y=155)
+        panNo_label.place(x=30, y=200)
+        address_label.place(x=30, y=245)
 
-        center_name = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        center_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                             textvariable=self.default_text1)
 
-        manager_name = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        manager_name = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                              textvariable=self.default_text3)
 
-        inaugdate = DateEntry(self.dataEntryFrame, width=39, date_pattern='dd/MM/yyyy',
-                              font=('times new roman', 18, 'normal'),
+        inaugdate = DateEntry(self.dataEntryFrame, width=30, date_pattern='dd/MM/yyyy',
+                              font=('times new roman', 17, 'normal'),
                               bg='light cyan',
                               justify='left')
 
-        regisno = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        regisno = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                         textvariable=self.default_text4)
 
-        panno = Entry(self.dataEntryFrame, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        panno = Entry(self.dataEntryFrame, width=35, font=L_FONT, bg='light cyan',
                       textvariable=self.default_text5)
         address = Entry(self.dataEntryFrame, width=35,
-                        font=('times new roman', 20, 'normal'),
+                        font=L_FONT,
                         bg='light cyan', textvariable=self.default_text8)
 
-        center_name.place(x=240, y=10)
-        manager_name.place(x=240, y=60)
-        inaugdate.place(x=240, y=120)
-        regisno.place(x=240, y=170)
-        panno.place(x=240, y=230)
-        address.place(x=240, y=280)
+        center_name.place(x=240, y=20)
+        manager_name.place(x=240, y=65)
+        inaugdate.place(x=240, y=110)
+        regisno.place(x=240, y=155)
+        panno.place(x=240, y=200)
+        address.place(x=240, y=245)
+        self.info_label.place(x=40, y=305)
 
         insert_result = partial(self.center_operations, 'NA', center_name, manager_name,
                                 inaugdate,
@@ -164,9 +193,6 @@ class NewMerchandise:
 
         self.btn_clear.configure(command=clear_result)
         self.btn_cancel.configure(command=self.merchandise_window.destroy)
-        # cancel.grid(row=0, column=2)
-
-        # ---------------------------------Button Frame End----------------------------------------
 
         self.merchandise_window.bind('<F9>', lambda event=None: self.btn_clear.invoke())
         self.merchandise_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
@@ -177,110 +203,17 @@ class NewMerchandise:
         self.merchandise_window.grab_set()
         mainloop()
 
-    def myfunction(self, mycanvas, frame, event):
-        print("Scroll Encountered")
-        mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=722, height=400)
-
-    def display_currentAuthorList(self, merchandise_window, authorFrame):
-        author_listFrm = Frame(authorFrame, width=750, height=63, bd=4, relief='ridge',
-                               bg='snow')
-        author_listFrm.place(x=30, y=110)
-
-        label_sno = Label(author_listFrm, text="S.No", width=10, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-
-        label_authId = Label(author_listFrm, text="Author Id", width=12, height=2, borderwidth=1, relief="solid",
-                             anchor='center',
-                             justify=CENTER,
-                             font=('times new roman', 16, 'normal'),
-                             bg='light grey')
-
-        label_AuthName = Label(author_listFrm, text="Author Name", width=28, height=2, borderwidth=1, relief="solid",
-                               anchor='center',
-                               justify=CENTER,
-                               font=('times new roman', 16, 'normal'),
-                               bg='light grey')
-
-        label_dor = Label(author_listFrm, text="DOR", width=11, height=2, borderwidth=1, relief="solid",
-                          anchor='center',
-                          justify=CENTER,
-                          font=('times new roman', 16, 'normal'),
-                          bg='light grey')
-        label_sno.place(x=5, y=5)
-        label_authId.place(x=125, y=5)
-        label_AuthName.place(x=255, y=5)
-        label_dor.place(x=580, y=5)
-
-        myframe = Frame(authorFrame, width=722, height=400, bd=4, relief='ridge',
-                        bg='snow')
-        myframe.place(x=30, y=170)
-
-        mycanvas = Canvas(myframe)
-        frame = Frame(mycanvas, width=722, height=900)
-        myscrollbar = Scrollbar(myframe, orient="vertical")
-        mycanvas.config(yscrollcommand=myscrollbar.set)
-
-        myscrollbar.pack(side="right", fill="y")
-        myscrollbar.config(command=mycanvas.yview)
-        mycanvas.pack(side="left", fill='both', expand='yes')
-        mycanvas.create_window((0, 0), window=frame, anchor='nw')
-
-        result_scrll = partial(self.myfunction, mycanvas, frame)
-
-        frame.bind("<Configure>", result_scrll)
-
-        # fetch the complete author table
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT * FROM author")
-        result = cursor.fetchall()
-        print(result[0][1])
-        print("Total records = ", result_query)
-        conn.close()
-
-        y_pos = 3
-        for row_count in range(0, result_query):
-            for column_count in range(0, 4):
-                if column_count == 0:
-                    width_label = 10
-                    start_pos = 5
-                elif column_count == 1 or column_count == 3:
-                    width_label = 12
-                    start_pos = 125
-                    if column_count == 3:
-                        start_pos = 580
-                        width_label = 11
-                elif column_count == 2:
-                    width_label = 28
-                    start_pos = 255
-                else:
-                    '''Not possible'''
-                label_display = Label(frame, width=width_label, height=2, borderwidth=1, relief="solid",
-                                      anchor='center',
-                                      justify=CENTER,
-                                      font=('times new roman', 16, 'normal'),
-                                      bg='light cyan')
-                print("row_count : ", row_count, "column_count :", column_count)
-                label_display['text'] = result[row_count][column_count]
-                label_display.place(x=start_pos, y=y_pos)
-            y_pos = y_pos + 51
-
     def edit_merchandise(self, master):
-        self.dataEntryFrame.destroy()
+        self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
-        self.dataModifyFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
+        self.dataEntryFrame.destroy()
+        self.dataModifyFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
-        frameSearch = Frame(self.dataModifyFrame, width=780, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataModifyFrame, width=610, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataModifyFrame, width=780, height=290, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataModifyFrame, width=610, height=290, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
@@ -295,34 +228,34 @@ class NewMerchandise:
         # create a item Name label
 
         mchd_SearchId = Label(frameSearch, text="Center Id", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
         center_namelabel = Label(framedisplay, text="Center Name", width=11, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'),
+                                 font=L_FONT,
                                  bg='snow')
 
         managerName_label = Label(framedisplay, text="Manager", width=11, anchor=W, justify=LEFT,
-                                  font=('times new roman', 20, 'normal'),
+                                  font=L_FONT,
                                   bg='snow')
 
         # create a Price label
         inaugDate_label = Label(framedisplay, text="Opening Date", width=13, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'), bg='snow')
+                                font=L_FONT, bg='snow')
 
         # create a Quantity label
         regisNo_label = Label(framedisplay, text="Regis No.", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
 
         # create a borrow fee label
         panno_label = Label(framedisplay, text="PAN No.", width=13, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'), bg='snow')
+                            font=L_FONT, bg='snow')
 
         # create a borrow fee label
         address_label = Label(framedisplay, text="Address", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
 
-        self.dataModifyFrame.place(x=150, y=20)
+        self.dataModifyFrame.place(x=160, y=5)
 
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
@@ -336,25 +269,25 @@ class NewMerchandise:
         panno_label.place(x=30, y=185)
         address_label.place(x=30, y=230)
 
-        center_idforSearch = Entry(frameSearch, width=20, font=('times new roman', 20, 'normal'), bg='light yellow')
+        center_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light yellow')
         center_idforSearch.place(x=240, y=5)
 
         btn_search = Button(frameSearch)
 
-        center_name = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        center_name = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                             textvariable=self.default_text1)
 
-        managerName = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        managerName = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                             textvariable=self.default_text3)
-        cal = DateEntry(framedisplay, width=39, date_pattern='dd/MM/yyyy',
+        cal = DateEntry(framedisplay, width=27, date_pattern='dd/MM/yyyy',
                         font=('times new roman', 18, 'normal'),
                         bg='light cyanw',
                         justify='left')
-        regisNo = Entry(framedisplay, width=35, font=('times new roman', 20, 'normal'), bg='light cyan',
+        regisNo = Entry(framedisplay, width=35, font=L_FONT, bg='light cyan',
                         textvariable=self.default_text7)
-        panno = Entry(framedisplay, width=35, text='0', font=('times new roman', 20, 'normal'),
+        panno = Entry(framedisplay, width=35, text='0', font=L_FONT,
                       bg='light cyan', textvariable=self.default_text4)
-        address = Entry(framedisplay, width=35, text='0', font=('times new roman', 20, 'normal'),
+        address = Entry(framedisplay, width=35, text='0', font=L_FONT,
                         bg='light cyan', textvariable=self.default_text5)
         center_name.place(x=240, y=5)
         managerName.place(x=240, y=50)
@@ -367,8 +300,8 @@ class NewMerchandise:
                                 cal, regisNo, panno, address, OPERATION_EDIT)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+                             font=('arial narrow', 14, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=450, y=2)
 
         insert_result = partial(self.center_operations, center_idforSearch, center_name,
                                 managerName,
@@ -398,8 +331,9 @@ class NewMerchandise:
         mainloop()
 
     def search_merchandise_details(self, master):
-        self.dataEntryFrame.destroy()
         self.dataModifyFrame.destroy()
+        self.dataSearchFrame.destroy()
+        self.dataEntryFrame.destroy()
         self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
@@ -413,25 +347,25 @@ class NewMerchandise:
         # create a item Name label
 
         mchd_SearchId = Label(frameSearch, text="center Id", width=11, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'),
+                              font=L_FONT,
                               bg='snow')
 
         centername_label = Label(framedisplay, text="Center Name", width=11, anchor=W, justify=LEFT,
-                                 font=('times new roman', 20, 'normal'),
+                                 font=L_FONT,
                                  bg='snow')
 
         managerName_label = Label(framedisplay, text="Manager Name", width=11, anchor=W, justify=LEFT,
-                                  font=('times new roman', 20, 'normal'),
+                                  font=L_FONT,
                                   bg='snow')
 
         inaug_label = Label(framedisplay, text="Opening Date", width=13, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'), bg='snow')
+                            font=L_FONT, bg='snow')
         regisNo_label = Label(framedisplay, text="Regis. No.", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
         panno_label = Label(framedisplay, text="PAN No.", width=13, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'), bg='snow')
+                            font=L_FONT, bg='snow')
         address_label = Label(framedisplay, text="Address", width=13, anchor=W, justify=LEFT,
-                              font=('times new roman', 20, 'normal'), bg='snow')
+                              font=L_FONT, bg='snow')
 
         self.dataSearchFrame.place(x=150, y=20)
 
@@ -447,33 +381,33 @@ class NewMerchandise:
         panno_label.place(x=30, y=185)
         address_label.place(x=30, y=230)
 
-        center_idforSearch = Entry(frameSearch, width=20, font=('times new roman', 20, 'normal'), bg='light cyan')
+        center_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
         center_idforSearch.place(x=240, y=5)
 
         btn_search = Button(frameSearch)
 
         center_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=('times new roman', 20, 'normal'),
+                            font=L_FONT,
                             bg='light cyan')
 
         manager_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                             font=('times new roman', 20, 'normal'),
+                             font=L_FONT,
                              bg='light cyan')
 
-        cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                    font=('times new roman', 20, 'normal'),
+        cal = Label(framedisplay, width=28, anchor=W, justify=LEFT,
+                    font=L_FONT,
                     bg='light cyan')
 
         regisNo = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                        font=('times new roman', 20, 'normal'),
+                        font=L_FONT,
                         bg='light cyan')
 
         panno = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                      font=('times new roman', 20, 'normal'),
+                      font=L_FONT,
                       bg='light cyan')
 
         address = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                        font=('times new roman', 20, 'normal'),
+                        font=L_FONT,
                         bg='light cyan')
 
         center_name.place(x=240, y=5)
@@ -543,13 +477,13 @@ class NewMerchandise:
         elif op_type == OPERATION_EDIT:
             center_id = center_idforSearch.get()
         if center_name.get() == "" or manager_name.get() == "" or regisno.get() == "" or panno.get() == "" or address.get() == "":
-            messagebox.showinfo("Data Entry Error", "All fields are mandatory !!!")
+            self.info_label.configure(text="All fields are mandatory !!!")
 
         else:
             bCenterExists = self.validate_centerName(center_name.get())
             print("bCenterExists :", bCenterExists)
             if bCenterExists and op_type is OPERATION_ADD:
-                messagebox.showwarning("Duplicate Entry Error !", "center already exists !!")
+                self.info_label.configure(text="Merchandise already exists !!!", fg='red')
                 center_name.configure(bd=2, fg='red')
                 return
             else:
@@ -566,12 +500,9 @@ class NewMerchandise:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                print("debug 1")
                 conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-                print("debug 2")
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
-                print("debug 3")
                 centername = str(center_name.get())
                 manager = str(manager_name.get())
                 registration_no = str(regisno.get())
@@ -606,12 +537,9 @@ class NewMerchandise:
                 print("Merchandise registered !!! ")
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
+                messagebox.showinfo("Success","Merchandise Registered Successfully")
                 self.clear_form(center_name, manager_name, inaugdate, regisno,
                                 panno, address)
-                user_choice = messagebox.askquestion("Item insertion success", "Do you want to add another item ? ")
-                # destroy the data entry form , if user do not want to add more records
-                if user_choice == 'no':
-                    print("Do nothing")
 
     def search_centerId(self, center_idforSearch, center_name, managerName,
                         cal, regisNo, panno, address, op_type):
