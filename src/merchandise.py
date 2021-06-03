@@ -332,19 +332,19 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-        self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
+        self.dataSearchFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-        frameSearch = Frame(self.dataSearchFrame, width=780, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataSearchFrame, width=610, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=780, height=290, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataSearchFrame, width=610, height=290, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
         # create a item Name label
 
-        mchd_SearchId = Label(frameSearch, text="center Id", width=11, anchor=W, justify=LEFT,
+        mchd_SearchId = Label(frameSearch, text="Center Id", width=11, anchor=W, justify=LEFT,
                               font=L_FONT,
                               bg='snow')
 
@@ -365,7 +365,7 @@ class NewMerchandise:
         address_label = Label(framedisplay, text="Address", width=13, anchor=W, justify=LEFT,
                               font=L_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=150, y=20)
+        self.dataSearchFrame.place(x=160, y=5)
 
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
@@ -392,7 +392,7 @@ class NewMerchandise:
                              font=L_FONT,
                              bg='light cyan')
 
-        cal = Label(framedisplay, width=28, anchor=W, justify=LEFT,
+        cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
                     font=L_FONT,
                     bg='light cyan')
 
@@ -419,8 +419,8 @@ class NewMerchandise:
                                 cal, regisNo, panno, address, OPERATION_SEARCH)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+                             font=('arial narrow', 14, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=450, y=2)
 
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
