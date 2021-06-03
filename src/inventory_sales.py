@@ -719,7 +719,7 @@ class InventorySales:
                 total_records = cursor.execute("SELECT * FROM inventory_stock")
                 conn.close()
 
-                if total_records is 0:
+                if total_records == 0:
                     serial_no = 1
                 else:
                     serial_no = total_records + 1
@@ -917,7 +917,7 @@ class InventorySales:
                 total_records = cursor.execute("SELECT * FROM author")
                 conn.close()
 
-                if total_records is 0:
+                if total_records == 0:
                     serial_no = 1
                 else:
                     serial_no = total_records + 1
