@@ -13,8 +13,6 @@
 from app_defines import *
 from app_common import *
 from app_thread import *
-import MySQLdb as sql_db
-
 
 class accountControl:
 
@@ -338,7 +336,7 @@ class accountControl:
         borrowFee.configure(fg='black')
 
     def generate_itemId(self, local_centerText):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -350,7 +348,7 @@ class accountControl:
     def validate_itemName(self, itemName, localCenterName):
         itemId = ""
         print("validate_itemName--> Start for item name: ", itemName)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -363,7 +361,7 @@ class accountControl:
 
     def validate_itemId(self, itemId):
         print("validate_itemId--> Start for item Id : ", itemId)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -376,7 +374,7 @@ class accountControl:
 
     def validate_account(self, name_text):
         print("validate_author--> validate for Name : ", name_text)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -399,7 +397,7 @@ class accountControl:
                 username_text.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -413,7 +411,7 @@ class accountControl:
 
                 # establishing the connection
 
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -450,7 +448,7 @@ class accountControl:
                 username_text.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -459,7 +457,7 @@ class accountControl:
 
                 # establishing the connection
 
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -490,7 +488,7 @@ class accountControl:
             else:
                 # establishing the connection
 
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()

@@ -1,8 +1,6 @@
 from app_defines import *
 from app_common import *
 from app_thread import *
-import MySQLdb as sql_db
-
 
 class InventorySales:
 

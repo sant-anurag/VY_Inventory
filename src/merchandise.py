@@ -1,8 +1,6 @@
 from app_defines import *
 from app_common import *
 from app_thread import *
-import MySQLdb as sql_db
-
 
 class NewMerchandise:
 
@@ -487,7 +485,7 @@ class NewMerchandise:
                 center_name.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -500,7 +498,7 @@ class NewMerchandise:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
                 centername = str(center_name.get())
@@ -549,7 +547,7 @@ class NewMerchandise:
         centerId = center_idforSearch.get()
         bCenterExists = self.validate_centerId(centerId)
         if bCenterExists:
-            conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+            conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
             # Creating a cursor object using the cursor() method
             cursor = conn.cursor()
@@ -585,7 +583,7 @@ class NewMerchandise:
             messagebox.showwarning("Not Available", "Center Not Registered!!!")
 
     def generate_centerId(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -597,7 +595,7 @@ class NewMerchandise:
     def validate_centerName(self, centername):
         itemId = ""
         print("validate_centerName--> Start for item name: ", centername)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -611,7 +609,7 @@ class NewMerchandise:
 
     def validate_centerId(self, itemId):
         print("validate_centerId--> Start for item Id : ", itemId)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -624,7 +622,7 @@ class NewMerchandise:
 
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()

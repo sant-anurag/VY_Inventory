@@ -38,11 +38,12 @@ import num2words
 import time
 import pyglet
 import pyautogui
+import MySQLdb as sql_db
 
 from dateTime_operation import *
 
-
 # constants defined for Application
+SQL_SERVER = '192.168.1.109'
 INDEX_ZERO = 0
 MAX_RECORD_ENTRY = 29
 DEFAULT = 1
@@ -94,6 +95,3 @@ PATH_PURCHASE = "..\\Library_Stock\\Purchase_Transaction.xlsx"
 PATH_NON_COMMERCIAL_STOCK = "..\\Library_Stock\\NonCommercial_Stock\\noncommercial_stock.xlsx"
 PATH_STOCK_INFO_TEMPLATE = "..\\Library_Stock\\Stock_Statement\\Stock_inventory_template.xlsx"
 PATH_ITEM_DETAILS_TEMPLATE = "..\\Library_Stock\\Invoices\\Template\\Inventory_Details.xlsx"
-
-
-
