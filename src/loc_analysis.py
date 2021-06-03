@@ -98,16 +98,6 @@ def analyzefile():
         if "#" in line or "'''" in line:
             actcomments_count = actcomments_count + 1
 
-    split_validate = open("stock_info.py", 'r')
-    splitline_count = 0
-    splitempty_line_count = 0
-    splitcomments_count = 0
-    for line in split_validate:
-        splitline_count = splitline_count + 1
-        if line in ['\n', '\r\n']:
-            splitempty_line_count = splitempty_line_count + 1
-        if "#" in line or "'''" in line:
-            splitcomments_count = splitcomments_count + 1
 
     stockInf_validate = open("user_account.py", 'r')
     stockInfline_count = 0
@@ -122,16 +112,16 @@ def analyzefile():
 
     total = total_line_count + noncommer_line_count + appdefine_line_count + \
             datetimefile_line_count + mondontaonstatement_line_count + \
-            initdatabase_line_count + appthread_line_count + stksalesline_count + actline_count + splitline_count \
+            initdatabase_line_count + appthread_line_count + stksalesline_count + actline_count \
             + stockInfline_count
     comments = comments_count + noncommer_comments_count + appdefine_count + \
                datetimefile_count + mondontaonstatement_count + \
-               initdatabase_count + appthread_count + actcomments_count + stksalescomments_count + splitcomments_count
+               initdatabase_count + appthread_count + actcomments_count + stksalescomments_count
 
     empty_lines = empty_line_count + noncommer_empty_line_count + \
                   appdefine_emptyline_count + \
                   datetimefile_emptyline_count + mondontaonstatement_emptyline_count + \
-                  initdatabase_emptyline_count + appthread_emptyline_count + stksalesempty_line_count + actempty_line_count + splitempty_line_count \
+                  initdatabase_emptyline_count + appthread_emptyline_count + stksalesempty_line_count + actempty_line_count  \
                   + stockInfempty_line_count
     print("---------------------------------------------------")
     print("Total number of lines : ", total)

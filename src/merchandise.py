@@ -1,8 +1,6 @@
 from app_defines import *
 from app_common import *
 from app_thread import *
-import MySQLdb as sql_db
-
 
 class NewMerchandise:
 
@@ -334,19 +332,19 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-        self.dataSearchFrame = Frame(self.merchandise_window, width=800, height=370, bd=4, relief='ridge',
+        self.dataSearchFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-        frameSearch = Frame(self.dataSearchFrame, width=780, height=50, bd=4, relief='ridge',
+        frameSearch = Frame(self.dataSearchFrame, width=610, height=50, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=780, height=290, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataSearchFrame, width=610, height=290, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
         # create a item Name label
 
-        mchd_SearchId = Label(frameSearch, text="center Id", width=11, anchor=W, justify=LEFT,
+        mchd_SearchId = Label(frameSearch, text="Center Id", width=11, anchor=W, justify=LEFT,
                               font=L_FONT,
                               bg='snow')
 
@@ -367,7 +365,7 @@ class NewMerchandise:
         address_label = Label(framedisplay, text="Address", width=13, anchor=W, justify=LEFT,
                               font=L_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=150, y=20)
+        self.dataSearchFrame.place(x=160, y=5)
 
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
@@ -394,7 +392,7 @@ class NewMerchandise:
                              font=L_FONT,
                              bg='light cyan')
 
-        cal = Label(framedisplay, width=28, anchor=W, justify=LEFT,
+        cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
                     font=L_FONT,
                     bg='light cyan')
 
@@ -421,8 +419,8 @@ class NewMerchandise:
                                 cal, regisNo, panno, address, OPERATION_SEARCH)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
-                             font=('arial narrow', 14, 'normal'), width=19, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=540, y=2)
+                             font=('arial narrow', 14, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=450, y=2)
 
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
@@ -487,20 +485,20 @@ class NewMerchandise:
                 center_name.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
                 total_records = cursor.execute("SELECT * FROM merchandise")
                 conn.close()
 
-                if total_records is 0:
+                if total_records == 0:
                     serial_no = 1
                 else:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
                 centername = str(center_name.get())
@@ -549,7 +547,7 @@ class NewMerchandise:
         centerId = center_idforSearch.get()
         bCenterExists = self.validate_centerId(centerId)
         if bCenterExists:
-            conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+            conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
             # Creating a cursor object using the cursor() method
             cursor = conn.cursor()
@@ -585,7 +583,7 @@ class NewMerchandise:
             messagebox.showwarning("Not Available", "Center Not Registered!!!")
 
     def generate_centerId(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -597,7 +595,7 @@ class NewMerchandise:
     def validate_centerName(self, centername):
         itemId = ""
         print("validate_centerName--> Start for item name: ", centername)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -611,7 +609,7 @@ class NewMerchandise:
 
     def validate_centerId(self, itemId):
         print("validate_centerId--> Start for item Id : ", itemId)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -624,7 +622,7 @@ class NewMerchandise:
 
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()

@@ -16,8 +16,6 @@
 from app_defines import *
 from babel.numbers import *
 import ctypes
-# import for non commercial data operations
-import MySQLdb as sql_db
 from Inventory_Entry import *
 from merchandise import *
 from inventory_sales import *
@@ -47,7 +45,7 @@ class Inventory:
 
     def createInventoryDatabase(self):
         # establishing the connection
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306)
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306)
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -127,7 +125,7 @@ class Inventory:
         conn.close()
 
     def new_inventory_view(self):
-        obj_newInventory = NewInventory(root,self.currentUser)
+        obj_newInventory = NewInventory(root, self.currentUser)
 
     def new_center_registration(self):
         obj_newMchd = NewMerchandise(root)
@@ -139,7 +137,7 @@ class Inventory:
         obj_newRept = InventoryReport(root)
 
     def user_login_screen(self):
-        obj_login = accountControl(root,self.currentUser)
+        obj_login = accountControl(root, self.currentUser)
 
     def designMainScreen(self, master):
         labelFrame = Label(master, text="Inventory & Sales Management", justify=CENTER,
@@ -199,7 +197,7 @@ class Inventory:
         canvas_width, canvas_height = width, height
         canvas = Canvas(self.master, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
-            PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg").resize((width*2, height*2)))
+            PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg").resize((width * 2, height * 2)))
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
@@ -284,7 +282,7 @@ class Inventory:
 
     def validateStaffLogin(self, userNameText, passwordText, labelLogin, login_window):
         bLoginValid = False
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -319,6 +317,7 @@ class Inventory:
         passwordText.delete(0, END)
         passwordText.configure(fg='black')
         userNameText.focus_set()
+
 
 # obj_animation = LoadingAnimation()
 root = Tk()

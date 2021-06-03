@@ -1,8 +1,6 @@
 from app_defines import *
 from app_common import *
 from app_thread import *
-import MySQLdb as sql_db
-
 
 class InventoryReport:
 
@@ -230,7 +228,7 @@ class InventoryReport:
 
     def getSearchList(self, localcenter_menu, item_Typemenu,search_type):
         print("getSearchList--> Start ")
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
