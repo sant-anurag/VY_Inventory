@@ -2,6 +2,7 @@ from app_defines import *
 from app_common import *
 from app_thread import *
 
+
 class NewMerchandise:
 
     # constructor for Library class
@@ -90,7 +91,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-
+        self.btn_print(state=DISABLED, bg = 'light grey', command=None)
         self.dataEntryFrame = Frame(self.merchandise_window, width=635, height=380, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
@@ -107,8 +108,8 @@ class NewMerchandise:
         # create a item Name label
 
         self.info_label = Label(self.dataEntryFrame, text="Press <Save> to register the merchandise", width=49,
-                           justify=CENTER,
-                           font=L_FONT, bg='light yellow', fg='purple',bd=2,relief='ridge')
+                                justify=CENTER,
+                                font=L_FONT, bg='light yellow', fg='purple', bd=2, relief='ridge')
 
         name_label = Label(self.dataEntryFrame, text="Center Name", width=11, anchor=W, justify=LEFT,
                            font=L_FONT,
@@ -205,6 +206,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
+        self.btn_print(state=DISABLED,bg = 'light grey', command=None)
         self.dataModifyFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
@@ -332,6 +334,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
+        self.btn_print(state=DISABLED,bg = 'light grey', command=None)
         self.dataSearchFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
@@ -535,7 +538,7 @@ class NewMerchandise:
                 print("Merchandise registered !!! ")
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
-                messagebox.showinfo("Success","Merchandise Registered Successfully")
+                messagebox.showinfo("Success", "Merchandise Registered Successfully")
                 self.clear_form(center_name, manager_name, inaugdate, regisno,
                                 panno, address)
 
@@ -576,11 +579,26 @@ class NewMerchandise:
                 regisNo['text'] = result[5]
                 panno['text'] = result[6]
                 address['text'] = result[7]
+                """ prints the item description to pdf form"""
+                wb_template = openpyxl.load_workbook(PATH_CENTER_DETAILS_TEMPLATE)
+                template_sheet = wb_template.active
+                template_sheet.cell(row=1, column=3).value = result[1]
+                template_sheet.cell(row=4, column=2).value = result[2]
+                template_sheet.cell(row=6, column=2).value = result[5]
+
+                template_sheet.cell(row=4, column=3).value = result[3]
+                template_sheet.cell(row=6, column=3).value = result[6]
+                template_sheet.cell(row=6, column=4).value = result[4]
+                wb_template.save(PATH_CENTER_DETAILS_TEMPLATE)
+                self.btn_print(state=NORMAL, bg='RosyBrown1', command=self.print_item_description)
             else:
                 ''' do nothing '''
 
         else:
             messagebox.showwarning("Not Available", "Center Not Registered!!!")
+
+    def print_item_description(self):
+        os.startfile(PATH_CENTER_DETAILS_TEMPLATE)
 
     def generate_centerId(self):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
