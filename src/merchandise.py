@@ -91,7 +91,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-        self.btn_print(state=DISABLED, bg = 'light grey', command=None)
+        self.btn_print.configure(state=DISABLED, bg='light grey', command=None)
         self.dataEntryFrame = Frame(self.merchandise_window, width=635, height=380, bd=4, relief='ridge',
                                     bg='snow')
         self.dataEntryFrame.pack()
@@ -206,7 +206,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-        self.btn_print(state=DISABLED,bg = 'light grey', command=None)
+        self.btn_print.configure(state=DISABLED, bg='light grey', command=None)
         self.dataModifyFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataModifyFrame.pack()
@@ -334,7 +334,7 @@ class NewMerchandise:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.dataEntryFrame.destroy()
-        self.btn_print(state=DISABLED,bg = 'light grey', command=None)
+        self.btn_print.configure(state=DISABLED, bg='light grey', command=None)
         self.dataSearchFrame = Frame(self.merchandise_window, width=635, height=370, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
@@ -589,8 +589,9 @@ class NewMerchandise:
                 template_sheet.cell(row=4, column=3).value = result[3]
                 template_sheet.cell(row=6, column=3).value = result[6]
                 template_sheet.cell(row=6, column=4).value = result[4]
+                template_sheet.cell(row=8, column=2).value = result[7]
                 wb_template.save(PATH_CENTER_DETAILS_TEMPLATE)
-                self.btn_print(state=NORMAL, bg='RosyBrown1', command=self.print_item_description)
+                self.btn_print.configure(state=NORMAL, bg='RosyBrown1', command=self.print_item_description)
             else:
                 ''' do nothing '''
 
