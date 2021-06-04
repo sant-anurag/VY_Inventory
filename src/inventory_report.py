@@ -2,6 +2,7 @@ from app_defines import *
 from app_common import *
 from app_thread import *
 
+
 class InventoryReport:
 
     # constructor for Library class
@@ -10,7 +11,7 @@ class InventoryReport:
         self.dateTimeOp = DatetimeOperation()
         self.stock_info_window = Toplevel(master)
         self.stock_info_window.title("Inventory Report")
-        self.stock_info_window.geometry('800x270+700+380')
+        self.stock_info_window.geometry('765x220+700+380')
         self.stock_info_window.configure(background='wheat')
         self.stock_info_window.resizable(width=False, height=False)
         self.stock_info_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -22,33 +23,41 @@ class InventoryReport:
         canvas.create_image(0, 0, anchor=NW, image=myimage)
         canvas.pack()
 
-        self.stockReportFrame = Frame(self.stock_info_window, width=760, height=120, bd=4, relief='ridge',
+        self.stockReportFrame = Frame(self.stock_info_window, width=600, height=160, bd=4, relief='ridge',
                                       bg='snow')
         self.stockReportFrame.pack()
 
-        self.infoFrame = Frame(self.stock_info_window, width=760, height=50, bd=4, relief='ridge', bg="light yellow")
+        self.infoFrame = Frame(self.stock_info_window, width=600, height=50, bd=4, relief='ridge', bg="light yellow")
         self.infoFrame.pack()
 
-        self.btn_generate = Button(self.stock_info_window)
-        self.btn_generate.configure(text="Generate", fg="Black", font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
-        self.btn_viewPDF = Button(self.stock_info_window, text="View PDF", fg="Black", font=XL_FONT, width=12,
-                                  bg='light grey', state=DISABLED)
-        self.btn_printBtn = Button(self.stock_info_window, text="Print", fg="Black", font=XL_FONT, width=12,
-                                   bg='light grey', state=DISABLED)
-        self.btn_cancel = Button(self.stock_info_window, text="Exit", fg="Black",
-                                 font=XL_FONT, width=12, state=NORMAL, bg='RosyBrown1')
-        self.btn_cancel.configure(command=self.stock_info_window.destroy)
+        self.mainMenuFrame = Frame(self.stock_info_window, width=153, height=210, bd=4, relief='ridge',
+                                   bg='wheat')
 
+        mainmenu_label = Label(self.mainMenuFrame, text="Main Menu", width=12, justify=CENTER,
+                               font=L_FONT,
+                               bg='wheat')
+
+        add_result = partial(self.report_inventory_item, master)
+        self.btn_generate = Button(self.mainMenuFrame, text="Generate", fg="Black", command=add_result,
+                                   font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+
+        self.btn_viewPDF = Button(self.mainMenuFrame, text="View PDF", fg="Black", font=L_FONT, width=12,
+                                  bg='light grey', state=DISABLED)
+        self.btn_printBtn = Button(self.mainMenuFrame, text="Print", fg="Black", font=L_FONT, width=12,
+                                   bg='light grey', state=DISABLED)
+        self.btn_cancel = Button(self.mainMenuFrame, text="Exit", fg="Black",
+                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1',command = self.stock_info_window.destroy)
+
+        # Side button panel - end
+        self.mainMenuFrame.place(x=5, y=5)
+        mainmenu_label.place(x=2, y=5)
+        self.btn_generate.place(x=1, y=40)
+        self.btn_viewPDF.place(x=1, y=80)
+        self.btn_printBtn.place(x=1, y=120)
+        self.btn_cancel.place(x=1, y=160)
         self.info_label = Label(self.infoFrame, text="Select the parameters and press <Generate>", width=49,
                                 justify=CENTER,
                                 font=L_FONT, bg='light yellow', fg='purple')
-
-        # Bottom button panel - end
-        self.btn_generate.place(x=20, y=142)
-        self.btn_viewPDF.place(x=210, y=142)
-        self.btn_printBtn.place(x=400, y=142)
-        self.btn_cancel.place(x=590, y=142)
-
         print("constructor called for sales ")
 
         # default window is "Add New Inventor" when window opens
@@ -59,12 +68,12 @@ class InventoryReport:
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=722, height=400)
 
     def report_inventory_item(self, master):
-        center_label = Label(self.stockReportFrame, text="Item Name", width=11, anchor=W, justify=LEFT,
-                             font=('times new roman', 20, 'normal'),
+        center_label = Label(self.stockReportFrame, text="Center Name", width=11, anchor=W, justify=LEFT,
+                             font=L_FONT,
                              bg='snow')
 
-        stockType_label = Label(self.stockReportFrame, text="Author", width=11, anchor=W, justify=LEFT,
-                                font=('times new roman', 20, 'normal'),
+        stockType_label = Label(self.stockReportFrame, text="Stock Type", width=11, anchor=W, justify=LEFT,
+                                font=L_FONT,
                                 bg='snow')
 
         local_centerText = StringVar(self.stockReportFrame)
@@ -78,7 +87,7 @@ class InventoryReport:
         print("Center list  - ", newCenterList)
         local_centerText.set(newCenterList[0])
         localcenter_menu = OptionMenu(self.stockReportFrame, local_centerText, *newCenterList)
-        localcenter_menu.configure(width=45, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        localcenter_menu.configure(width=35, font=L_FONT, bg='light cyan', anchor=W,
                                    justify=LEFT)
 
         item_TypeText = StringVar(self.stockReportFrame)
@@ -86,16 +95,16 @@ class InventoryReport:
         print("Item Type list  - ", itemtypeList)
         item_TypeText.set(itemtypeList[0])
         item_Typemenu = OptionMenu(self.stockReportFrame, item_TypeText, *itemtypeList)
-        item_Typemenu.configure(width=45, font=('times new roman', 17, 'normal'), bg='light cyan', anchor=W,
+        item_Typemenu.configure(width=35, font=L_FONT, bg='light cyan', anchor=W,
                                 justify=LEFT)
 
-        self.stockReportFrame.place(x=20, y=20)
-        self.infoFrame.place(x=20, y=200)
+        self.stockReportFrame.place(x=160, y=5)
+        self.infoFrame.place(x=160, y=165)
 
-        center_label.place(x=30, y=5)
-        stockType_label.place(x=30, y=50)
-        localcenter_menu.place(x=180, y=5)
-        item_Typemenu.place(x=180, y=50)
+        center_label.place(x=30, y=23)
+        stockType_label.place(x=30, y=80)
+        localcenter_menu.place(x=180, y=20)
+        item_Typemenu.place(x=180, y=80)
         self.info_label.place(x=2, y=2)
         search_result = partial(self.search_stock_info, local_centerText, item_TypeText)
         self.btn_generate.configure(command=search_result)
@@ -115,7 +124,7 @@ class InventoryReport:
         search_type = REGULAR_STOCK
         if item_Typemenu.get() == "Critical Stock":
             search_type = CRITICAL_STOCK
-        result_list = self.getSearchList(localcenter_menu, item_Typemenu,search_type)
+        result_list = self.getSearchList(localcenter_menu, item_Typemenu, search_type)
         print(result_list)
 
         wb_template = openpyxl.load_workbook(PATH_STOCK_INFO_TEMPLATE)
@@ -226,7 +235,7 @@ class InventoryReport:
         self.clearStockInfoTemplateSheet(dict_index)
         current_window.destroy()
 
-    def getSearchList(self, localcenter_menu, item_Typemenu,search_type):
+    def getSearchList(self, localcenter_menu, item_Typemenu, search_type):
         print("getSearchList--> Start ")
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
