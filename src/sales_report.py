@@ -25,8 +25,10 @@ class StocksalesStatement:
 
     def stocksales_sheet(self, master):
         stocksales_statement_window = Toplevel(master)
-        stocksales_statement_window.title("Stock Sales Statement ")
-        stocksales_statement_window.geometry('770x450+120+40')
+        stocksales_statement_window.title("Inventory Sales Statement ")
+        width, height = pyautogui.size()
+        stocksales_statement_window.geometry(
+            '{}x{}+{}+{}'.format(int('770'), int('450'), int(width / 2.82), int(height / 3.6)))
         stocksales_statement_window.configure(background='wheat')
         stocksales_statement_window.resizable(width=False, height=False)
 
@@ -370,7 +372,8 @@ class StocksalesStatement:
                             starting_index = starting_index + 1
 
                     today = date.today()
-                    dt_string = today.strftime("%d_%b_%Y_%H%M%S")
+                    now = datetime.now()
+                    dt_string = now.strftime("%d_%b_%Y_%H%M%S")
                     dt_today = today.strftime("%d-%b-%Y")
                     destination_file = "..\\Library_Stock\\Sales_Statement\\Report\\Statement_StockSales" + dt_string + ".pdf"
                     frdateforstatement = fromDate.strftime("%d-%b-%Y")
