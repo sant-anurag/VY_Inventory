@@ -139,7 +139,7 @@ class Inventory:
     def user_login_screen(self):
         obj_login = accountControl(root, self.currentUser)
 
-    def designMainScreen(self, master):
+    def designMainScreen(self, master,user_category):
         labelFrame = Label(master, text="Inventory & Sales Management", justify=CENTER,
                            font=XXL_FONT,
                            fg='black')
@@ -147,31 +147,36 @@ class Inventory:
         result_btnInv = partial(self.new_inventory_view)
         btn_inventory = Button(master, text="Inventory", fg="Black", command=result_btnInv,
                                font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
-        # button_load = Image.open('..//Images//Logos//button bg 2.jfif').resize((400, 110))
-        # button_img = ImageTk.PhotoImage(button_load)
-        # btn_inventory.config(image=button_img, text="Inventory")
+
         result_sales = partial(self.sales_operations)
         btn_sales = Button(master, text="Sales", fg="Black", command=result_sales,
                            font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
-        result_btnMchd = partial(self.new_center_registration)
-        btn_merchandise = Button(master, text="Merchandise", fg="Black", command=result_btnMchd,
-                                 font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
-        result_btnReport = partial(self.inventory_report)
-        btn_reports = Button(master, text="Reports", fg="Black", command=result_btnReport,
-                             font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
-        result_usrLogin = partial(self.user_login_screen)
-        btn_usrCtrl = Button(master, text="User Control", fg="Black", command=result_usrLogin,
-                             font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+        if user_category == 'Admin':
+            result_btnMchd = partial(self.new_center_registration)
+            btn_merchandise = Button(master, text="Merchandise", fg="Black", command=result_btnMchd,
+                                     font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+            result_btnReport = partial(self.inventory_report)
+            btn_reports = Button(master, text="Reports", fg="Black", command=result_btnReport,
+                                 font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+
+            result_usrLogin = partial(self.user_login_screen)
+            btn_usrCtrl = Button(master, text="User Control", fg="Black", command=result_usrLogin,
+                                 font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
         btn_exit = Button(master, text="Exit", fg="Black", command=master.destroy,
                           font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
         btn_inventory.place(x=65, y=240)
         btn_sales.place(x=65, y=295)
-        btn_merchandise.place(x=65, y=350)
-        btn_reports.place(x=65, y=405)
-        btn_usrCtrl.place(x=65, y=460)
-        btn_exit.place(x=65, y=515)
+        if user_category == 'Admin':
+            btn_merchandise.place(x=65, y=350)
+            btn_reports.place(x=65, y=405)
+            btn_usrCtrl.place(x=65, y=460)
+            btn_exit.place(x=65, y=515)
+        elif user_category == 'User':
+            btn_exit.place(x=65, y=350)
+        else:
+            print("Un-reachable code")
 
         master.bind('<Escape>', lambda event=None: btn_exit.invoke())
 
@@ -289,10 +294,12 @@ class Inventory:
 
         result_query = cursor.execute("SELECT * FROM userlogin")
         result = cursor.fetchall()
+        curUser_category = "Admin"
         conn.close()
         for iLoop in range(0, len(result)):
             if userNameText.get() == result[iLoop][1] and passwordText.get() == result[iLoop][2]:
                 bLoginValid = True
+                curUser_category = result[iLoop][3]
                 username = result[iLoop][1]
                 break;
 
@@ -301,7 +308,9 @@ class Inventory:
             print("Authentication Success for user :", userNameText.get())
             login_window.destroy()
             self.currentUser = username
-            self.designMainScreen(root)
+            print("Username = ", self.currentUser, "Category = ", curUser_category)
+            self.designMainScreen(root, curUser_category)
+
 
         else:
             # log the user action
