@@ -38,6 +38,7 @@ class Inventory:
         self.master = master
         self.print_button = ""
         self.obj_commonUtil = CommonUtil()
+        self.obj_curUser = CurrentUser()
         # sets the configuration of main screen
         self.master.title("Inventory & Sales Management")
         self.currentUser = ""
@@ -304,17 +305,15 @@ class Inventory:
                 break;
 
         if bLoginValid:
-            self.obj_commonUtil.logActivity(self.currentUser, "Login Success")
+            self.obj_curUser.setCurrentUser(username)
+            self.obj_commonUtil.logActivity("Login Success")
             print("Authentication Success for user :", userNameText.get())
             login_window.destroy()
-            self.currentUser = username
             print("Username = ", self.currentUser, "Category = ", curUser_category)
             self.designMainScreen(root, curUser_category)
-
-
         else:
             # log the user action
-            self.obj_commonUtil.logActivity(self.currentUser, "Login failure")
+            self.obj_commonUtil.logActivity("Login failure")
             labelLogin.configure(fg='red')
             labelLogin['text'] = "Login Failed !! Try Again"
             self.clear_loginForm(userNameText, passwordText)

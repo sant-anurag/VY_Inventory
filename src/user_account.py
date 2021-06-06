@@ -112,7 +112,7 @@ class accountControl:
                                bg='wheat')
         self.userInfoFrame.place(x=160, y=5)
         userInfo_label.place(x=5, y=5)
-        self.obj_commonUtil.logActivity(self.currentuser, "Viewed Current user info")
+        self.obj_commonUtil.logActivity("Viewed Current user info")
         self.account_control_window.focus()
         self.account_control_window.grab_set()
         mainloop()
@@ -427,7 +427,7 @@ class accountControl:
                 conn.close()
                 print("Account created !!! ")
                 infoText = "New Account created as: " + username
-                self.obj_commonUtil.logActivity(self.currentUser, infoText)
+                self.obj_commonUtil.logActivity(infoText)
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
 
@@ -504,7 +504,7 @@ class accountControl:
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
                 messagebox.showinfo("Success", "Account Removal success")
                 infoText = "Account deletion was success for: " + username_text.get()
-                self.obj_commonUtil.logActivity(self.currentUser, infoText)
+                self.obj_commonUtil.logActivity(infoText)
 
     def password_validity(self, password):
         print("password_validity -> start :", password)

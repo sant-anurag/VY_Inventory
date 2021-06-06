@@ -39,6 +39,7 @@ import time
 import pyglet
 import pyautogui
 import MySQLdb as sql_db
+from singleton_user import *
 
 from dateTime_operation import *
 

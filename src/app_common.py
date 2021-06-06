@@ -187,7 +187,7 @@ class CommonUtil:
         conn.close()
         return result
 
-    def logActivity(self, username,activity_details):
+    def logActivity(self, activity_details):
         print("logging Activity --> ")
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
@@ -199,7 +199,7 @@ class CommonUtil:
 
         dateForLogging = now.strftime("%d-%b-%Y")
         timeForLogging = now.strftime("%H-%M-%S")
-
+        username = CurrentUser.get_instance().getCurrentUser()
         sql = "INSERT INTO activity_logs VALUES(%s,%s,%s,%s,%s,%s)"
         values = (dateForLogging,timeForLogging,hostname,ipaddress,username,activity_details)
         cursor.execute(sql, values)

@@ -913,7 +913,7 @@ class NewInventory:
                 # execute the query
                 conn.commit()
                 conn.close()
-                self.obj_commonUtil.logActivity(self.currentuser, logInfo)
+                self.obj_commonUtil.logActivity(logInfo)
                 print("Record inserted !!! ")
 
                 self.btn_submit.configure(state=DISABLED, bg='light grey')
