@@ -657,6 +657,7 @@ class InventorySales:
         self.obj_commonUtil.logActivity(logInfo)
         # Clear the cart since , purchase has happened .
         self.list_InvoicePrint = []
+        # temp list is cleared
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
