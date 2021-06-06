@@ -2,6 +2,7 @@ from app_defines import *
 from app_common import *
 from app_thread import *
 
+
 class InventorySales:
 
     # constructor for Library class
@@ -71,7 +72,7 @@ class InventorySales:
         self.btn_discount = Button(self.AdditionalbtnFrame)
         discount_result = partial(self.discount_display)
         self.btn_discount.configure(text="Discount %", fg="Black", font=L_FONT, width=18, state=NORMAL,
-                                    bg='RosyBrown1', command = discount_result)
+                                    bg='RosyBrown1', command=discount_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
                                   font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
         self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
@@ -228,8 +229,8 @@ class InventorySales:
                                font=L_FONT,
                                bg='light cyan')
         self.billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                                font=L_FONT,
-                                bg='light cyan')
+                                     font=L_FONT,
+                                     bg='light cyan')
         discount_label = Label(framelower, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
                                font=L_FONT, bg='snow')
         billNo_label = Label(framelower, text="Bill No.", width=14, anchor=W, justify=LEFT,
@@ -363,12 +364,12 @@ class InventorySales:
                 elif column_index == 3:
                     label_detail['text'] = self.list_InvoicePrint[row_index][1]
                 elif column_index == 4:
-                    label_detail['text'] = round(float(self.list_InvoicePrint[row_index][3]),2)
+                    label_detail['text'] = round(float(self.list_InvoicePrint[row_index][3]), 2)
                 elif column_index == 5:
                     label_detail['text'] = self.list_InvoicePrint[row_index][2]
                 elif column_index == 6:
                     label_detail['text'] = round((int(self.list_InvoicePrint[row_index][2]) * float(
-                        self.list_InvoicePrint[row_index][3])),2)
+                        self.list_InvoicePrint[row_index][3])), 2)
                 else:
                     print("this value doesn't exists")
         self.calculateAndDisplayTotalBillAmt()
@@ -474,9 +475,9 @@ class InventorySales:
         for iLoop in range(0, len(self.list_InvoicePrint)):
             if iLoop + 1 == int(serialNo.get()):
                 bSerialValid = True
-                discounted_price = float((int(discountAmt.get())/100)*float(self.list_InvoicePrint[iLoop][3]))
+                discounted_price = float((int(discountAmt.get()) / 100) * float(self.list_InvoicePrint[iLoop][3]))
                 self.list_InvoicePrint[iLoop][3] = discounted_price
-                print("Discounted price is :",discounted_price)
+                print("Discounted price is :", discounted_price)
                 break
 
         if bSerialValid:
@@ -549,9 +550,6 @@ class InventorySales:
         conn.close()
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-        # Clear the cart since , purchase has happened .
-        self.list_InvoicePrint = []
-
         # generate Invoice
         self.generateInvoicePage(customer_name,
                                  libMemberId,
@@ -569,7 +567,6 @@ class InventorySales:
 
         print("Purchase Step 2 - Generating Invoice")
         # update the invoice database with invoice details
-        self.updateInvoiceRecord(invoice_id)
 
         file_name = "..\\Library_Stock\\Invoices\\Template\\sales-invoice.xlsx"
         # searchinfo_label.configure(text="Invoice is being generated. Please wait ...", fg="purple")
@@ -611,9 +608,9 @@ class InventorySales:
 
         sheet_obj.cell(row=29, column=6).value = str(final_paymentValue)
 
-        # print("Invoice records  :")
-        # for iLoop in range(0, len(self.list_InvoicePrint)):
-        # print(" Record :", iLoop + 1, " :", self.list_InvoicePrint[iLoop][1])
+        print("Invoice records  :")
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            print(" Record :", iLoop + 1, " :", self.list_InvoicePrint[iLoop][1])
 
         wb_obj.save(file_name)
         today = datetime.now()
@@ -623,12 +620,8 @@ class InventorySales:
             print("Current year directory is not available , hence building one")
             os.makedirs(dirname)
         dest_file = dirname + "\\" + invoice_id + ".pdf "
-        dest_desktop_file = self.obj_initDatabase.get_desktop_invoices_directory_path() + "\\" + invoice_id + ".pdf "
+
         self.obj_commonUtil.convertExcelToPdf(file_name, dest_file)
-        # os.startfile(dest_file, 'print')
-        # invoice_info = "Invoice is ready ! Invoice Id : " + invoice_id
-        # searchinfo_label.configure(text=invoice_info, fg='purple')
-        # copyfile(dest_file, dest_desktop_file)
 
         self.btn_print.configure(state=NORMAL, bg='light cyan')
         #        print_result = partial(self.printInvoice, dest_file)
@@ -639,9 +632,31 @@ class InventorySales:
         self.btn_addToCart.configure(state=DISABLED, bg='light grey')
 
         # update the invoice table
-        # self.obj_commonUtil.updateInvoiceTable(invoice_id, dest_file)
+        self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue)
 
         # self.obj_commonUtil.clearSales_InvoiceData(file_name,len(self.list_InvoicePrint))
+
+    def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue):
+        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+        total_records = cursor.execute("SELECT * FROM invoices")
+        if total_records == 0:
+            serial_no = 1
+        else:
+            serial_no = total_records + 1
+
+        sql = "INSERT INTO invoices VALUES(%s, %s, %s, %s)"
+        values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue)
+        cursor.execute(sql, values)
+        conn.commit()
+        conn.close()
+
+        logInfo = str(invoice_id) + " purchase" + " success"
+        self.obj_commonUtil.logActivity(logInfo)
+        # Clear the cart since , purchase has happened .
+        self.list_InvoicePrint = []
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
@@ -660,7 +675,7 @@ class InventorySales:
         total_cart_mrp = 0
         for iLoop in range(0, len(self.list_InvoicePrint)):
             total_cart_mrp = total_cart_mrp + round((int(self.list_InvoicePrint[iLoop][2]) * float(
-                self.list_InvoicePrint[iLoop][3])),2)
+                self.list_InvoicePrint[iLoop][3])), 2)
 
         self.billAmount_text['text'] = str(total_cart_mrp)
 
