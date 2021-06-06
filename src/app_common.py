@@ -67,12 +67,12 @@ class CommonUtil:
 
     def preparePDFStatement_file(self, src_file, pathToPrint, destination_copy_folder):
         self.convertExcelToPdf(src_file, pathToPrint)
-        self.copyTheStatementFileToDesktop_file(pathToPrint, destination_copy_folder)
+        #self.copyTheStatementFileToDesktop_file(pathToPrint, destination_copy_folder)
         # copy to software repo
         today = datetime.now()
-        year = today.strftime("%Y")
-        dirname = "..\\Expanse_Data\\" + year + "\\Statements"
-        shutil.copy(pathToPrint, dirname)
+        #year = today.strftime("%Y")
+        #dirname = "..\\Expanse_Data\\" + year + "\\Statements"
+        #shutil.copy(pathToPrint, dirname)
 
     def preparePDFStatement_forStockInfo(self, src_file, pathToPrint, destination_copy_folder):
         self.convertExcelToPdf(src_file, pathToPrint)

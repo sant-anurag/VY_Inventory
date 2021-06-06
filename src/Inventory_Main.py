@@ -108,7 +108,9 @@ class Inventory:
             S_no int,
             invoice_id VARCHAR(255) NOT NULL,
             invoice_date DATE NOT NULL,
-            invoice_amount int
+            invoice_amount int,
+            customer_name VARCHAR(255),
+            customer_contact VARCHAR(20)
         )'''
         cursor.execute(sql)
 

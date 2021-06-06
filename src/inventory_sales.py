@@ -632,11 +632,11 @@ class InventorySales:
         self.btn_addToCart.configure(state=DISABLED, bg='light grey')
 
         # update the invoice table
-        self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue)
+        self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue, customer_name,customer_contact)
 
         # self.obj_commonUtil.clearSales_InvoiceData(file_name,len(self.list_InvoicePrint))
 
-    def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue):
+    def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name,customer_contact):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
@@ -647,8 +647,10 @@ class InventorySales:
         else:
             serial_no = total_records + 1
 
-        sql = "INSERT INTO invoices VALUES(%s, %s, %s, %s)"
-        values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue)
+        customername = customer_name.get()
+        customercontact = customer_contact.get()
+        sql = "INSERT INTO invoices VALUES(%s, %s, %s, %s, %s, %s)"
+        values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue, customername,customercontact)
         cursor.execute(sql, values)
         conn.commit()
         conn.close()

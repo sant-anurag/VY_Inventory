@@ -2,15 +2,14 @@
 # Copyright 2021 by Deo Tech.
 # All rights reserved.
 # This file is part of the Software Package,
-# and is released under the "VY License Agreement". Please see the LICENSE
+# and is released under the License Agreement. Please see the LICENSE
 # file that should have been included as part of this package.
-# Vihangan Yoga Operations  of Ashram Management Software
+# Inventory & Sales Management Software
 # File Name : stocksales_statement.py
 # Developer : Sant Anurag Deo
 # Version : 2.0
 """
 
-from app_defines import *
 from app_common import *
 from app_thread import *
 
@@ -136,13 +135,13 @@ class StocksalesStatement:
                           font=NORM_FONT, width=12, bg='light grey', state=DISABLED)
         cancel = Button(buttonFrame, text="Close", fg="Black", command=stocksales_statement_window.destroy,
                         font=NORM_FONT, width=12, bg='light cyan')
-        '''
+
         search_result = partial(self.prepare_account_statement_Excel, stocksales_statement_window, printBtn,
                                 cal_dateFrom,
                                 cal_toDate, month_variable, year_variable,
                                 year_yearvariable, var, viewPDF, infoLabel, cancel)
-                                '''
-        submit = Button(buttonFrame, text="Search", fg="Black", command=None,
+
+        submit = Button(buttonFrame, text="Search", fg="Black", command=search_result,
                         font=NORM_FONT, width=12, bg='light cyan')
         submit.grid(row=0, column=0)
         viewPDF.grid(row=0, column=1)
@@ -251,9 +250,8 @@ class StocksalesStatement:
                                                                               viewbymonth_yearTxt.get())
             fromDate, toDate = self.dateTimeOp.getFromAndToDates_Account_Statement(month_number,
                                                                                    viewbymonth_yearTxt.get(),
-                                                                                   noOfDays)
-            frdateforstatement = fromDate.strftime("%b-%d-%Y")
-            todateforstatement = toDate.strftime("%b-%d-%Y")
+                                                                                  noOfDays)
+
         else:
             print("Requested year is :", viewbyYear_yearTxt.get())
             noOfDays = self.dateTimeOp.calculateNoOfDaysInYear(viewbyYear_yearTxt.get())
@@ -266,7 +264,6 @@ class StocksalesStatement:
         today_date = datetime.now()
         formatted_date = today_date.strftime("%Y-%m-%d")
         currentDate = self.dateTimeOp.prepare_dateFromString(formatted_date)
-        current_year = currentDate.strftime("%Y")
         print("From Year :", from_year, " To Year :", to_year)
         bDateConditionsValid = True
         if fromDate > toDate:
@@ -294,10 +291,6 @@ class StocksalesStatement:
         else:
             # check if the selected years are less than or equal to current date ,
             # but no database exists for them
-            dir_name = "..\\Expanse_Data\\" + str(from_year)
-            if not os.path.exists(dir_name):
-                error_info = "Database does not exists for " + str(from_year) + " Please correct !!!"
-                bDateConditionsValid = False
             pass
 
         # algorithm generates the statement when from and start date has the same year
@@ -308,310 +301,110 @@ class StocksalesStatement:
                     to_year == self.obj_commonUtil.getCurrentYearFolderName():
                 bAlike_seva = True
                 print("This is current year transaction")
+                template_file_path = "..\\Library_Stock\\Sales_Statement\\template\\stock_sales_account_template.xlsx"
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
-                path_seva_sheet = InitDatabase.getInstance().get_purchase_record_database_name()  # STOCK SALES DATABASE
-                InitDatabase.getInstance().initilize_sorted_purchase_record_database()
-                sorted_seva_sheet = InitDatabase.getInstance().get_sorted_purchase_record_database()
+                # Creating a cursor object using the cursor() method
+                cursor = conn.cursor()
+                total_records = cursor.execute("SELECT * FROM invoices")
+                result_invoice = cursor.fetchall()
+                conn.close()
 
-                if bAlike_seva:
-                    print("path_seva_sheet :", path_seva_sheet)
-                    wb_obj = openpyxl.load_workbook(path_seva_sheet)
-                    wb_sorted_obj = openpyxl.load_workbook(sorted_seva_sheet)
-                    sheet_obj = wb_obj.active
-                    sheet_sorted_obj = wb_sorted_obj.active
-                    total_records = self.obj_commonUtil.totalrecords_excelDataBase(path_seva_sheet)
-                    if total_records > 0:
-                        sort_sheet_index = 2
-                        print("Total records  in transaction sheet:", total_records)
-                        for row_index in range(0, total_records):
-                            # critical stock ->stock with quantity is 0 or 1
-                            # print("Date from sheet is :", sheet_obj.cell(row=row_index + 2, column=6).value)
-                            dateFromTransactionSheet = self.dateTimeOp.prepare_dateFromString(
-                                sheet_obj.cell(row=row_index + 2, column=6).value)
-                            # print("dateFromMon_DepositSheet :", dateFromTransactionSheet, "fromDate :", fromDate, " toDate:", toDate)
+                wb_sorted_obj = openpyxl.load_workbook(template_file_path)
 
-                            if ((dateFromTransactionSheet > fromDate or dateFromTransactionSheet == fromDate)
-                                    and (dateFromTransactionSheet < toDate or dateFromTransactionSheet == toDate)):
+                sheet_sorted_obj = wb_sorted_obj.active
+                dict_index = 1
+                starting_index = 15
+                balance = 0
+                if total_records > 0:
+                    print("Total records  in transaction sheet:", total_records)
+                    text_info = "Statement is being generated for Stock Sales.Please wait ...."
+                    infoLabel.configure(text=text_info, fg='purple')
+                    for row_index in range(0, total_records):
+                        dateFromInvoiceTable = result_invoice[row_index][2]
 
-                                for column_index in range(1, 11):
-                                    text_value = str(sheet_obj.cell(row=row_index + 2, column=column_index).value)
+                        print("dateFromInvoiceTable :", dateFromInvoiceTable)
 
-                                    sheet_sorted_obj.cell(row=sort_sheet_index, column=column_index).font = Font(size=8,
-                                                                                                                 name='Arial',
-                                                                                                                 bold=False)
-                                    sheet_sorted_obj.cell(row=sort_sheet_index,
-                                                          column=column_index).alignment = Alignment(
-                                        horizontal='left', vertical='center', wrapText=True)
-                                    sheet_sorted_obj.cell(row=sort_sheet_index, column=column_index).value = text_value
+                        if ((dateFromInvoiceTable > fromDate or dateFromInvoiceTable == fromDate)
+                                and (dateFromInvoiceTable < toDate or dateFromInvoiceTable == toDate)):
+                            print("dict_index is :", dict_index)
+                            if dict_index == 1:
+                                balance = float(result_invoice[row_index][3])
+                            else:
+                                balance = balance + float(result_invoice[row_index][3])
+                            print("balance is :", balance)
 
-                                sort_sheet_index = sort_sheet_index + 1
-
-                        today = date.today()
-                        dt_today = today.strftime("%d-%b-%Y")
-                        wb_sorted_obj.save(sorted_seva_sheet)
-                        print("Sorted sheet created for sorting")
-                        self.obj_commonUtil.sortExcelSheetByDate(sorted_seva_sheet, sorted_seva_sheet)
-
-                        now = datetime.now()
-                        dt_string = now.strftime("%d_%b_%Y_%H%M%S")
-                        currentyear = now.strftime("%Y")
-                        destination_file = "..\\Expanse_Data\\" + currentyear + "\\Transaction\\StockSell\\Statements\\Statement_StockSales" + dt_string + ".pdf"
-                        # write the  sorted record in statement template
-                        template_sheet = "..\\Expanse_Data\\" + currentyear + "\\Transaction\\StockSell\\Template\\stock_sales_account_template.xlsx"
-                        wb_critical_stock = openpyxl.load_workbook(template_sheet)
-                        critical_stock_sheet = wb_critical_stock.active
-                        total_sorted_records = self.obj_commonUtil.totalrecords_excelDataBase(sorted_seva_sheet)
-                        wb_sort = openpyxl.load_workbook(sorted_seva_sheet)
-                        sort_sheet = wb_sort.active
-                        dict_index = 1
-                        starting_index = 15
-                        print("Total sorted records :", total_sorted_records)
-                        if total_sorted_records > 0:
-                            text_info = "Statement is being generated for Stock Sales.Please wait ...."
-                            infoLabel.configure(text=text_info, fg='purple')
-                            for row_index in range(1, total_sorted_records + 1):
-                                #print("credit amount is :", sort_sheet.cell(row=row_index + 1, column=8).value)
-                                if dict_index == 1:
-                                    balance = int(sort_sheet.cell(row=row_index + 1, column=7).value)
+                            for column_index in range(1, 7):
+                                if column_index == 1:  # Date
+                                    text_value = result_invoice[row_index][2]
+                                elif column_index == 2:  # Invoice
+                                    text_value = result_invoice[row_index][1]
+                                elif column_index == 3:  # Customer name
+                                    text_value = result_invoice[row_index][4]
+                                elif column_index == 4:  # customer contact
+                                    text_value = result_invoice[row_index][5]
+                                elif column_index == 5:  # credit
+                                    text_value = result_invoice[row_index][3]
+                                elif column_index == 6:  # balance
+                                    text_value = balance
                                 else:
-                                    balance = balance + int(sort_sheet.cell(row=row_index + 1, column=7).value)
+                                    pass
 
-                                for column_index in range(1, 7):
-                                    if column_index == 1:  # Date
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=6).value
-                                        text_value = text_value.strftime("%d-%b-%Y")
-                                    elif column_index == 2:  # Invoice
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=9).value
-                                    elif column_index == 3:  # Description
-                                        text_value = str(sort_sheet.cell(row=row_index + 1, column=4).value) + "-By " + \
-                                                     str(sort_sheet.cell(row=row_index + 1, column=3).value)
-                                    elif column_index == 4:  # quantity
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=10).value
-                                    elif column_index == 5:  # credit
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=7).value
-                                    elif column_index == 6:  # balance
-                                        text_value = str(balance)
-                                    else:
-                                        pass
-                                    critical_stock_sheet.cell(row=starting_index, column=column_index).font = Font(
-                                        size=8,
-                                        name='Arial',
-                                        bold=False)
-                                    if column_index == 4 or column_index == 5 or column_index == 6:
-                                        critical_stock_sheet.cell(row=starting_index,
-                                                                  column=column_index).alignment = Alignment(
-                                            horizontal='center', vertical='center', wrapText=True)
-                                    else:
-                                        critical_stock_sheet.cell(row=starting_index,
-                                                                  column=column_index).alignment = Alignment(
-                                            horizontal='left', vertical='center', wrapText=True)
+                                sheet_sorted_obj.cell(row=starting_index, column=column_index).font = Font(
+                                    size=8,
+                                    name='Arial',
+                                    bold=False)
 
-                                    critical_stock_sheet.cell(row=starting_index,
-                                                              column=column_index).value = text_value
-                                dict_index = dict_index + 1
-                                starting_index = starting_index + 1
+                                if column_index == 4 or column_index == 5 or column_index == 6:
+                                    sheet_sorted_obj.cell(row=starting_index,
+                                                              column=column_index).alignment = Alignment(
+                                        horizontal='center', vertical='center', wrapText=True)
+                                else:
+                                    sheet_sorted_obj.cell(row=starting_index,
+                                                              column=column_index).alignment = Alignment(
+                                        horizontal='left', vertical='center', wrapText=True)
 
-                            frdateforstatement = fromDate.strftime("%d-%b-%Y")
-                            todateforstatement = toDate.strftime("%d-%b-%Y")
-                            critical_stock_sheet.cell(row=3, column=6).value = dt_today
-                            critical_stock_sheet.cell(row=5, column=6).value = "Stock Sales"
-                            critical_stock_sheet.cell(row=8, column=6).value = str(balance)
-                            critical_stock_sheet.cell(row=9, column=6).value = str(starting_index - 15)
-                            critical_stock_sheet.cell(row=10, column=6).value = frdateforstatement
-                            critical_stock_sheet.cell(row=11, column=6).value = todateforstatement
-                            wb_critical_stock.save(template_sheet)
-                            print("File has been saved for template")
-                            destination_copy_folder = InitDatabase.getInstance().get_desktop_statement_directory_path()
-                            obj_threadClass = myThread(10, "statementThread", 1, template_sheet,
-                                                       destination_file, starting_index, viewPDF, printBtn, infoLabel,destination_copy_folder)
-                            obj_threadClass.start()
-                            print_result = partial(self.obj_commonUtil.open_statement_file,
-                                                   template_sheet,
-                                                   destination_file, starting_index)
-                            printBtn.configure(command=print_result)
-                            view_result = partial(self.obj_commonUtil.open_statement_file, template_sheet,
-                                                  destination_file, starting_index)
-                            viewPDF.configure(command=view_result, )
+                                sheet_sorted_obj.cell(row=starting_index,
+                                                          column=column_index).value = text_value
+                            dict_index = dict_index + 1
+                            starting_index = starting_index + 1
 
-                            cancel_result = partial(self.closepage, template_sheet, starting_index,
-                                                    account_statement_window)
-                            cancelbtn.configure(command=cancel_result)
-                        else:
-                            text_error = "No records present for Stock Sales in specified period!!!"
-                            infoLabel.configure(text=text_error, fg='red')
-                    else:
-                        text_error = "No records present for  Stock sales"
-                        infoLabel.configure(text=text_error, fg='red')
+                    today = date.today()
+                    dt_string = today.strftime("%d_%b_%Y_%H%M%S")
+                    dt_today = today.strftime("%d-%b-%Y")
+                    destination_file = "..\\Library_Stock\\Sales_Statement\\Report\\Statement_StockSales" + dt_string + ".pdf"
+                    frdateforstatement = fromDate.strftime("%d-%b-%Y")
+                    todateforstatement = toDate.strftime("%d-%b-%Y")
+                    sheet_sorted_obj.cell(row=3, column=6).value = dt_today
+                    sheet_sorted_obj.cell(row=5, column=6).value = "Stock Sales"
+                    sheet_sorted_obj.cell(row=8, column=6).value = str(balance)
+                    sheet_sorted_obj.cell(row=9, column=6).value = str(starting_index - 15)
+                    sheet_sorted_obj.cell(row=10, column=6).value = frdateforstatement
+                    sheet_sorted_obj.cell(row=11, column=6).value = todateforstatement
+                    wb_sorted_obj.save(template_file_path)
+
+                    print("File has been saved for template")
+
+                    obj_threadClass = myThread(10, "statementThread", 1, template_file_path,
+                                               destination_file, starting_index, viewPDF, printBtn, infoLabel,
+                                               "NA")
+                    obj_threadClass.start()
+                    print_result = partial(self.obj_commonUtil.open_statement_file,
+                                           template_file_path,
+                                           destination_file, starting_index)
+                    printBtn.configure(command=print_result)
+                    view_result = partial(self.obj_commonUtil.open_statement_file, template_file_path,
+                                          destination_file, starting_index)
+                    viewPDF.configure(command=view_result, )
+
+                    cancel_result = partial(self.closepage, template_file_path, starting_index,
+                                            account_statement_window)
+                    cancelbtn.configure(command=cancel_result)
+                else:
+                    text_error = "No records present for Stock Sales in specified period!!!"
+                    infoLabel.configure(text=text_error, fg='red')
             else:
-                # algorithm generates the statement when from and start date has different year
-                # same current year directory needs to be referred for these statement generations
-                print(" From year and to year are different")
-
-                # Since the maximum viewed transaction are only 6 months
-                # only 2 year numbers can be considered at max
-                # hence same loop with different from and to dates in executed twice
-                # this is possible only in case of view by date
-                yearDiff = int(to_year) - int(from_year)
-                loop_range = yearDiff + 2
-
-                print("Year diff :", yearDiff, " loop_range :", loop_range)
-                for year_loop in range(1, loop_range):
-                    if var.get() == 1:
-                        if year_loop == 1:
-                            fDate = fromDate
-                            yearOfFromdate = fDate.strftime("%Y")
-                            yearFolderToSearch = yearOfFromdate
-                            tDate = self.obj_commonUtil.prepare_dateFromString("31" + "-" + "12" + "-" + yearOfFromdate)
-                        elif year_loop == 2:
-                            yearOfTodate = toDate.strftime("%Y")
-                            fDate = self.obj_commonUtil.prepare_dateFromString("1" + "-" + "1" + "-" + yearOfTodate)
-                            yearOfTodate = toDate.strftime("%Y")
-                            yearFolderToSearch = yearOfTodate
-                            tDate = toDate
-                        else:
-                            pass
-                    elif var.get() == 2 or var.get() == 3:
-                        fDate = fromDate
-                        tDate = toDate
-                        yearOfFromdate = fDate.strftime("%Y")
-                        yearFolderToSearch = yearOfFromdate
-                    else:
-                        pass
-
-                    print("fDate :", fDate, "tDate:", tDate, "yearFolderToSearch :", yearFolderToSearch)
-
-                    path_seva_sheet = "..\\Expanse_Data\\" + yearFolderToSearch + "\\Transaction\\StockSell\\Purchase_Transaction.xlsx"
-                    if year_loop == 1:
-                        InitDatabase.getInstance().initilize_sortedmonthly_seva_database()
-                        sorted_seva_sheet = InitDatabase.getInstance().get_sortedmonthly_database_name()
-
-                    print("path_seva_sheet :", path_seva_sheet)
-                    wb_obj = openpyxl.load_workbook(path_seva_sheet)
-                    wb_sorted_obj = openpyxl.load_workbook(sorted_seva_sheet)
-                    sheet_obj = wb_obj.active
-                    sheet_sorted_obj = wb_sorted_obj.active
-                    total_records = self.obj_commonUtil.totalrecords_excelDataBase(path_seva_sheet)
-                    if total_records > 0:
-                        sort_sheet_index = self.obj_commonUtil.totalrecords_excelDataBase(sorted_seva_sheet) + 2
-                        print("Sorted sheet will now start from row:", sort_sheet_index)
-                        print("Total records  in transaction sheet:", total_records)
-                        for row_index in range(0, total_records):
-                            # critical stock ->stock with quantity is 0 or 1
-                            # print("Date from sheet is :", sheet_obj.cell(row=row_index + 2, column=6).value)
-                            dateFromTransactionSheet = self.dateTimeOp.prepare_dateFromString(
-                                sheet_obj.cell(row=row_index + 2, column=6).value)
-                            # print("dateFromMon_DepositSheet :", dateFromTransactionSheet, "fromDate :", fromDate, " toDate:", toDate)
-
-                            if ((dateFromTransactionSheet > fDate or dateFromTransactionSheet == fDate)
-                                    and (dateFromTransactionSheet < tDate or dateFromTransactionSheet == tDate)):
-                                for column_index in range(1, 11):
-                                    text_value = str(sheet_obj.cell(row=row_index + 2, column=column_index).value)
-
-                                    sheet_sorted_obj.cell(row=sort_sheet_index, column=column_index).font = Font(size=8,
-                                                                                                                 name='Arial',
-                                                                                                                 bold=False)
-                                    sheet_sorted_obj.cell(row=sort_sheet_index,
-                                                          column=column_index).alignment = Alignment(
-                                        horizontal='left', vertical='center', wrapText=True)
-                                    sheet_sorted_obj.cell(row=sort_sheet_index, column=column_index).value = text_value
-
-                                sort_sheet_index = sort_sheet_index + 1
-
-                        today = date.today()
-                        dt_today = today.strftime("%d-%b-%Y")
-                        wb_sorted_obj.save(sorted_seva_sheet)
-                        print("Sorted sheet created for sorting")
-                        self.obj_commonUtil.sortExcelSheetByDate(sorted_seva_sheet, sorted_seva_sheet)
-                        now = datetime.now()
-                        dt_string = now.strftime("%d_%b_%Y_%H%M%S")
-                        currentyear = now.strftime("%Y")
-                        destination_file = "..\\Expanse_Data\\" + currentyear + "\\Transaction\\StockSell\\Statements\\Statement_StockSales" + dt_string + ".pdf"
-                        # write the  sorted record in statement template
-                        template_sheet = "..\\Expanse_Data\\" + currentyear + "\\Transaction\\StockSell\\Template\\stock_sales_account_template.xlsx"
-                        wb_critical_stock = openpyxl.load_workbook(template_sheet)
-                        critical_stock_sheet = wb_critical_stock.active
-                        total_sorted_records = self.obj_commonUtil.totalrecords_excelDataBase(sorted_seva_sheet)
-                        wb_sort = openpyxl.load_workbook(sorted_seva_sheet)
-                        sort_sheet = wb_sort.active
-                        dict_index = 1
-                        starting_index = 15
-                        print("Total sorted records :", total_sorted_records)
-                        if total_sorted_records > 0:
-                            text_info = "Statement is being generated for Stock Sales.Please wait ...."
-                            infoLabel.configure(text=text_info, fg='purple')
-                            for row_index in range(1, total_sorted_records + 1):
-                                if dict_index == 1:
-                                    balance = int(sort_sheet.cell(row=row_index + 1, column=2).value)
-                                else:
-                                    balance = balance + int(sort_sheet.cell(row=row_index + 1, column=2).value)
-
-                                for column_index in range(1, 7):
-                                    if column_index == 1:  # Date
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=6).value
-                                        text_value = text_value.strftime("%d-%b-%Y")
-                                    elif column_index == 2:  # Invoice
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=9).value
-                                    elif column_index == 3:  # Description
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=7).value + "-By " + \
-                                                     sort_sheet.cell(row=row_index + 1, column=11).value + \
-                                                     " From " + sort_sheet.cell(row=row_index + 1, column=5).value
-                                    elif column_index == 4:  # Quantity
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=10).value
-                                    elif column_index == 5:  # credit
-                                        text_value = sort_sheet.cell(row=row_index + 1, column=2).value
-                                    elif column_index == 6:  # balance
-                                        text_value = str(balance)
-                                    else:
-                                        pass
-                                    # print("Text value :", text_value)
-                                    critical_stock_sheet.cell(row=starting_index, column=column_index).font = Font(
-                                        size=8,
-                                        name='Arial',
-                                        bold=False)
-                                    if column_index == 4 or column_index == 5:
-                                        critical_stock_sheet.cell(row=starting_index,
-                                                                  column=column_index).alignment = Alignment(
-                                            horizontal='center', vertical='center', wrapText=True)
-                                    else:
-                                        critical_stock_sheet.cell(row=starting_index,
-                                                                  column=column_index).alignment = Alignment(
-                                            horizontal='left', vertical='center', wrapText=True)
-                                    critical_stock_sheet.cell(row=starting_index,
-                                                              column=column_index).value = text_value
-                                dict_index = dict_index + 1
-                                starting_index = starting_index + 1
-
-                            frdateforstatement = fromDate.strftime("%d-%b-%Y")
-                            todateforstatement = toDate.strftime("%d-%b-%Y")
-                            critical_stock_sheet.cell(row=3, column=6).value = dt_today
-                            critical_stock_sheet.cell(row=5, column=6).value = "Stock Sales"
-                            critical_stock_sheet.cell(row=8, column=6).value = str(balance)
-                            critical_stock_sheet.cell(row=9, column=6).value = str(starting_index - 15)
-                            critical_stock_sheet.cell(row=10, column=6).value = frdateforstatement
-                            critical_stock_sheet.cell(row=11, column=6).value = todateforstatement
-                            wb_critical_stock.save(template_sheet)
-                            print("File has been saved for template")
-                            destination_copy_folder = InitDatabase.getInstance().get_statement_directory_path()
-                            obj_threadClass = myThread(10, "statementThread", 1, template_sheet,
-                                                       destination_file, starting_index, viewPDF, printBtn, infoLabel,destination_copy_folder)
-                            obj_threadClass.start()
-
-                            print_result = partial(self.obj_commonUtil.open_statement_file,
-                                                   template_sheet,
-                                                   destination_file, starting_index)
-                            printBtn.configure(command=print_result)
-                            view_result = partial(self.obj_commonUtil.open_statement_file, template_sheet,
-                                                  destination_file, starting_index)
-                            viewPDF.configure(command=view_result, )
-
-                            cancel_result = partial(self.closepage, template_sheet, starting_index,
-                                                    account_statement_window)
-                            cancelbtn.configure(command=cancel_result)
-                        else:
-                            text_error = "No records present for Stock Sales in specified period!!!"
-                            infoLabel.configure(text=text_error, fg='red')
-                    else:
-                        text_error = "No records present for Stock Sales in specified period!!!"
-                        infoLabel.configure(text=text_error, fg='red')
+                text_error = "No records present for  Stock sales"
+                infoLabel.configure(text=text_error, fg='red')
         else:
             infoLabel.configure(text=error_info, fg='red')
