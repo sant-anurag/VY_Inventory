@@ -21,6 +21,7 @@ from merchandise import *
 from inventory_sales import *
 from inventory_report import *
 from user_account import *
+from sales_report import *
 import sqlite3
 
 """
@@ -136,6 +137,9 @@ class Inventory:
     def inventory_report(self):
         obj_newRept = InventoryReport(root)
 
+    def sales_report(self):
+        obj_newSalesRept = StocksalesStatement(root)
+
     def user_login_screen(self):
         obj_login = accountControl(root, self.currentUser)
 
@@ -157,7 +161,11 @@ class Inventory:
             btn_merchandise = Button(master, text="Merchandise", fg="Black", command=result_btnMchd,
                                      font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
             result_btnReport = partial(self.inventory_report)
-            btn_reports = Button(master, text="Reports", fg="Black", command=result_btnReport,
+            btn_reports = Button(master, text="Inv. Reports", fg="Black", command=result_btnReport,
+                                 font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+
+            result_btnSalesReport = partial(self.sales_report)
+            btn_salesreports = Button(master, text="Sales Reports", fg="Black", command=result_btnSalesReport,
                                  font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
             result_usrLogin = partial(self.user_login_screen)
@@ -171,8 +179,9 @@ class Inventory:
         if user_category == 'Admin':
             btn_merchandise.place(x=65, y=350)
             btn_reports.place(x=65, y=405)
-            btn_usrCtrl.place(x=65, y=460)
-            btn_exit.place(x=65, y=515)
+            btn_salesreports.place(x=65, y=460)
+            btn_usrCtrl.place(x=65, y=515)
+            btn_exit.place(x=65, y=570)
             master.bind('<M>', lambda event=None: btn_merchandise.invoke())
             master.bind('<m>', lambda event=None: btn_merchandise.invoke())
             master.bind('<R>', lambda event=None: btn_reports.invoke())
