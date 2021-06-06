@@ -106,8 +106,7 @@ class Inventory:
             S_no int,
             invoice_id VARCHAR(255) NOT NULL,
             invoice_date DATE NOT NULL,
-            invoice_amount int,
-            category VARCHAR(255) NOT NULL
+            invoice_amount int
         )'''
         cursor.execute(sql)
 
@@ -173,6 +172,12 @@ class Inventory:
             btn_reports.place(x=65, y=405)
             btn_usrCtrl.place(x=65, y=460)
             btn_exit.place(x=65, y=515)
+            master.bind('<M>', lambda event=None: btn_merchandise.invoke())
+            master.bind('<m>', lambda event=None: btn_merchandise.invoke())
+            master.bind('<R>', lambda event=None: btn_reports.invoke())
+            master.bind('<r>', lambda event=None: btn_reports.invoke())
+            master.bind('<u>', lambda event=None: btn_usrCtrl.invoke())
+            master.bind('<U>', lambda event=None: btn_usrCtrl.invoke())
         elif user_category == 'User':
             btn_exit.place(x=65, y=350)
         else:
@@ -184,12 +189,7 @@ class Inventory:
         master.bind('<i>', lambda event=None: btn_inventory.invoke())
         master.bind('<S>', lambda event=None: btn_sales.invoke())
         master.bind('<s>', lambda event=None: btn_sales.invoke())
-        master.bind('<M>', lambda event=None: btn_merchandise.invoke())
-        master.bind('<m>', lambda event=None: btn_merchandise.invoke())
-        master.bind('<R>', lambda event=None: btn_reports.invoke())
-        master.bind('<r>', lambda event=None: btn_reports.invoke())
-        master.bind('<u>', lambda event=None: btn_usrCtrl.invoke())
-        master.bind('<U>', lambda event=None: btn_usrCtrl.invoke())
+
         mainloop()
 
     def main_menu(self):

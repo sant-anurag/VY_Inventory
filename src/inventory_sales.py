@@ -487,17 +487,6 @@ class InventorySales:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
 
-    def initialize_billArea(self):
-        print("Initializing the  bill area with default template")
-        self.txtarea.delete(1.0, END)
-        self.txtarea.insert(END, "\t  Sukrit Publication\n\tPhone-No.9900019361")
-        self.txtarea.insert(END, f"\n\nBill no. :")  # {self.bill_no.get()}")
-        self.txtarea.insert(END, f"\nCustomer Name :")  # {self.c_name.get()}")
-        self.txtarea.insert(END, f"\nPhone No. :")  # {self.phone.get()}")
-        self.txtarea.insert(END, "\n====================================\n")
-        self.txtarea.insert(END, "\nProduct\t\tQty\tPrice\n")
-        self.txtarea.insert(END, "\n====================================\n")
-
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
         bItemExists = False
@@ -579,6 +568,9 @@ class InventorySales:
                             invoice_id):
 
         print("Purchase Step 2 - Generating Invoice")
+        # update the invoice database with invoice details
+        self.updateInvoiceRecord(invoice_id)
+
         file_name = "..\\Library_Stock\\Invoices\\Template\\sales-invoice.xlsx"
         # searchinfo_label.configure(text="Invoice is being generated. Please wait ...", fg="purple")
         wb_obj = openpyxl.load_workbook(file_name)
