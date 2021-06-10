@@ -240,9 +240,10 @@ class InventorySales:
         discount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                               font=L_FONT,
                               bg='light cyan')
+        inv_id = self.generate_StockPurchase_invoiceID()
         billNo_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                             font=L_FONT,
-                            bg='light cyan')
+                            bg='light cyan', text = inv_id)
 
         cartCount_label.place(x=30, y=12)
         cartCount_text.place(x=165, y=12)
@@ -1014,10 +1015,21 @@ class InventorySales:
         return result
 
     def generate_StockPurchase_invoiceID(self):
-        strInvId = datetime.now().strftime('%Y%m%d%H%M')
-        finalId = "INV" + strInvId
+        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+        total_records = cursor.execute("SELECT * FROM invoices")
+        bItemExist = cursor.execute("select invoice_id from invoices ORDER BY invoice_id DESC LIMIT 1 ")
+        last_invId = cursor.fetchone()
+        print("Last invoice id :", last_invId)
+        if total_records > 0:
+            finalId = int(last_invId) + 1
+        else:
+            finalId = 1
         print("Generated Invoice Id : ", finalId)
-        return finalId
+        conn.close()
+        return str(finalId)
 
     def get_currentStockQuantity(self, item_id):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
