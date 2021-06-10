@@ -599,7 +599,7 @@ class NewMerchandise:
             messagebox.showwarning("Not Available", "Center Not Registered!!!")
 
     def print_item_description(self):
-        os.startfile(PATH_CENTER_DETAILS_TEMPLATE)
+        os.startfile(PATH_CENTER_DETAILS_TEMPLATE,'print')
 
     def generate_centerId(self):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')

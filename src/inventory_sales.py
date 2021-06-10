@@ -1,3 +1,5 @@
+import os
+
 from app_defines import *
 from app_common import *
 from app_thread import *
@@ -48,18 +50,17 @@ class InventorySales:
         self.btn_submit = Button(self.MainbtnFrame)
         self.btn_submit.configure(text="Bill", fg="Black", font=L_FONT, width=11, state=NORMAL,
                                   bg='RosyBrown1')
-        self.btn_clear = Button(self.MainbtnFrame, text="Reset", fg="Black",
+        self.btn_reset = Button(self.MainbtnFrame, text="Reset", fg="Black",
                                 font=L_FONT, width=11, state=NORMAL, bg='RosyBrown1')
-        self.btn_cancel = Button(self.MainbtnFrame, text="Print", fg="Black",
-                                 font=L_FONT, width=11, state=NORMAL, bg='RosyBrown1')
-        self.btn_cancel.configure(command=self.sales_window.destroy)
+        self.btn_print = Button(self.MainbtnFrame, text="Print", fg="Black",
+                                font=L_FONT, width=11, state=DISABLED, bg='light grey')
 
         # Bottom button panel - end
         self.MainbtnFrame.place(x=5, y=520)
         self.btn_addToCart.place(x=7, y=1)
         self.btn_submit.place(x=137, y=1)
-        self.btn_clear.place(x=265, y=1)
-        self.btn_cancel.place(x=395, y=1)
+        self.btn_reset.place(x=265, y=1)
+        self.btn_print.place(x=395, y=1)
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
 
         # Support button frame design -start
@@ -75,16 +76,16 @@ class InventorySales:
                                     bg='RosyBrown1', command=discount_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
                                   font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
-        self.btn_print = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
-                                font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
-        self.btn_print.configure(command=self.sales_window.destroy)
+        self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
+                               font=L_FONT, width=17, state=NORMAL, bg='RosyBrown1')
+        self.btn_exit.configure(command=self.sales_window.destroy)
 
         # Bottom button panel - end
         self.AdditionalbtnFrame.place(x=540, y=520)
         self.btn_chgQuantity.place(x=2, y=1)
         self.btn_discount.place(x=210, y=1)
         self.btn_remItem.place(x=409, y=1)
-        self.btn_print.place(x=600, y=1)
+        self.btn_exit.place(x=600, y=1)
         # Support button frame design-End
 
         print("constructor called for sales ")
@@ -265,17 +266,45 @@ class InventorySales:
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-        # Bottom button panel - start
+        reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, name_entry, contact_entry,
+                               address_entry, item_name, author_menu,
+                               item_price,
+                               item_borrowfee,
+                               item_quantity, )
+        self.btn_reset.configure(command=reset_result)
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
         self.sales_window.bind('<Alt-b>', lambda event=None: self.btn_submit.invoke())
-        self.sales_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
-        self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_clear.invoke())
+        self.sales_window.bind('<Escape>', lambda event=None: self.btn_exit.invoke())
+        self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
+        self.sales_window.bind('<Alt-p>', lambda event=None: self.btn_reset.invoke())
         # self.initialize_billArea()
         self.display_billArea(self.dataSearchFrame, 532, 5, 780, 400)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
+
+    def reset_sales_frm(self, item_idforSearch, quantity_entry, name_entry, contact_entry, address_entry, item_name,
+                        author_menu,
+                        item_price,
+                        item_borrowfee,
+                        item_quantity, ):
+        """ reset the text entry data on the sales form"""
+        item_idforSearch.delete(0, END)
+        item_idforSearch.configure(fg='black')
+        quantity_entry.delete(0, END)
+        quantity_entry.configure(fg='black')
+        name_entry.delete(0, END)
+        name_entry.configure(fg='black')
+        contact_entry.delete(0, END)
+        contact_entry.configure(fg='black')
+        address_entry.delete(0, END)
+        address_entry.configure(fg='black')
+        item_name['text'] = ""
+        author_menu['text'] = ""
+        item_price['text'] = ""
+        item_borrowfee['text'] = ""
+        item_quantity['text'] = ""
 
     def display_billArea(self, split_open_window, startx, starty, xwidth, xheight):
         self.myframe.destroy()
@@ -397,9 +426,9 @@ class InventorySales:
         change_result = partial(self.change_quantity, sno_entry, quantity_entry, change_quantity_window)
         btn_changeQuantity.configure(text="Change", fg="Black", font=L_FONT, width=9, state=NORMAL,
                                      bg='RosyBrown1', command=change_result)
-        btn_cancelQuantity = Button(btn_frame)
-        btn_cancelQuantity.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
-                                     bg='RosyBrown1', command=change_quantity_window.destroy)
+        btn_printQuantity = Button(btn_frame)
+        btn_printQuantity.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                    bg='RosyBrown1', command=change_quantity_window.destroy)
 
         label_itemSerialNo.place(x=30, y=20)
         sno_entry.place(x=130, y=20)
@@ -407,9 +436,9 @@ class InventorySales:
         quantity_entry.place(x=130, y=55)
         btn_frame.place(x=50, y=90)
         btn_changeQuantity.place(x=3, y=2)
-        btn_cancelQuantity.place(x=110, y=2)
+        btn_printQuantity.place(x=110, y=2)
         change_quantity_window.bind('<Return>', lambda event=None: btn_changeQuantity.invoke())
-        change_quantity_window.bind('<Escape>', lambda event=None: btn_cancelQuantity.invoke())
+        change_quantity_window.bind('<Escape>', lambda event=None: btn_printQuantity.invoke())
 
     def discount_display(self):
         discount_display_window = Toplevel(self.dataSearchFrame)
@@ -435,9 +464,9 @@ class InventorySales:
         change_result = partial(self.apply_discount, sno_entry, discount_entry, discount_display_window)
         btn_changediscount.configure(text="Apply", fg="Black", font=L_FONT, width=9, state=NORMAL,
                                      bg='RosyBrown1', command=change_result)
-        btn_canceldiscount = Button(btn_frame)
-        btn_canceldiscount.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
-                                     bg='RosyBrown1', command=discount_display_window.destroy)
+        btn_printdiscount = Button(btn_frame)
+        btn_printdiscount.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                                    bg='RosyBrown1', command=discount_display_window.destroy)
 
         label_itemSerialNo.place(x=30, y=20)
         sno_entry.place(x=130, y=20)
@@ -445,9 +474,9 @@ class InventorySales:
         discount_entry.place(x=130, y=55)
         btn_frame.place(x=50, y=90)
         btn_changediscount.place(x=3, y=2)
-        btn_canceldiscount.place(x=110, y=2)
+        btn_printdiscount.place(x=110, y=2)
         discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
-        discount_display_window.bind('<Escape>', lambda event=None: btn_canceldiscount.invoke())
+        discount_display_window.bind('<Escape>', lambda event=None: btn_printdiscount.invoke())
 
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
@@ -519,7 +548,7 @@ class InventorySales:
                         self.list_InvoicePrint[iLoop][3]))
 
                 billAmount_text['text'] = str(total_cart_mrp)
-                self.btn_submit.configure(state=NORMAL, bg='light cyan')
+                self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
                 print("Added to Cart Item Id :", item_idforSearch)
                 self.display_billArea(self.dataSearchFrame, 532, 5, 780, 400)
             else:
@@ -623,20 +652,23 @@ class InventorySales:
 
         self.obj_commonUtil.convertExcelToPdf(file_name, dest_file)
 
-        self.btn_print.configure(state=NORMAL, bg='light cyan')
-        #        print_result = partial(self.printInvoice, dest_file)
-        # self.btn_print.configure(command=print_result)
+        self.btn_exit.configure(state=NORMAL, bg='RosyBrown1')
+        print_result = partial(self.printInvoice, dest_file)
+        self.btn_print.configure(command=print_result)
 
         # disable to add to cart and purchase button, so that same invoice is not generated twice
         self.btn_submit.configure(state=DISABLED, bg='light grey')
         self.btn_addToCart.configure(state=DISABLED, bg='light grey')
 
         # update the invoice table
-        self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue, customer_name,customer_contact)
+        self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact)
 
         # self.obj_commonUtil.clearSales_InvoiceData(file_name,len(self.list_InvoicePrint))
 
-    def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name,customer_contact):
+    def printInvoice(self, fileToPrint):
+        os.startfile(fileToPrint,'print')
+
+    def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
@@ -650,7 +682,7 @@ class InventorySales:
         customername = customer_name.get()
         customercontact = customer_contact.get()
         sql = "INSERT INTO invoices VALUES(%s, %s, %s, %s, %s, %s)"
-        values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue, customername,customercontact)
+        values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue, customername, customercontact)
         cursor.execute(sql, values)
         conn.commit()
         conn.close()
