@@ -13,7 +13,7 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1350x575+240+150')
+        self.sales_window.geometry('1360x575+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -68,24 +68,29 @@ class InventorySales:
                                         bg='light yellow')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
         chngQuantity_result = partial(self.change_quantity_display)
-        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=L_FONT, width=18, state=NORMAL,
+        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=L_FONT, width=13, state=NORMAL,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
         discount_result = partial(self.discount_display)
-        self.btn_discount.configure(text="Discount %", fg="Black", font=L_FONT, width=18, state=NORMAL,
+        self.btn_discount.configure(text="Discount %", fg="Black", font=L_FONT, width=13, state=NORMAL,
                                     bg='RosyBrown1', command=discount_result)
+        self.btn_tax = Button(self.AdditionalbtnFrame)
+        tax_result = partial(self.tax_display)
+        self.btn_tax.configure(text="Tax %", fg="Black", font=L_FONT, width=13, state=NORMAL,
+                                    bg='RosyBrown1', command=tax_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=L_FONT, width=18, state=NORMAL, bg='RosyBrown1')
+                                  font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
-                               font=L_FONT, width=17, state=NORMAL, bg='RosyBrown1')
+                               font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_exit.configure(command=self.sales_window.destroy)
 
         # Bottom button panel - end
         self.AdditionalbtnFrame.place(x=540, y=520)
         self.btn_chgQuantity.place(x=2, y=1)
-        self.btn_discount.place(x=210, y=1)
-        self.btn_remItem.place(x=409, y=1)
-        self.btn_exit.place(x=600, y=1)
+        self.btn_discount.place(x=165, y=1)
+        self.btn_tax.place(x=330, y=1)
+        self.btn_remItem.place(x=490, y=1)
+        self.btn_exit.place(x=650, y=1)
         # Support button frame design-End
 
         print("constructor called for sales ")
@@ -115,7 +120,7 @@ class InventorySales:
                               bg='snow')
         framepurchase.pack()
 
-        framelower = Frame(self.dataSearchFrame, width=805, height=90, bd=4, relief='ridge',
+        framelower = Frame(self.dataSearchFrame, width=1330, height=90, bd=4, relief='ridge',
                            bg='snow')
         framelower.pack()
 
@@ -161,7 +166,7 @@ class InventorySales:
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
         framepurchase.place(x=10, y=220)
-        framelower.place(x=532, y=417)
+        framelower.place(x=10, y=417)
 
         item_SearchId.place(x=30, y=5)
 
@@ -479,6 +484,44 @@ class InventorySales:
         discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
         discount_display_window.bind('<Escape>', lambda event=None: btn_printdiscount.invoke())
 
+    def tax_display(self):
+        tax_display_window = Toplevel(self.dataSearchFrame)
+        tax_display_window.title("Apply Tax %")
+        tax_display_window.geometry('320x150+950+380')
+        tax_display_window.configure(background='wheat')
+        tax_display_window.resizable(width=False, height=False)
+        tax_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_itemSerialNo = Label(tax_display_window, text="Tax %", width=7, height=1, anchor=W,
+                                   justify=LEFT,
+                                   font=L_FONT,
+                                   bg='wheat')
+        taxAmt_entry = Entry(tax_display_window, width=15, font=L_FONT, bg='light cyan')
+
+        label_tax = Label(tax_display_window, text="Amount(Rs.)", width=8, height=1, anchor=W, justify=LEFT,
+                          font=L_FONT,
+                          bg='wheat')
+        tax_labelAmt = Label(tax_display_window, width=13, font=L_FONT, bg='light cyan', text='0')
+        btn_frame = Frame(tax_display_window, width=230, height=50, bd=4, relief='ridge',
+                          bg='purple')
+        btn_applytax = Button(btn_frame)
+        change_result = partial(self.apply_tax, taxAmt_entry, tax_labelAmt, tax_display_window)
+        btn_applytax.configure(text="Apply", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                               bg='RosyBrown1', command=change_result)
+        btn_close = Button(btn_frame)
+        btn_close.configure(text="Cancel", fg="Black", font=L_FONT, width=9, state=NORMAL,
+                            bg='RosyBrown1', command=tax_display_window.destroy)
+
+        label_itemSerialNo.place(x=30, y=20)
+        taxAmt_entry.place(x=130, y=20)
+        label_tax.place(x=30, y=55)
+        tax_labelAmt.place(x=130, y=55)
+        btn_frame.place(x=50, y=90)
+        btn_applytax.place(x=3, y=2)
+        btn_close.place(x=110, y=2)
+        tax_display_window.bind('<Return>', lambda event=None: btn_applytax.invoke())
+        tax_display_window.bind('<Escape>', lambda event=None: btn_close.invoke())
+
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
 
@@ -517,6 +560,20 @@ class InventorySales:
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
+
+    def apply_tax(self, taxAmt_entry, tax_labelAmt, tax_display_window):
+        print("Apply Tax% :", taxAmt_entry.get())
+        total_bill_Amount = 0
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            total_bill_Amount = total_bill_Amount + (self.list_InvoicePrint[iLoop][3] * int(self.list_InvoicePrint[iLoop][2]))
+
+        print("Total Bill Amount = ", total_bill_Amount)
+        tax_amount = float(int(taxAmt_entry.get()) / 100) * total_bill_Amount
+        final_price = round(float(total_bill_Amount + tax_amount), 2)
+        print("Gross Amount = ", final_price)
+        print("Gross amount changed")
+        self.billAmount_text['text'] = str(final_price)
+        tax_labelAmt['text'] = str(tax_amount)
 
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
