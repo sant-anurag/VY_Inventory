@@ -15,11 +15,11 @@ from app_defines import *
 from app_common import *
 from app_thread import *
 
+
 class NewInventory:
 
     # constructor for Library class
-    def __init__(self, master, loggeduser):
-        self.currentuser = loggeduser
+    def __init__(self, master):
         self.obj_commonUtil = CommonUtil()
         self.dateTimeOp = DatetimeOperation()
         self.newItem_window = Toplevel(master)

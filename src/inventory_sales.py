@@ -3,6 +3,7 @@ import os
 from app_defines import *
 from app_common import *
 from app_thread import *
+from customer_details import *
 
 
 class InventorySales:
@@ -71,7 +72,7 @@ class InventorySales:
         self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=L_FONT, width=13, state=NORMAL,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
-        discount_result = partial(self.discount_display)
+        discount_result = partial(self.customer_operations)
         self.btn_discount.configure(text="Discount %", fg="Black", font=L_FONT, width=13, state=NORMAL,
                                     bg='RosyBrown1', command=discount_result)
         self.btn_tax = Button(self.AdditionalbtnFrame)
@@ -483,6 +484,9 @@ class InventorySales:
         btn_printdiscount.place(x=110, y=2)
         discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
         discount_display_window.bind('<Escape>', lambda event=None: btn_printdiscount.invoke())
+
+    def customer_operations(self):
+        objCustomer = Customer(self.sales_window)
 
     def tax_display(self):
         tax_display_window = Toplevel(self.dataSearchFrame)

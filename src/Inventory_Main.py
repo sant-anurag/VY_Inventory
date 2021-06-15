@@ -124,11 +124,23 @@ class Inventory:
         )'''
         cursor.execute(sql)
 
+        sql = '''CREATE TABLE IF NOT EXISTS customer_details(
+            S_no int,
+            customer_actno VARCHAR(50) NOT NULL,
+            customer_name VARCHAR(50) NOT NULL,
+            customer_contact VARCHAR(15) NOT NULL,
+            customer_address VARCHAR(255),
+            customer_redeempoints VARCHAR(20) ,
+            customer_gender VARCHAR(10) ,
+            customer_regisdate VARCHAR(20) 
+        )'''
+        cursor.execute(sql)
+
         print("Tables Created !!! ")
         conn.close()
 
     def new_inventory_view(self):
-        obj_newInventory = NewInventory(root, self.currentUser)
+        obj_newInventory = NewInventory(root)
 
     def new_center_registration(self):
         obj_newMchd = NewMerchandise(root)
