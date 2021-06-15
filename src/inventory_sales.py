@@ -243,7 +243,7 @@ class InventorySales:
         inv_id = self.generate_StockPurchase_invoiceID()
         billNo_text = Label(framelower, width=14, anchor=W, justify=LEFT,
                             font=L_FONT,
-                            bg='light cyan', text = inv_id)
+                            bg='light cyan', text=inv_id)
 
         cartCount_label.place(x=30, y=12)
         cartCount_text.place(x=165, y=12)
@@ -667,7 +667,7 @@ class InventorySales:
         # self.obj_commonUtil.clearSales_InvoiceData(file_name,len(self.list_InvoicePrint))
 
     def printInvoice(self, fileToPrint):
-        os.startfile(fileToPrint,'print')
+        os.startfile(fileToPrint, 'print')
 
     def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
@@ -749,7 +749,7 @@ class InventorySales:
             bitemExists = self.validate_itemName(item_name.get(), local_centerText.get())
             print("bitemExists :", bitemExists)
             if bitemExists and op_type is OPERATION_ADD:
-                messagebox.showwarning("Duplicate Entry Error !", "item already exists !!")
+                messagebox.showwarning("Duplicate Entry Error !", "Item already exists !!")
                 item_name.configure(bd=2, fg='red')
                 return
             else:
@@ -857,7 +857,7 @@ class InventorySales:
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
 
-    def generate_itemId(self, local_centerText):
+    def generate_itemId(self):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
@@ -964,12 +964,11 @@ class InventorySales:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                print("debug 1")
                 conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
-                print("debug 2")
+
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
-                print("debug 3")
+
                 authorname = str(name_text.get())
 
                 print("\n", serial_no, item_id, name_text, dor_date)
@@ -992,26 +991,37 @@ class InventorySales:
 
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
+        # establishing the database connection
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
         result_query = cursor.execute("SELECT author_Name FROM author")
+
+        # fetching all results from the executed query
         result = cursor.fetchall()
+
+        # closing the connection
         conn.close()
         return result
 
     def get_centerNames(self):
-        print("get_centerNames--> Start ")
+        # establishing the database connection
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
         result_query = cursor.execute("SELECT merchandise_Name FROM merchandise")
+
+        # fetching all results from the executed query
         result = cursor.fetchall()
+
+        # closing the connection
         conn.close()
+
+        # return the result
         return result
 
     def generate_StockPurchase_invoiceID(self):
@@ -1024,7 +1034,7 @@ class InventorySales:
         last_invId = cursor.fetchone()
         print("Last invoice id :", last_invId)
         if total_records > 0:
-            finalId = int(last_invId) + 1
+            finalId = int(last_invId[0]) + 1
         else:
             finalId = 1
         print("Generated Invoice Id : ", finalId)
