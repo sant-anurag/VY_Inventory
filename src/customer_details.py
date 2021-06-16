@@ -706,40 +706,6 @@ class Customer:
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
 
-    def print_item_description(self, result):
-        """ prints the item description to pdf form"""
-        wb_template = openpyxl.load_workbook(PATH_ITEM_DETAILS_TEMPLATE)
-        template_sheet = wb_template.active
-        template_sheet.cell(row=1, column=3).value = result[1]
-        template_sheet.cell(row=4, column=2).value = result[2]
-        template_sheet.cell(row=6, column=2).value = result[3]
-        template_sheet.cell(row=8, column=2).value = result[4]
-        template_sheet.cell(row=10, column=2).value = result[6]
-        template_sheet.cell(row=12, column=2).value = result[7]
-
-        template_sheet.cell(row=4, column=3).value = result[9]
-        template_sheet.cell(row=4, column=4).value = result[11]
-        template_sheet.cell(row=6, column=3).value = result[10]
-        template_sheet.cell(row=6, column=4).value = result[8]
-        template_sheet.cell(row=8, column=3).value = result[12]
-        template_sheet.cell(row=8, column=4).value = result[13]
-        wb_template.save(PATH_ITEM_DETAILS_TEMPLATE)
-        os.startfile(PATH_ITEM_DETAILS_TEMPLATE,'print')  # prints the file on standard output printer
-
-    def print_customer_description(self, result):
-        """ prints the item description to pdf form"""
-        wb_template = openpyxl.load_workbook(PATH_CUSTOMER_DETAILS_TEMPLATE)
-        template_sheet = wb_template.active
-        template_sheet.cell(row=1, column=3).value = result[1]
-        template_sheet.cell(row=4, column=2).value = result[2]
-        template_sheet.cell(row=4, column=3).value = result[4]
-        template_sheet.cell(row=6, column=2).value = result[3]
-        template_sheet.cell(row=6, column=3).value = result[5]
-        template_sheet.cell(row=8, column=2).value = result[7]
-        template_sheet.cell(row=8, column=3).value = result[6]
-        wb_template.save(PATH_CUSTOMER_DETAILS_TEMPLATE)
-        os.startfile(PATH_CUSTOMER_DETAILS_TEMPLATE,'print')
-
     def generate_customerActNo(self):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
@@ -779,106 +745,36 @@ class Customer:
         conn.close()
         return result[0]
 
-    def generate_authorId(self):
-        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
+    def print_item_description(self, result):
+        """ prints the item description to pdf form"""
+        wb_template = openpyxl.load_workbook(PATH_ITEM_DETAILS_TEMPLATE)
+        template_sheet = wb_template.active
+        template_sheet.cell(row=1, column=3).value = result[1]
+        template_sheet.cell(row=4, column=2).value = result[2]
+        template_sheet.cell(row=6, column=2).value = result[3]
+        template_sheet.cell(row=8, column=2).value = result[4]
+        template_sheet.cell(row=10, column=2).value = result[6]
+        template_sheet.cell(row=12, column=2).value = result[7]
 
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-        total_records = cursor.execute("SELECT * FROM author")
-        conn.close()
-        authorId = total_records + 100
-        return "ATH" + str(authorId)  # Author Id
+        template_sheet.cell(row=4, column=3).value = result[9]
+        template_sheet.cell(row=4, column=4).value = result[11]
+        template_sheet.cell(row=6, column=3).value = result[10]
+        template_sheet.cell(row=6, column=4).value = result[8]
+        template_sheet.cell(row=8, column=3).value = result[12]
+        template_sheet.cell(row=8, column=4).value = result[13]
+        wb_template.save(PATH_ITEM_DETAILS_TEMPLATE)
+        os.startfile(PATH_ITEM_DETAILS_TEMPLATE,'print')  # prints the file on standard output printer
 
-    def validate_author(self, name_text):
-        print("validate_author--> validate for Name : ", name_text)
-        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        bItemExist = cursor.execute("SELECT EXISTS(SELECT * FROM author WHERE author_Name = %s)", (name_text,))
-        result = cursor.fetchone()
-        print("result :", result[0])
-        conn.close()
-        return result[0]
-
-    def register_author(self, newItem_window, name_text, dor_text):
-        """ register the author"""
-        dateTimeObj = dor_text.get_date()
-
-        dor_date = dateTimeObj.strftime("%Y-%m-%d")
-
-        if name_text.get() == "":
-            messagebox.showinfo("Data Entry Error", "All fields are mandatory !!!")
-        else:
-            item_id = self.generate_authorId()  # generates a unique item id
-            bitemExists = self.validate_author(name_text.get())
-            print("Author Exists :", bitemExists)
-            if bitemExists:
-                messagebox.showwarning("Duplicate Entry Error !", "Author already exists !!")
-                name_text.configure(bd=2, fg='red')
-                return
-            else:
-                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
-
-                # Creating a cursor object using the cursor() method
-                cursor = conn.cursor()
-                total_records = cursor.execute("SELECT * FROM author")
-                conn.close()
-
-                if total_records == 0:
-                    serial_no = 1
-                else:
-                    serial_no = total_records + 1
-
-                # establishing the connection
-                print("debug 1")
-                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
-                print("debug 2")
-                # Creating a cursor object using the cursor() method
-                cursor = conn.cursor()
-                print("debug 3")
-                authorname = str(name_text.get())
-
-                print("\n", serial_no, item_id, name_text, dor_date)
-                print("\n Add Author")
-                sql = "INSERT INTO author VALUES(%s, %s, %s, %s)"
-                values = (
-                    serial_no, item_id, authorname, dor_date)
-                cursor.execute(sql, values)
-
-                conn.commit()
-                conn.close()
-                print("Author inserted !!! ")
-
-                self.btn_submit.configure(state=DISABLED, bg='light grey')
-
-                user_choice = messagebox.askquestion("Author registered", "Do you want to register new  ? ")
-                self.display_currentShopperList(self.authorFrame, 5, 100, 550, 320)
-                # destroy the data entry form , if user do not want to add more records
-                if user_choice == 'no':
-                    print("Do nothing")
-
-    def get_authorNames(self):
-        print("get_authorNames--> Start for item name: ")
-        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT author_Name FROM author")
-        result = cursor.fetchall()
-        conn.close()
-        return result
-
-    def get_centerNames(self):
-        print("get_centerNames--> Start ")
-        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
-
-        # Creating a cursor object using the cursor() method
-        cursor = conn.cursor()
-
-        result_query = cursor.execute("SELECT merchandise_Name FROM merchandise")
-        result = cursor.fetchall()
-        conn.close()
-        return result
+    def print_customer_description(self, result):
+        """ prints the item description to pdf form"""
+        wb_template = openpyxl.load_workbook(PATH_CUSTOMER_DETAILS_TEMPLATE)
+        template_sheet = wb_template.active
+        template_sheet.cell(row=1, column=3).value = result[1]
+        template_sheet.cell(row=4, column=2).value = result[2]
+        template_sheet.cell(row=4, column=3).value = result[4]
+        template_sheet.cell(row=6, column=2).value = result[3]
+        template_sheet.cell(row=6, column=3).value = result[5]
+        template_sheet.cell(row=8, column=2).value = result[7]
+        template_sheet.cell(row=8, column=3).value = result[6]
+        wb_template.save(PATH_CUSTOMER_DETAILS_TEMPLATE)
+        os.startfile(PATH_CUSTOMER_DETAILS_TEMPLATE,'print')
