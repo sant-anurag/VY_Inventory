@@ -698,7 +698,7 @@ class Customer:
                 genderText['text'] = result[6]
                 cal['text'] = result[7]
                 shopper_address['text'] = result[4]
-                print_result = partial(self.print_item_description,result)
+                print_result = partial(self.print_customer_description,result)
                 self.btn_print.configure(state=NORMAL, bg='RosyBrown1', command=print_result)
             else:
                 ''' do nothing '''
@@ -724,7 +724,21 @@ class Customer:
         template_sheet.cell(row=8, column=3).value = result[12]
         template_sheet.cell(row=8, column=4).value = result[13]
         wb_template.save(PATH_ITEM_DETAILS_TEMPLATE)
-        os.startfile(PATH_ITEM_DETAILS_TEMPLATE)  # prints the file on standard output printer
+        os.startfile(PATH_ITEM_DETAILS_TEMPLATE,'print')  # prints the file on standard output printer
+
+    def print_customer_description(self, result):
+        """ prints the item description to pdf form"""
+        wb_template = openpyxl.load_workbook(PATH_CUSTOMER_DETAILS_TEMPLATE)
+        template_sheet = wb_template.active
+        template_sheet.cell(row=1, column=3).value = result[1]
+        template_sheet.cell(row=4, column=2).value = result[2]
+        template_sheet.cell(row=4, column=3).value = result[4]
+        template_sheet.cell(row=6, column=2).value = result[3]
+        template_sheet.cell(row=6, column=3).value = result[5]
+        template_sheet.cell(row=8, column=2).value = result[7]
+        template_sheet.cell(row=8, column=3).value = result[6]
+        wb_template.save(PATH_CUSTOMER_DETAILS_TEMPLATE)
+        os.startfile(PATH_CUSTOMER_DETAILS_TEMPLATE,'print')
 
     def generate_customerActNo(self):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
