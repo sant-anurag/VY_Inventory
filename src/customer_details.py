@@ -345,56 +345,40 @@ class Customer:
         self.dataModifyFrame.destroy()
         self.dataSearchFrame.destroy()
         self.authorFrame.destroy()
+
         self.dataSearchFrame = Frame(self.newItem_window, width=600, height=440, bd=4, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
         frameSearch = Frame(self.dataSearchFrame, width=580, height=40, bd=4, relief='ridge',
                             bg='snow')
         frameSearch.pack()
-        framedisplay = Frame(self.dataSearchFrame, width=580, height=387, bd=4, relief='ridge',
+        framedisplay = Frame(self.dataSearchFrame, width=580, height=200, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
 
-        # create a item Name label
-
-        item_SearchId = Label(frameSearch, text="Search Item Id", width=11, anchor=W, justify=LEFT,
+        item_SearchId = Label(frameSearch, text="Contact No.", width=11, anchor=W, justify=LEFT,
                               font=L_FONT,
                               bg='snow')
 
-        item_namelabel = Label(framedisplay, text="Item Name", width=11, anchor=W, justify=LEFT,
-                               font=L_FONT,
-                               bg='snow')
-
-        author = Label(framedisplay, text="Author", width=11, anchor=W, justify=LEFT,
-                       font=L_FONT,
-                       bg='snow')
+        shopper_name = Label(framedisplay, text="Customer Name", width=12, anchor=W, justify=LEFT,
+                             font=NORM_FONT,
+                             bg='snow')
+        shopper_acct = Label(framedisplay, text="Account", width=11, anchor=W, justify=LEFT,
+                             font=NORM_FONT,
+                             bg='snow')
+        shopper_contact = Label(framedisplay, text="Contact No.", width=11, anchor=W, justify=LEFT,
+                                font=NORM_FONT,
+                                bg='snow')
 
         # create a Price label
-        price = Label(framedisplay, text="Price(Rs.)", width=13, anchor=W, justify=LEFT,
-                      font=L_FONT, bg='snow')
+        shopper_gender = Label(framedisplay, text="Gender", width=13, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='snow')
 
-        # create a Quantity label
-        quantity = Label(framedisplay, text="Quantity", width=13, anchor=W, justify=LEFT,
-                         font=L_FONT, bg='snow')
+        shopper_regisDate = Label(framedisplay, text="Regis. Date", width=13, anchor=W, justify=LEFT,
+                                  font=NORM_FONT, bg='snow')
 
-        # create a borrow fee label
-        rackNumber = Label(framedisplay, text="Rack Number", width=13, anchor=W, justify=LEFT,
-                           font=L_FONT, bg='snow')
-
-        # create a borrow fee label
-        date_label = Label(framedisplay, text="Received On", width=13, anchor=W, justify=LEFT,
-                           font=L_FONT, bg='snow')
-
-        center_location = Label(framedisplay, text="Center Name", width=13, anchor=W, justify=LEFT,
-                                font=L_FONT, bg='snow')
-        item_type = Label(framedisplay, text="Item Type", width=13, anchor=W, justify=LEFT,
-                          font=L_FONT, bg='snow')
-        receivedBy = Label(framedisplay, text="Received By", width=13, anchor=W, justify=LEFT,
-                           font=L_FONT, bg='snow')
-        sendername = Label(framedisplay, text="Sender Name", width=13, anchor=W, justify=LEFT,
-                           font=L_FONT, bg='snow')
-        orderId = Label(framedisplay, text="Order/Inv No.", width=13, anchor=W, justify=LEFT,
-                        font=L_FONT, bg='snow')
+        shopper_address = Label(framedisplay, text="Address", width=13, anchor=W, justify=LEFT,
+                                font=NORM_FONT, bg='snow')
 
         self.dataSearchFrame.place(x=160, y=5)
 
@@ -402,91 +386,58 @@ class Customer:
         framedisplay.place(x=10, y=45)
 
         item_SearchId.place(x=30, y=2)
-        item_namelabel.place(x=30, y=5)
-        author.place(x=30, y=38)
-        price.place(x=30, y=70)
-        quantity.place(x=30, y=105)
-        rackNumber.place(x=30, y=140)
-        date_label.place(x=30, y=175)
-        center_location.place(x=30, y=210)
-        item_type.place(x=30, y=245)
-        receivedBy.place(x=30, y=280)
-        sendername.place(x=30, y=315)
-        orderId.place(x=30, y=350)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
+        shopper_name.place(x=30, y=5)
+        shopper_acct.place(x=30, y=35)
+
+        shopper_contact.place(x=30, y=65)
+        shopper_gender.place(x=30, y=95)
+        shopper_regisDate.place(x=30, y=125)
+        shopper_address.place(x=30, y=155)
+
+        contactNoToSearch_txt = Entry(frameSearch, width=20, font=L_FONT, bg='light cyan')
         btn_search = Button(frameSearch)
 
-        item_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                          font=NORM_FONT,
-                          bg='light cyan')
+        shopperName_txt = Label(framedisplay, width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
+        shopperAcct_txt = Label(framedisplay, width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
+        shopperContact_txt = Label(framedisplay, width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
 
-        author_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=NORM_FONT,
-                            bg='light cyan')
+        gender_menu = Label(framedisplay,width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
 
-        item_price = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                           font=NORM_FONT,
-                           bg='light cyan')
+        cal = Label(framedisplay, width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
 
-        item_quantity = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=NORM_FONT,
-                              bg='light cyan')
+        shopper_address = Label(framedisplay, width=35, anchor=W, justify=LEFT,
+                               font=NORM_FONT, bg='light cyan')
 
-        rack_location = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=NORM_FONT,
-                              bg='light cyan')
+        contactNoToSearch_txt.place(x=200, y=5)
+        shopperName_txt.place(x=200, y=5)
+        shopperAcct_txt.place(x=200, y=35)
+        shopperContact_txt.place(x=200, y=65)
+        gender_menu.place(x=200, y=95)
+        cal.place(x=200, y=125)
+        shopper_address.place(x=200, y=155)
 
-        cal = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                    font=NORM_FONT,
-                    bg='light cyan')
-
-        localcenter_menu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                                 font=NORM_FONT,
-                                 bg='light cyan')
-
-        item_Typemenu = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=NORM_FONT,
-                              bg='light cyan')
-        receiver_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                              font=NORM_FONT,
-                              bg='light cyan')
-
-        order_id = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                         font=NORM_FONT,
-                         bg='light cyan')
-        sender_name = Label(framedisplay, width=32, anchor=W, justify=LEFT,
-                            font=NORM_FONT,
-                            bg='light cyan')
-
-        item_idforSearch.place(x=200, y=5)
-        item_name.place(x=200, y=7)
-        author_menu.place(x=200, y=40)
-        item_price.place(x=200, y=73)
-        item_quantity.place(x=200, y=106)
-        rack_location.place(x=200, y=139)
-        cal.place(x=200, y=172)
-        localcenter_menu.place(x=200, y=211)
-        item_Typemenu.place(x=200, y=245)
-        receiver_name.place(x=200, y=280)
-        sender_name.place(x=200, y=313)
-        order_id.place(x=200, y=347)
-
-        search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
-                                item_price,
-                                item_quantity, rack_location, cal, localcenter_menu, item_Typemenu, receiver_name,
-                                order_id, sender_name, OPERATION_SEARCH)
+        search_result = partial(self.search_shopper, contactNoToSearch_txt, shopperName_txt, shopperAcct_txt,
+                                shopperContact_txt, cal, gender_menu, shopper_address, OPERATION_SEARCH)
 
         btn_search.configure(text="Search", fg="Black", command=search_result,
                              font=NORM_FONT, width=15, state=NORMAL, bg='RosyBrown1')
         btn_search.place(x=420, y=1)
 
         self.btn_submit.configure(state=DISABLED, bg='light grey')
+        self.btn_reset.configure(state=DISABLED, bg='light grey')
+
+        # ---------------------------------Button Frame End----------------------------------------
 
         self.newItem_window.bind('<Return>', lambda event=None: btn_search.invoke())
         self.newItem_window.bind('<Escape>', lambda event=None: self.btn_cancel.invoke())
-        self.newItem_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
-
+        self.newItem_window.bind('<F9>', lambda event=None: self.btn_reset.invoke())
+        self.display_currentShopperList(self.dataSearchFrame, 10, 247, 553, 175)
         self.newItem_window.focus()
         self.newItem_window.grab_set()
         mainloop()
@@ -581,16 +532,6 @@ class Customer:
         else:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-    def check_SaveItemBtn_author(self, *args):
-        print("Tracing  entry input")
-
-        if self.default_text1.get() != "":
-            self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
-        else:
-            self.btn_submit.configure(state=DISABLED, bg='light grey')
-
-    # Function for clearing the
-    # contents of text entry boxes
     def clear_form_addCustomer(self, name, author, price, quantity, borrowFee, rack_location,
                                receiver_name, order_id, sender_name):
         # clear the content of text entry box
@@ -610,7 +551,6 @@ class Customer:
         order_id.configure(fg='black')
         sender_name.delete(0, END)
         sender_name.configure(fg='black')
-
 
     def shopper_add_operations(self, name_txt, contact_txt, authorText, cal, address_txt, op_type):
         dateTimeObj = cal.get_date()
@@ -712,7 +652,7 @@ class Customer:
             self.messageLabel['text'] = messageText
             self.btn_submit.configure(state=DISABLED, bg='light grey')
             self.display_currentShopperList(self.dataModifyFrame, 10, 247, 553, 175)
-            self.clear_form_addcustomer(name_txt,contact_txt,address_txt)
+            self.clear_form_addcustomer(name_txt, shopper_gender, contact_txt, address_txt)
 
     def clear_form_addcustomer(self, name_txt, authorText, contact_txt, address_txt):
         # clear the content of text entry box
@@ -752,18 +692,13 @@ class Customer:
                 shopper_address.insert(0, result[4])
 
             elif op_type == OPERATION_SEARCH:
-                item_name['text'] = result[2]
-                authorText['text'] = result[3]
-                item_price['text'] = result[4]
-                item_quantity['text'] = result[6]
-                rack_location['text'] = result[7]
-                local_centerText['text'] = result[9]
-                cal['text'] = result[8]
-                item_TypeText['text'] = result[10]
-                receiver_name['text'] = result[11]
-                order_id['text'] = result[13]
-                sender_name['text'] = result[12]
-                print_result = partial(self.print_item_description, result)
+                shopperName_txt['text'] = result[2]
+                shopperAcct_txt['text'] = result[1]
+                shopperContact_txt['text'] = result[3]
+                genderText['text'] = result[6]
+                cal['text'] = result[7]
+                shopper_address['text'] = result[4]
+                print_result = partial(self.print_item_description,result)
                 self.btn_print.configure(state=NORMAL, bg='RosyBrown1', command=print_result)
             else:
                 ''' do nothing '''

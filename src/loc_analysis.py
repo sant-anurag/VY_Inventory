@@ -120,21 +120,33 @@ def analyzefile():
             salesempty_line_count = salesempty_line_count + 1
         if "#" in line or "'''" in line:
             salescomments_count = salescomments_count + 1
+            
+    customerDetails_validate = open("customer_details.py", 'r')
+    customerDetailsline_count = 0
+    customerDetailsempty_line_count = 0
+    customerDetailscomments_count = 0
+    for line in customerDetails_validate:
+        customerDetailsline_count = customerDetailsline_count + 1
+        if line in ['\n', '\r\n']:
+            customerDetailsempty_line_count = customerDetailsempty_line_count + 1
+        if "#" in line or "'''" in line:
+            customerDetailscomments_count = customerDetailscomments_count + 1
 
     total = total_line_count + noncommer_line_count + appdefine_line_count + \
             datetimefile_line_count + mondontaonstatement_line_count + \
             initdatabase_line_count + appthread_line_count + stksalesline_count + actline_count \
-            + stockInfline_count + salesline_count
+            + stockInfline_count + salesline_count + customerDetailsline_count
+
     comments = comments_count + noncommer_comments_count + appdefine_count + \
                datetimefile_count + mondontaonstatement_count + \
                initdatabase_count + appthread_count + actcomments_count + stksalescomments_count \
-                + salescomments_count
+                + salescomments_count + customerDetailscomments_count
 
     empty_lines = empty_line_count + noncommer_empty_line_count + \
                   appdefine_emptyline_count + \
                   datetimefile_emptyline_count + mondontaonstatement_emptyline_count + \
                   initdatabase_emptyline_count + appthread_emptyline_count + stksalesempty_line_count + actempty_line_count  \
-                  + stockInfempty_line_count + salesempty_line_count
+                  + stockInfempty_line_count + salesempty_line_count + customerDetailsempty_line_count
     print("---------------------------------------------------")
     print("Total number of lines : ", total)
     print("Empty lines : ", empty_lines)
