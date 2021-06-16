@@ -14,7 +14,7 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1360x575+240+150')
+        self.sales_window.geometry('1360x775+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -78,7 +78,7 @@ class InventorySales:
         self.btn_tax = Button(self.AdditionalbtnFrame)
         tax_result = partial(self.tax_display)
         self.btn_tax.configure(text="Tax %", fg="Black", font=L_FONT, width=13, state=NORMAL,
-                                    bg='RosyBrown1', command=tax_result)
+                               bg='RosyBrown1', command=tax_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
                                   font=L_FONT, width=13, state=NORMAL, bg='RosyBrown1')
         self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
@@ -113,6 +113,79 @@ class InventorySales:
         btn_search.configure(text="Search", fg="Black",
                              font=('arial narrow', 12, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
         btn_search.place(x=370, y=2)
+
+        # designing a upper frame --------------------start----------------------------
+        frameupper = Frame(self.sales_window, width=1350, height=100, bd=4, relief='ridge',
+                           bg='snow')
+        frameupper.pack()
+        sales_label = Label(frameupper, text="Sales Login", width=9, anchor=W, justify=LEFT,
+                            font=L_FONT,
+                            bg='snow')
+        sales_txtlabel = Label(frameupper, width=15, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='light cyan')
+        dateTime_label = Label(frameupper, text="Date,Time", width=9, anchor=W, justify=LEFT,
+                               font=L_FONT,
+                               bg='snow')
+        dateTime_txtlabel = Label(frameupper, width=15, anchor=W, justify=LEFT,
+                                  font=L_FONT,
+                                  bg='light cyan')
+        billNo_label = Label(frameupper, text="Bill No.", width=9, anchor=W, justify=LEFT,
+                             font=L_FONT,
+                             bg='snow')
+        billNo_txtlabel = Label(frameupper, width=15, anchor=W, justify=LEFT,
+                                font=L_FONT,
+                                bg='light cyan')
+        customerAcct_label = Label(frameupper, text="Shopper Act.", width=11, anchor=W, justify=LEFT,
+                                   font=L_FONT,
+                                   bg='snow')
+        customerAcct_txtlabel = Label(frameupper, width=15, anchor=W, justify=LEFT,
+                                      font=L_FONT,
+                                      bg='light cyan')
+        customerName_label = Label(frameupper, text="Customer Name", width=12, anchor=W, justify=LEFT,
+                                   font=L_FONT,
+                                   bg='snow')
+        customerName_txt = Entry(frameupper, width=20, font=L_FONT, bg='light cyan')
+
+        customercontact_label = Label(frameupper, text="Contact No.", width=10, anchor=W, justify=LEFT,
+                                      font=L_FONT,
+                                      bg='snow')
+        customerContact_txt = Entry(frameupper, width=20, font=L_FONT, bg='light cyan')
+
+        customerAddress_label = Label(frameupper, text="Address", width=10, anchor=W, justify=LEFT,
+                                      font=L_FONT,
+                                      bg='snow')
+        customerAddress_txt = Entry(frameupper, width=28, font=L_FONT, bg='light cyan')
+        framebtn = Frame(frameupper,width=365, height=50, bd=4, relief='ridge',
+                           bg='snow')
+        fetchDetails_btn = Button(framebtn, text="Shopper Details", fg="Black", font=L_FONT, width=15, state=NORMAL,
+                                  bg='RosyBrown1')
+        resetCustDeatils_btn = Button(framebtn, text="Reset Shopper", fg="Black", font=L_FONT, width=15, state=NORMAL,
+                                      bg='RosyBrown1')
+        frameupper.place(x=5, y=5)
+        sales_label.place(x=5, y=10)
+        sales_txtlabel.place(x=120, y=10)
+        dateTime_label.place(x=5, y=50)
+        dateTime_txtlabel.place(x=120, y=50)
+
+        billNo_label.place(x=300, y=10)
+        billNo_txtlabel.place(x=430, y=10)
+        customerAcct_label.place(x=300, y=50)
+        customerAcct_txtlabel.place(x=430, y=50)
+
+        customerName_label.place(x=610, y=10)
+        customerName_txt.place(x=750, y=10)
+        customercontact_label.place(x=610, y=50)
+        customerContact_txt.place(x=750, y=50)
+
+        customerAddress_label.place(x=970, y=10)
+        customerAddress_txt.place(x=1050, y=10)
+
+        framebtn.place(x=977,y=40)
+        fetchDetails_btn.place(x=2,y=2)
+        resetCustDeatils_btn.place(x=180,y=2)
+        # designing a upper frame --------------------end----------------------------
+
         framedisplay = Frame(self.dataSearchFrame, width=520, height=195, bd=4, relief='ridge',
                              bg='snow')
         framedisplay.pack()
@@ -163,7 +236,7 @@ class InventorySales:
         purchase_Addresslbl = Label(framepurchase, text="Address", width=13, anchor=W, justify=LEFT,
                                     font=L_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=5, y=5)
+        self.dataSearchFrame.place(x=5, y=105)
         frameSearch.place(x=10, y=5)
         framedisplay.place(x=10, y=60)
         framepurchase.place(x=10, y=220)
@@ -569,7 +642,8 @@ class InventorySales:
         print("Apply Tax% :", taxAmt_entry.get())
         total_bill_Amount = 0
         for iLoop in range(0, len(self.list_InvoicePrint)):
-            total_bill_Amount = total_bill_Amount + (self.list_InvoicePrint[iLoop][3] * int(self.list_InvoicePrint[iLoop][2]))
+            total_bill_Amount = total_bill_Amount + (
+                    self.list_InvoicePrint[iLoop][3] * int(self.list_InvoicePrint[iLoop][2]))
 
         print("Total Bill Amount = ", total_bill_Amount)
         tax_amount = float(int(taxAmt_entry.get()) / 100) * total_bill_Amount
