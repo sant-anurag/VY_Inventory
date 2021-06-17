@@ -106,8 +106,8 @@ class InventorySales:
         frameSearch.pack()
         btn_search = Button(frameSearch)
         btn_search.configure(text="Search", fg="Black",
-                             font=('arial narrow', 12, 'normal'), width=15, state=NORMAL, bg='RosyBrown1')
-        btn_search.place(x=370, y=2)
+                             font=('arial narrow', 12, 'normal'), width=8, state=NORMAL, bg='RosyBrown1')
+        btn_search.place(x=280, y=2)
 
         # designing a upper frame --------------------start----------------------------
 
@@ -115,14 +115,14 @@ class InventorySales:
                             font=NORM_FONT,
                             bg='snow')
         sales_login = CurrentUser.get_instance().getCurrentUser()
-        sales_txtlabel = Label(self.frameupper, width=15,text = sales_login, anchor=W, justify=LEFT,
+        sales_txtlabel = Label(self.frameupper, width=15, text=sales_login, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
 
         now = datetime.now()
         timeinfo = now.strftime("%H:%M")
         date_info = now.strftime("%d-%b-%Y")
-        dateTimetxt = date_info+','+timeinfo
+        dateTimetxt = date_info + ',' + timeinfo
         dateTime_label = Label(self.frameupper, text="Date,Time", width=9, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='snow')
@@ -133,7 +133,7 @@ class InventorySales:
                              font=NORM_FONT,
                              bg='snow')
         inv_id = self.generate_StockPurchase_invoiceID()
-        billNo_txtlabel = Label(self.frameupper, width=15,text=str(inv_id), anchor=W, justify=LEFT,
+        billNo_txtlabel = Label(self.frameupper, width=15, text=str(inv_id), anchor=W, justify=LEFT,
                                 font=NORM_FONT,
                                 bg='light cyan')
         customerAcct_label = Label(self.frameupper, text="Shopper Act.", width=11, anchor=W, justify=LEFT,
@@ -162,7 +162,8 @@ class InventorySales:
                                  customerAcct_txtlabel)
         fetchDetails_btn = Button(framebtn, text="Shopper Details", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
                                   bg='RosyBrown1', command=deatils_result)
-        resetCustDeatils_btn = Button(framebtn, text="Reset Shopper", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
+        resetCustDeatils_btn = Button(framebtn, text="Reset Shopper", fg="Black", font=NORM_FONT, width=17,
+                                      state=NORMAL,
                                       bg='RosyBrown1')
 
         self.frameupper.place(x=5, y=5)
@@ -224,11 +225,13 @@ class InventorySales:
         borrowFee = Label(framedisplay, text="Center", width=12, anchor=W, justify=LEFT,
                           font=NORM_FONT, bg='snow')
 
+        purchase_quantitylbl = Label(framedisplay, text="Purchase Quantity", width=15, justify=CENTER,
+                                     font=XL_FONT, bg='light green')
+        quantity_entry = Entry(framedisplay, width=5, font=XL_FONT, bg='light cyan')
+
         purchase_headline = Label(framepurchase, text="Purchase Details", width=13, anchor=W, justify=LEFT,
                                   font=NORM_FONT, bg='snow', fg='red')
 
-        purchase_quantitylbl = Label(framepurchase, text="Quantity", width=13, anchor=W, justify=LEFT,
-                                     font=NORM_FONT, bg='snow')
         purchase_CustomerNamelbl = Label(framepurchase, text="Name", width=13, anchor=W, justify=LEFT,
                                          font=NORM_FONT, bg='snow')
         purchase_ContactNolbl = Label(framepurchase, text="Contact No.", width=13, anchor=W, justify=LEFT,
@@ -237,68 +240,65 @@ class InventorySales:
                                     font=NORM_FONT, bg='snow')
 
         self.dataSearchFrame.place(x=5, y=105)
-        frameSearch.place(x=10, y=5)
-        framedisplay.place(x=10, y=60)
-        framepurchase.place(x=10, y=220)
-        framelower.place(x=10, y=417)
+        frameSearch.place(x=5, y=5)
+        framedisplay.place(x=5, y=60)
+        framepurchase.place(x=5, y=220)
+        framelower.place(x=5, y=417)
 
-        item_SearchId.place(x=30, y=5)
+        item_SearchId.place(x=10, y=5)
 
-        item_namelabel.place(x=30, y=5)
-        author.place(x=30, y=40)
-        price.place(x=30, y=80)
-        quantity.place(x=30, y=120)
-        borrowFee.place(x=30, y=160)
+        item_namelabel.place(x=10, y=5)
+        author.place(x=10, y=40)
+        price.place(x=10, y=80)
+        quantity.place(x=200, y=80)
+        purchase_quantitylbl.place(x=10, y=115)
 
         purchase_headline.place(x=25, y=5)
-        purchase_quantitylbl.place(x=30, y=35)
-        purchase_CustomerNamelbl.place(x=30, y=70)
-        purchase_ContactNolbl.place(x=30, y=110)
-        purchase_Addresslbl.place(x=30, y=150)
+        purchase_CustomerNamelbl.place(x=10, y=70)
+        purchase_ContactNolbl.place(x=10, y=110)
+        purchase_Addresslbl.place(x=10, y=150)
 
-        item_idforSearch = Entry(frameSearch, width=20, font=NORM_FONT, bg='light cyan')
+        item_idforSearch = Entry(frameSearch, width=15, font=L_FONT, bg='light cyan')
 
-        item_name = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        item_name = Label(framedisplay, width=25, anchor=W, justify=LEFT,
                           font=NORM_FONT,
                           bg='light cyan')
 
-        author_menu = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        author_menu = Label(framedisplay, width=25, anchor=W, justify=LEFT,
                             font=NORM_FONT,
                             bg='light cyan')
 
-        item_price = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        item_price = Label(framedisplay, width=8, anchor=W, justify=LEFT,
                            font=NORM_FONT,
                            bg='light cyan')
 
-        item_quantity = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        item_quantity = Label(framedisplay, width=8, anchor=W, justify=LEFT,
                               font=NORM_FONT,
                               bg='light cyan')
-        item_borrowfee = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        item_borrowfee = Label(framedisplay, width=25, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
-        localcenter_menu = Label(framedisplay, width=31, anchor=W, justify=LEFT,
+        localcenter_menu = Label(framedisplay, width=25, anchor=W, justify=LEFT,
                                  font=NORM_FONT,
                                  bg='light cyan')
-        item_idforSearch.place(x=160, y=5)
-        item_name.place(x=160, y=5)
-        author_menu.place(x=160, y=40)
-        item_price.place(x=160, y=80)
-        item_quantity.place(x=160, y=120)
-        item_borrowfee.place(x=160, y=160)
-        localcenter_menu.place(x=160, y=235)
+        item_idforSearch.place(x=120, y=5)
+        item_name.place(x=120, y=5)
+        author_menu.place(x=120, y=40)
+        item_price.place(x=120, y=80)
+        item_quantity.place(x=272, y=80)
+        quantity_entry.place(x=272, y=115)
+        item_borrowfee.place(x=120, y=160)
+        localcenter_menu.place(x=120, y=235)
 
-        quantity_entry = Entry(framepurchase, width=34, font=NORM_FONT, bg='light cyan')
+        name_entry = Entry(framepurchase, width=30, font=NORM_FONT, bg='light cyan')
 
-        name_entry = Entry(framepurchase, width=34, font=NORM_FONT, bg='light cyan')
-
-        contact_entry = Entry(framepurchase, width=34, font=NORM_FONT, bg='light cyan')
-        address_entry = Entry(framepurchase, width=34, text='0', font=NORM_FONT,
+        contact_entry = Entry(framepurchase, width=30, font=NORM_FONT, bg='light cyan')
+        address_entry = Entry(framepurchase, width=30, text='0', font=NORM_FONT,
                               bg='light cyan')
 
-        quantity_entry.place(x=160, y=35)
-        name_entry.place(x=160, y=70)
-        contact_entry.place(x=160, y=110)
-        address_entry.place(x=160, y=150)
+        name_entry.place(x=120, y=70)
+        contact_entry.place(x=120, y=110)
+        address_entry.place(x=120, y=150)
 
         cartCount_label = Label(framelower, text="Cart Count", width=13, anchor=W, justify=LEFT,
                                 font=NORM_FONT, bg='snow')
@@ -454,7 +454,7 @@ class InventorySales:
                     pass
 
                 label_detail = Label(frame, text="No Data", width=width_column, height=1,
-                                     anchor='center', justify=LEFT,bd=1,relief='ridge',
+                                     anchor='center', justify=LEFT, bd=1, relief='ridge',
                                      font=('arial narrow', 13, 'normal'),
                                      bg='light yellow')
                 label_detail.grid(row=row_index + 1, column=column_index, padx=2, pady=1, sticky=W)
@@ -605,7 +605,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             change_quantity_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 580, 513)
+            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 513)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -624,7 +624,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             discount_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 580, 513)
+            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 513)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -677,7 +677,7 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
                 print("Added to Cart Item Id :", item_idforSearch)
-                self.display_billArea(self.dataSearchFrame, 532, 5, 580, 400)
+                self.display_billArea(self.dataSearchFrame, 532, 5, 575, 400)
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 
