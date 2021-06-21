@@ -49,8 +49,9 @@ class InventorySales:
                                   bg='RosyBrown1')
         self.btn_reset = Button(self.MainbtnFrame, text="Reset Item", fg="Black",
                                 font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        resetcart_result = partial(self.resetcart)
         self.btn_resetCart = Button(self.MainbtnFrame, text="Reset Cart", fg="Black",
-                                    font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                    font=NORM_FONT, width=14, command=resetcart_result, state=DISABLED, bg='RosyBrown1')
         self.btn_print = Button(self.MainbtnFrame, text="Print Invoice", fg="Black",
                                 font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
 
@@ -251,11 +252,11 @@ class InventorySales:
                                font=NORM_FONT,
                                bg='light cyan')
         mop_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='light cyan')
+                         font=NORM_FONT,
+                         bg='light cyan')
         pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='light cyan')
+                                  font=NORM_FONT,
+                                  bg='light cyan')
         remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
@@ -268,19 +269,19 @@ class InventorySales:
         purchase_discountlbl = Label(framepurchase, text="Discount", width=13, anchor=W, justify=LEFT,
                                      font=NORM_FONT, bg='snow')
         self.billdiscount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
-                                     font=NORM_FONT,
-                                     bg='light cyan')
+                                       font=NORM_FONT,
+                                       bg='light cyan')
         purchase_taxlbl = Label(framepurchase, text="Tax %", width=13, anchor=W, justify=LEFT,
                                 font=NORM_FONT, bg='snow')
 
         self.billtax_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
-                                     font=NORM_FONT,
-                                     bg='light cyan')
+                                  font=NORM_FONT,
+                                  bg='light cyan')
         purchase_finalBillAmtlbl = Label(framepurchase, text="Amt. Payable(Rs.)", width=13, anchor=W, justify=LEFT,
                                          font=NORM_FONT, bg='snow')
         self.finalBillAmt_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
-                                     font=NORM_FONT,
-                                     bg='light cyan')
+                                       font=NORM_FONT,
+                                       bg='light cyan')
 
         self.dataSearchFrame.place(x=155, y=105)
         frameSearch.place(x=5, y=5)
@@ -359,7 +360,8 @@ class InventorySales:
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-        reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, customerName_txt, customerContact_txt,
+        reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, customerName_txt,
+                               customerContact_txt,
                                customerAddress_txt, item_name, author_menu,
                                item_price,
                                item_borrowfee,
@@ -689,6 +691,7 @@ class InventorySales:
 
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_resetCart.configure(state=NORMAL, bg='RosyBrown1')
                 print("Added to Cart Item Id :", item_idforSearch)
                 self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
             else:
@@ -794,7 +797,7 @@ class InventorySales:
 
         self.btn_exit.configure(state=NORMAL, bg='RosyBrown1')
         print_result = partial(self.printInvoice, dest_file)
-        self.btn_print.configure(command=print_result)
+        self.btn_print.configure(state=NORMAL, bg='RosyBrown1', command=print_result)
 
         # disable to add to cart and purchase button, so that same invoice is not generated twice
         self.btn_submit.configure(state=DISABLED, bg='light grey')
@@ -807,6 +810,18 @@ class InventorySales:
 
     def printInvoice(self, fileToPrint):
         os.startfile(fileToPrint, 'print')
+
+    def resetcart(self):
+        # Clear the cart since , purchase has happened .
+        self.list_InvoicePrint = []
+
+        # disable the button as they are no longer releavnt with cart item count  = 0
+        self.btn_submit.configure(state=DISABLED, bg='light grey')
+        self.btn_print.configure(state=DISABLED, bg='light grey')
+        self.btn_reset.configure(state=DISABLED, bg='light grey')
+        self.btn_resetCart.configure(state=DISABLED, bg='light grey')
+
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
 
     def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact):
         conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
