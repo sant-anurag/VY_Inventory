@@ -128,6 +128,7 @@ class accountControl:
 
         self.default_text2 = StringVar(self.newpasswordFrame, value='')
         self.default_text1 = StringVar(self.newpasswordFrame, value='')
+        
         self.newpasswordFrame.place(x=160, y=5)
         # create a item Name label
 

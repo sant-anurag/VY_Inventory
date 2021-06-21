@@ -14,12 +14,12 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1360x700+240+150')
+        self.sales_window.geometry('1300x510+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
-        canvas_width, canvas_height = 1400, 750
+        canvas_width, canvas_height = 1300, 520
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
             PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg"))
@@ -39,56 +39,71 @@ class InventorySales:
         self.billAreaFrame.pack()
 
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
-        self.MainbtnFrame = Frame(self.sales_window, width=540, height=50, bd=2, relief='ridge',
-                                  bg='light yellow')
+        self.MainbtnFrame = Frame(self.sales_window, width=148, height=215, bd=4, relief='ridge',
+                                  bg='wheat')
         self.btn_addToCart = Button(self.MainbtnFrame)
-        self.btn_addToCart.configure(text="+ Cart", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+        self.btn_addToCart.configure(text="Add To Cart", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                      bg='RosyBrown1')
         self.btn_submit = Button(self.MainbtnFrame)
-        self.btn_submit.configure(text="Bill", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+        self.btn_submit.configure(text="Generate Bill", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                   bg='RosyBrown1')
-        self.btn_reset = Button(self.MainbtnFrame, text="Reset", fg="Black",
-                                font=NORM_FONT, width=11, state=NORMAL, bg='RosyBrown1')
-        self.btn_print = Button(self.MainbtnFrame, text="Print", fg="Black",
-                                font=NORM_FONT, width=11, state=DISABLED, bg='light grey')
+        self.btn_reset = Button(self.MainbtnFrame, text="Reset Item", fg="Black",
+                                font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        self.btn_resetCart = Button(self.MainbtnFrame, text="Reset Cart", fg="Black",
+                                    font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        self.btn_print = Button(self.MainbtnFrame, text="Print Invoice", fg="Black",
+                                font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
 
-        # Bottom button panel - end
-        self.MainbtnFrame.place(x=5, y=623)
-        self.btn_addToCart.place(x=7, y=1)
-        self.btn_submit.place(x=137, y=1)
-        self.btn_reset.place(x=265, y=1)
-        self.btn_print.place(x=395, y=1)
-        # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-End
+        mainmenu_label = Label(self.MainbtnFrame, text="Main Menu", width=12, justify=CENTER,
+                               font=L_FONT,
+                               bg='wheat')
+
+        self.MainbtnFrame.place(x=5, y=5)
+        mainmenu_label.place(x=2, y=5)
+        self.btn_addToCart.place(x=2, y=40)
+        self.btn_submit.place(x=2, y=73)
+        self.btn_reset.place(x=2, y=106)
+        self.btn_resetCart.place(x=2, y=139)
+        self.btn_print.place(x=2, y=172)
 
         # Support button frame design -start
-        self.AdditionalbtnFrame = Frame(self.sales_window, width=810, height=50, bd=2, relief='ridge',
-                                        bg='light yellow')
+        self.AdditionalbtnFrame = Frame(self.sales_window, width=148, height=285, bd=4, relief='ridge',
+                                        bg='wheat')
+        opmenu_label = Label(self.AdditionalbtnFrame, text="Context Menu", width=12, justify=CENTER,
+                             font=L_FONT,
+                             bg='wheat')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
         chngQuantity_result = partial(self.change_quantity_display)
-        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=NORM_FONT, width=13, state=NORMAL,
+        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
-        discount_result = partial(self.customer_operations)
-        self.btn_discount.configure(text="Discount %", fg="Black", font=NORM_FONT, width=13, state=NORMAL,
+        discount_result = partial(self.discount_display)
+        self.btn_discount.configure(text="Discount %", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                     bg='RosyBrown1', command=discount_result)
         self.btn_tax = Button(self.AdditionalbtnFrame)
         tax_result = partial(self.tax_display)
-        self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=13, state=NORMAL,
+        self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                bg='RosyBrown1', command=tax_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=NORM_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+                                  font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        self.btn_redeempts = Button(self.AdditionalbtnFrame, text="Redeem Points", fg="Black",
+                                    font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+        shopper_result = partial(self.customer_operations)
+        self.btn_member = Button(self.AdditionalbtnFrame, text="Shopper", fg="Black",
+                                 font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1', command=shopper_result)
         self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
-                               font=NORM_FONT, width=13, state=NORMAL, bg='RosyBrown1')
+                               font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_exit.configure(command=self.sales_window.destroy)
 
-        # Bottom button panel - end
-        self.AdditionalbtnFrame.place(x=545, y=623)
-        self.btn_chgQuantity.place(x=2, y=1)
-        self.btn_discount.place(x=165, y=1)
-        self.btn_tax.place(x=330, y=1)
-        self.btn_remItem.place(x=490, y=1)
-        self.btn_exit.place(x=650, y=1)
-        # Support button frame design-End
+        self.AdditionalbtnFrame.place(x=5, y=220)
+        opmenu_label.place(x=2, y=5)
+        self.btn_chgQuantity.place(x=2, y=40)
+        self.btn_discount.place(x=2, y=73)
+        self.btn_tax.place(x=2, y=106)
+        self.btn_remItem.place(x=2, y=139)
+        self.btn_redeempts.place(x=2, y=172)
+        self.btn_member.place(x=2, y=205)
+        self.btn_exit.place(x=2, y=238)
 
         print("constructor called for sales ")
 
@@ -97,7 +112,7 @@ class InventorySales:
 
     def sales_inventory_item(self, master):
         self.dataSearchFrame.destroy()
-        self.dataSearchFrame = Frame(self.sales_window, width=1140, height=517, bd=2, relief='ridge',
+        self.dataSearchFrame = Frame(self.sales_window, width=1140, height=400, bd=2, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
 
@@ -166,7 +181,7 @@ class InventorySales:
                                       state=NORMAL,
                                       bg='RosyBrown1')
 
-        self.frameupper.place(x=5, y=5)
+        self.frameupper.place(x=155, y=5)
         sales_label.place(x=5, y=10)
         sales_txtlabel.place(x=100, y=10)
         dateTime_label.place(x=5, y=50)
@@ -194,15 +209,9 @@ class InventorySales:
                              bg='snow')
         framedisplay.pack()
 
-        framepurchase = Frame(self.dataSearchFrame, width=520, height=195, bd=2, relief='ridge',
+        framepurchase = Frame(self.dataSearchFrame, width=520, height=170, bd=2, relief='ridge',
                               bg='snow')
         framepurchase.pack()
-
-        framelower = Frame(self.dataSearchFrame, width=1330, height=90, bd=2, relief='ridge',
-                           bg='snow')
-        framelower.pack()
-
-        # create a item Name label
 
         item_SearchId = Label(frameSearch, text="Search Item Id", width=11, anchor=W, justify=LEFT,
                               font=NORM_FONT,
@@ -222,28 +231,61 @@ class InventorySales:
         quantity = Label(framedisplay, text="Quantity", width=12, anchor=W, justify=LEFT,
                          font=NORM_FONT, bg='snow')
 
-        borrowFee = Label(framedisplay, text="Center", width=12, anchor=W, justify=LEFT,
-                          font=NORM_FONT, bg='snow')
-
         purchase_quantitylbl = Label(framedisplay, text="Purchase Quantity", width=15, justify=CENTER,
                                      font=XL_FONT, bg='light green')
         quantity_entry = Entry(framedisplay, width=5, font=XL_FONT, bg='light cyan')
 
-        purchase_headline = Label(framepurchase, text="Purchase Details", width=13, anchor=W, justify=LEFT,
+        purchase_headline = Label(framepurchase, text="Bill Summary", width=13, anchor=W, justify=LEFT,
                                   font=NORM_FONT, bg='snow', fg='red')
 
-        purchase_CustomerNamelbl = Label(framepurchase, text="Name", width=13, anchor=W, justify=LEFT,
-                                         font=NORM_FONT, bg='snow')
-        purchase_ContactNolbl = Label(framepurchase, text="Contact No.", width=13, anchor=W, justify=LEFT,
+        purchase_cartCountlbl = Label(framepurchase, text="Cart Count", width=13, anchor=W, justify=LEFT,
                                       font=NORM_FONT, bg='snow')
-        purchase_Addresslbl = Label(framepurchase, text="Address", width=13, anchor=W, justify=LEFT,
-                                    font=NORM_FONT, bg='snow')
+        purchase_moplbl = Label(framepurchase, text="Paymt.Mode", width=13, anchor=W, justify=LEFT,
+                                font=NORM_FONT, bg='snow')
+        purchase_pointsEarnedlbl = Label(framepurchase, text="Pts. Earned", width=13, anchor=W, justify=LEFT,
+                                         font=NORM_FONT, bg='snow')
+        purchase_rempointslbl = Label(framepurchase, text="Pts. Rem.", width=13, anchor=W, justify=LEFT,
+                                      font=NORM_FONT, bg='snow')
 
-        self.dataSearchFrame.place(x=5, y=105)
+        cartCount_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='light cyan')
+        mop_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='light cyan')
+        pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='light cyan')
+        remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='light cyan')
+
+        purchase_billAmtlbl = Label(framepurchase, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
+                                    font=NORM_FONT, bg='snow')
+        self.billAmount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+                                     font=NORM_FONT,
+                                     bg='light cyan')
+        purchase_discountlbl = Label(framepurchase, text="Discount", width=13, anchor=W, justify=LEFT,
+                                     font=NORM_FONT, bg='snow')
+        self.billdiscount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+                                     font=NORM_FONT,
+                                     bg='light cyan')
+        purchase_taxlbl = Label(framepurchase, text="Tax %", width=13, anchor=W, justify=LEFT,
+                                font=NORM_FONT, bg='snow')
+
+        self.billtax_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+                                     font=NORM_FONT,
+                                     bg='light cyan')
+        purchase_finalBillAmtlbl = Label(framepurchase, text="Amt. Payable(Rs.)", width=13, anchor=W, justify=LEFT,
+                                         font=NORM_FONT, bg='snow')
+        self.finalBillAmt_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+                                     font=NORM_FONT,
+                                     bg='light cyan')
+
+        self.dataSearchFrame.place(x=155, y=105)
         frameSearch.place(x=5, y=5)
         framedisplay.place(x=5, y=60)
         framepurchase.place(x=5, y=220)
-        framelower.place(x=5, y=417)
 
         item_SearchId.place(x=10, y=5)
 
@@ -252,11 +294,6 @@ class InventorySales:
         price.place(x=10, y=80)
         quantity.place(x=200, y=80)
         purchase_quantitylbl.place(x=10, y=115)
-
-        purchase_headline.place(x=25, y=5)
-        purchase_CustomerNamelbl.place(x=10, y=70)
-        purchase_ContactNolbl.place(x=10, y=110)
-        purchase_Addresslbl.place(x=10, y=150)
 
         item_idforSearch = Entry(frameSearch, width=15, font=L_FONT, bg='light cyan')
 
@@ -290,48 +327,24 @@ class InventorySales:
         item_borrowfee.place(x=120, y=160)
         localcenter_menu.place(x=120, y=235)
 
-        name_entry = Entry(framepurchase, width=30, font=NORM_FONT, bg='light cyan')
+        purchase_headline.place(x=10, y=5)
+        purchase_cartCountlbl.place(x=10, y=35)
+        cartCount_text.place(x=120, y=35)
+        purchase_moplbl.place(x=10, y=70)
+        mop_text.place(x=120, y=70)
+        purchase_pointsEarnedlbl.place(x=10, y=105)
+        pointsEarned_text.place(x=120, y=105)
+        purchase_rempointslbl.place(x=10, y=140)
+        remPoints_text.place(x=120, y=140)
 
-        contact_entry = Entry(framepurchase, width=30, font=NORM_FONT, bg='light cyan')
-        address_entry = Entry(framepurchase, width=30, text='0', font=NORM_FONT,
-                              bg='light cyan')
-
-        name_entry.place(x=120, y=70)
-        contact_entry.place(x=120, y=110)
-        address_entry.place(x=120, y=150)
-
-        cartCount_label = Label(framelower, text="Cart Count", width=13, anchor=W, justify=LEFT,
-                                font=NORM_FONT, bg='snow')
-        billAmount_label = Label(framelower, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
-                                 font=NORM_FONT, bg='snow')
-
-        cartCount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='light cyan')
-        self.billAmount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                                     font=NORM_FONT,
-                                     bg='light cyan')
-        discount_label = Label(framelower, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
-                               font=NORM_FONT, bg='snow')
-        billNo_label = Label(framelower, text="Bill No.", width=14, anchor=W, justify=LEFT,
-                             font=NORM_FONT, bg='snow')
-
-        discount_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                              font=NORM_FONT,
-                              bg='light cyan')
-        inv_id = self.generate_StockPurchase_invoiceID()
-        billNo_text = Label(framelower, width=14, anchor=W, justify=LEFT,
-                            font=NORM_FONT,
-                            bg='light cyan', text=inv_id)
-
-        cartCount_label.place(x=30, y=12)
-        cartCount_text.place(x=165, y=12)
-        billAmount_label.place(x=370, y=12)
-        self.billAmount_text.place(x=530, y=12)
-        discount_label.place(x=30, y=45)
-        discount_text.place(x=165, y=45)
-        billNo_label.place(x=370, y=45)
-        billNo_text.place(x=530, y=45)
+        purchase_billAmtlbl.place(x=250, y=35)
+        self.billAmount_text.place(x=380, y=35)
+        purchase_discountlbl.place(x=250, y=70)
+        self.billdiscount_text.place(x=380, y=70)
+        purchase_taxlbl.place(x=250, y=105)
+        self.billtax_text.place(x=380, y=105)
+        purchase_finalBillAmtlbl.place(x=250, y=140)
+        self.finalBillAmt_text.place(x=380, y=140)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
@@ -342,12 +355,12 @@ class InventorySales:
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
                                    cartCount_text, self.billAmount_text)
         self.btn_addToCart.configure(command=addToCart_result)
-        purchase_result = partial(self.purchase_stock_item, name_entry, contact_entry, address_entry)
+        purchase_result = partial(self.purchase_stock_item, customerName_txt, customerContact_txt, customerAddress_txt)
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-        reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, name_entry, contact_entry,
-                               address_entry, item_name, author_menu,
+        reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, customerName_txt, customerContact_txt,
+                               customerAddress_txt, item_name, author_menu,
                                item_price,
                                item_borrowfee,
                                item_quantity, )
@@ -360,7 +373,7 @@ class InventorySales:
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
         self.sales_window.bind('<Alt-p>', lambda event=None: self.btn_reset.invoke())
         # self.initialize_billArea()
-        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 400)
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
@@ -605,7 +618,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             change_quantity_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 513)
+            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -624,7 +637,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             discount_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 513)
+            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -677,7 +690,7 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
                 print("Added to Cart Item Id :", item_idforSearch)
-                self.display_billArea(self.dataSearchFrame, 532, 5, 575, 400)
+                self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 
