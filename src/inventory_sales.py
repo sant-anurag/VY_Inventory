@@ -75,23 +75,23 @@ class InventorySales:
                              bg='wheat')
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
         chngQuantity_result = partial(self.change_quantity_display)
-        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
+        self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
                                        bg='RosyBrown1', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
         discount_result = partial(self.discount_display)
-        self.btn_discount.configure(text="Discount %", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
+        self.btn_discount.configure(text="Discount %", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
                                     bg='RosyBrown1', command=discount_result)
         self.btn_tax = Button(self.AdditionalbtnFrame)
         tax_result = partial(self.tax_display)
-        self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
+        self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
                                bg='RosyBrown1', command=tax_result)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                  font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
         self.btn_redeempts = Button(self.AdditionalbtnFrame, text="Redeem Points", fg="Black",
-                                    font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                    font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
         shopper_result = partial(self.customer_operations)
         self.btn_member = Button(self.AdditionalbtnFrame, text="Shopper", fg="Black",
-                                 font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1', command=shopper_result)
+                                 font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1', command=shopper_result)
         self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
                                font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_exit.configure(command=self.sales_window.destroy)
@@ -268,7 +268,7 @@ class InventorySales:
                                      bg='light cyan')
         purchase_discountlbl = Label(framepurchase, text="Discount", width=13, anchor=W, justify=LEFT,
                                      font=NORM_FONT, bg='snow')
-        self.billdiscount_text = Label(framepurchase, width=13, anchor=W,text = "0", justify=LEFT,
+        self.billdiscount_text = Label(framepurchase, width=13, anchor=W, text="0", justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
         purchase_taxlbl = Label(framepurchase, text="Tax %", width=13, anchor=W, justify=LEFT,
@@ -634,12 +634,14 @@ class InventorySales:
                 discounted_price = float((int(discountAmt.get()) / 100) * float(self.list_InvoicePrint[iLoop][3]))
                 self.list_InvoicePrint[iLoop][3] = float(self.list_InvoicePrint[iLoop][3]) - discounted_price
                 print("Discounted price is :", discounted_price)
-                self.billdiscount_text['text'] = round(((discounted_price*int(self.list_InvoicePrint[iLoop][2])) + float(self.billdiscount_text.cget("text"))),2)
+                self.billdiscount_text['text'] = round(((discounted_price * int(
+                    self.list_InvoicePrint[iLoop][2])) + float(self.billdiscount_text.cget("text"))), 2)
                 break
 
         if bSerialValid:
             print("Quantity has been changed")
             discount_window.destroy()
+
             self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
         else:
             print("Invalid Serial no")
@@ -657,8 +659,9 @@ class InventorySales:
         final_price = round(float(total_bill_Amount + tax_amount), 2)
         print("Gross Amount = ", final_price)
         print("Gross amount changed")
-        self.billAmount_text['text'] = str(final_price)
-        tax_labelAmt['text'] = str(tax_amount)
+        self.finalBillAmt_text['text'] = str(final_price)
+        self.billtax_text['text'] = str(tax_amount)
+        self.btn_discount.configure(state=DISABLED, bg='light grey')
 
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
@@ -693,6 +696,13 @@ class InventorySales:
                 billAmount_text['text'] = str(total_cart_mrp)
                 self.btn_submit.configure(state=NORMAL, bg='RosyBrown1')
                 self.btn_resetCart.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_tax.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_chgQuantity.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_remItem.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_discount.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_redeempts.configure(state=NORMAL, bg='RosyBrown1')
+                self.btn_member.configure(state=NORMAL, bg='RosyBrown1')
+
                 print("Added to Cart Item Id :", item_idforSearch)
                 self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
             else:
@@ -721,7 +731,15 @@ class InventorySales:
             cursor.execute(sql, values)
             conn.commit()
         conn.close()
+
         self.btn_submit.configure(state=DISABLED, bg='light grey')
+        self.btn_resetCart.configure(state=DISABLED, bg='light grey')
+        self.btn_chgQuantity.configure(state=DISABLED, bg='light grey')
+        self.btn_remItem.configure(state=DISABLED, bg='light grey')
+        self.btn_tax.configure(state=DISABLED, bg='light grey')
+        self.btn_discount.configure(state=DISABLED, bg='light grey')
+        self.btn_redeempts.configure(state=DISABLED, bg='light grey')
+        self.btn_member.configure(state=DISABLED, bg='light grey')
 
         # generate Invoice
         self.generateInvoicePage(customer_name,
