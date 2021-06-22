@@ -268,7 +268,7 @@ class InventorySales:
                                      bg='light cyan')
         purchase_discountlbl = Label(framepurchase, text="Discount", width=13, anchor=W, justify=LEFT,
                                      font=NORM_FONT, bg='snow')
-        self.billdiscount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+        self.billdiscount_text = Label(framepurchase, width=13, anchor=W,text = "0", justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
         purchase_taxlbl = Label(framepurchase, text="Tax %", width=13, anchor=W, justify=LEFT,
@@ -632,8 +632,9 @@ class InventorySales:
             if iLoop + 1 == int(serialNo.get()):
                 bSerialValid = True
                 discounted_price = float((int(discountAmt.get()) / 100) * float(self.list_InvoicePrint[iLoop][3]))
-                self.list_InvoicePrint[iLoop][3] = discounted_price
+                self.list_InvoicePrint[iLoop][3] = float(self.list_InvoicePrint[iLoop][3]) - discounted_price
                 print("Discounted price is :", discounted_price)
+                self.billdiscount_text['text'] = round(((discounted_price*int(self.list_InvoicePrint[iLoop][2])) + float(self.billdiscount_text.cget("text"))),2)
                 break
 
         if bSerialValid:
@@ -815,7 +816,7 @@ class InventorySales:
         # Clear the cart since , purchase has happened .
         self.list_InvoicePrint = []
 
-        # disable the button as they are no longer releavnt with cart item count  = 0
+        # disable the button as they are no longer relevant with cart item count  = 0
         self.btn_submit.configure(state=DISABLED, bg='light grey')
         self.btn_print.configure(state=DISABLED, bg='light grey')
         self.btn_reset.configure(state=DISABLED, bg='light grey')
