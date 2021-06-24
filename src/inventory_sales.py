@@ -107,8 +107,6 @@ class InventorySales:
         self.btn_exit.place(x=2, y=238)
 
         print("constructor called for sales ")
-
-        # default window is "Add New Inventor" when window opens
         self.sales_inventory_item(master)
 
     def sales_inventory_item(self, master):
@@ -251,9 +249,11 @@ class InventorySales:
         cartCount_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
-        mop_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+        self.default_text1 = StringVar(framepurchase, value='')
+        mop_text = Entry(framepurchase, width=12, justify=LEFT,
                          font=NORM_FONT,
-                         bg='light cyan')
+                         bg='light cyan', textvariable=self.default_text1)
+        self.default_text1.trace("w", self.enable_PaymentMethodView)
         pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                   font=NORM_FONT,
                                   bg='light cyan')
@@ -266,18 +266,18 @@ class InventorySales:
         self.billAmount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
                                      font=NORM_FONT,
                                      bg='light cyan')
-        purchase_discountlbl = Label(framepurchase, text="Discount", width=13, anchor=W, justify=LEFT,
+        purchase_discountlbl = Label(framepurchase, text="Discount(Rs.)", width=14, anchor=W, justify=LEFT,
                                      font=NORM_FONT, bg='snow')
         self.billdiscount_text = Label(framepurchase, width=13, anchor=W, text="0", justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
-        purchase_taxlbl = Label(framepurchase, text="Tax %", width=13, anchor=W, justify=LEFT,
+        purchase_taxlbl = Label(framepurchase, text="Tax %", width=14, anchor=W, justify=LEFT,
                                 font=NORM_FONT, bg='snow')
 
-        self.billtax_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
+        self.billtax_text = Label(framepurchase, width=13, anchor=W, text="0", justify=LEFT,
                                   font=NORM_FONT,
                                   bg='light cyan')
-        purchase_finalBillAmtlbl = Label(framepurchase, text="Amt. Payable(Rs.)", width=13, anchor=W, justify=LEFT,
+        purchase_finalBillAmtlbl = Label(framepurchase, text="Amt. Payable(Rs.)", width=14, anchor=W, justify=LEFT,
                                          font=NORM_FONT, bg='snow')
         self.finalBillAmt_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
                                        font=NORM_FONT,
@@ -297,7 +297,7 @@ class InventorySales:
         purchase_quantitylbl.place(x=10, y=115)
 
         item_idforSearch = Entry(frameSearch, width=15, font=L_FONT, bg='light cyan')
-
+        item_idforSearch.focus_set()
         item_name = Label(framedisplay, width=25, anchor=W, justify=LEFT,
                           font=NORM_FONT,
                           bg='light cyan')
@@ -339,18 +339,18 @@ class InventorySales:
         remPoints_text.place(x=120, y=140)
 
         purchase_billAmtlbl.place(x=250, y=35)
-        self.billAmount_text.place(x=380, y=35)
+        self.billAmount_text.place(x=385, y=35)
         purchase_discountlbl.place(x=250, y=70)
-        self.billdiscount_text.place(x=380, y=70)
+        self.billdiscount_text.place(x=385, y=70)
         purchase_taxlbl.place(x=250, y=105)
-        self.billtax_text.place(x=380, y=105)
+        self.billtax_text.place(x=385, y=105)
         purchase_finalBillAmtlbl.place(x=250, y=140)
-        self.finalBillAmt_text.place(x=380, y=140)
+        self.finalBillAmt_text.place(x=385, y=140)
 
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
                                 item_borrowfee,
-                                item_quantity, OPERATION_SEARCH)
+                                item_quantity,quantity_entry, OPERATION_SEARCH)
 
         btn_search.configure(command=search_result)
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
@@ -529,7 +529,7 @@ class InventorySales:
     def discount_display(self):
         discount_display_window = Toplevel(self.dataSearchFrame)
         discount_display_window.title("Apply Discount")
-        discount_display_window.geometry('320x150+950+380')
+        discount_display_window.geometry('300x135+950+380')
         discount_display_window.configure(background='wheat')
         discount_display_window.resizable(width=False, height=False)
         discount_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -540,11 +540,11 @@ class InventorySales:
                                    bg='wheat')
         sno_entry = Entry(discount_display_window, width=15, font=NORM_FONT, bg='light cyan')
 
-        label_discount = Label(discount_display_window, text="Discount %", width=8, height=1, anchor=W, justify=LEFT,
+        label_discount = Label(discount_display_window, text="Discount %", width=9, height=1, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='wheat')
         discount_entry = Entry(discount_display_window, width=15, font=NORM_FONT, bg='light cyan')
-        btn_frame = Frame(discount_display_window, width=230, height=50, bd=2, relief='ridge',
+        btn_frame = Frame(discount_display_window, width=185, height=40, bd=2, relief='ridge',
                           bg='purple')
         btn_changediscount = Button(btn_frame)
         change_result = partial(self.apply_discount, sno_entry, discount_entry, discount_display_window)
@@ -559,8 +559,8 @@ class InventorySales:
         label_discount.place(x=30, y=55)
         discount_entry.place(x=130, y=55)
         btn_frame.place(x=50, y=90)
-        btn_changediscount.place(x=3, y=2)
-        btn_printdiscount.place(x=110, y=2)
+        btn_changediscount.place(x=1, y=2)
+        btn_printdiscount.place(x=88, y=2)
         discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
         discount_display_window.bind('<Escape>', lambda event=None: btn_printdiscount.invoke())
 
@@ -628,6 +628,7 @@ class InventorySales:
     def apply_discount(self, serialNo, discountAmt, discount_window):
         print("Apply discount started for the serial no :", serialNo.get())
         bSerialValid = False
+
         for iLoop in range(0, len(self.list_InvoicePrint)):
             if iLoop + 1 == int(serialNo.get()):
                 bSerialValid = True
@@ -641,7 +642,6 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             discount_window.destroy()
-
             self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
         else:
             print("Invalid Serial no")
@@ -867,6 +867,14 @@ class InventorySales:
         self.list_InvoicePrint = []
         # temp list is cleared
 
+    def enable_PaymentMethodView(self, *args):
+        print("Tracing  entry input")
+
+        if self.default_text1.get() != "":
+            self.discount_display()
+        else:
+            pass
+
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
 
@@ -887,6 +895,8 @@ class InventorySales:
                 self.list_InvoicePrint[iLoop][3])), 2)
 
         self.billAmount_text['text'] = str(total_cart_mrp)
+        self.finalBillAmt_text['text'] = str(
+            float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text")))
 
     # Function for clearing the
     # contents of text entry boxes
@@ -993,7 +1003,7 @@ class InventorySales:
     def search_itemId(self, item_idforSearch, item_name, author_menu,
                       item_price,
                       item_author,
-                      item_quantity, op_type):
+                      item_quantity,quantity_entry, op_type):
 
         # search started -------------
         print("search_itemId--> Start for item name: ", item_idforSearch.get())
@@ -1024,6 +1034,7 @@ class InventorySales:
                 item_price['text'] = result[4]
                 item_author['text'] = result[9]
                 item_quantity['text'] = result[6]
+                quantity_entry.focus_set()
             else:
                 ''' do nothing '''
             self.btn_addToCart.configure(state=NORMAL, bg='RosyBrown1')
