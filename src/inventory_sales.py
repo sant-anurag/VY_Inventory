@@ -19,6 +19,7 @@ class InventorySales:
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
+        self.list_productDetails = []
         canvas_width, canvas_height = 1300, 700
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
@@ -37,6 +38,9 @@ class InventorySales:
         self.frameupper.pack()
         self.billAreaFrame = Frame(self.dataSearchFrame, relief=GROOVE, width=520, height=407, bd=2)
         self.billAreaFrame.pack()
+
+        self.searchproductDeatilsArea = Frame(self.sales_window, relief=GROOVE, width=1290, height=150, bd=2)
+        self.searchproductDeatilsArea.pack()
 
         # Main button frame design for Add to cart, Bill, Reset, and Exit Screen-start
         self.MainbtnFrame = Frame(self.sales_window, width=148, height=215, bd=4, relief='ridge',
@@ -114,9 +118,9 @@ class InventorySales:
         self.dataSearchFrame = Frame(self.sales_window, width=1140, height=400, bd=2, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-        frameProductSearch = Frame(self.sales_window, width=1290, height=190, bd=2, relief='ridge',
+        self.frameProductSearch = Frame(self.sales_window, width=1290, height=190, bd=2, relief='ridge',
                                    bg='snow')
-        frameProductSearch.pack()
+        self.frameProductSearch.pack()
         frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=2, relief='ridge',
                             bg='snow')
         frameSearch.pack()
@@ -371,24 +375,26 @@ class InventorySales:
         self.btn_reset.configure(command=reset_result)
 
         # Design of the search bottom area for products  -  start
-        frameProductSearch.place(x=5, y=506)
-        product_SearchIdlbl = Label(frameProductSearch, text="Barcode/Item Id", width=15, anchor=W, justify=LEFT,
-                              font=XL_FONT,
-                              bg='snow')
-        product_SearchIdTxt = Entry(frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
-        product_namelbl = Label(frameProductSearch, text="Product Name", width=15, anchor=W, justify=LEFT,
-                              font=XL_FONT,
-                              bg='snow')
-        product_NameTxt = Entry(frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
-        btn_productSearch = Button(frameProductSearch, text="Search Item/s", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
-                                  bg='RosyBrown1', command=deatils_result)
+        self.frameProductSearch.place(x=5, y=506)
+        product_SearchIdlbl = Label(self.frameProductSearch, text="Barcode/Item Id", width=15, anchor=W, justify=LEFT,
+                                    font=XL_FONT,
+                                    bg='snow')
+        product_SearchIdTxt = Entry(self.frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
+        product_namelbl = Label(self.frameProductSearch, text="Product Name", width=15, anchor=W, justify=LEFT,
+                                font=XL_FONT,
+                                bg='snow')
+        product_NameTxt = Entry(self.frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
+        product_searchResult = partial(self.display_productDeatils, product_SearchIdTxt, product_NameTxt)
+        btn_productSearch = Button(self.frameProductSearch, text="Search Item/s", fg="Black", font=NORM_FONT, width=17,
+                                   state=NORMAL,
+                                   bg='RosyBrown1', command=product_searchResult)
         product_SearchIdlbl.place(x=5, y=5)
         product_SearchIdTxt.place(x=200, y=5)
         product_namelbl.place(x=570, y=5)
         product_NameTxt.place(x=750, y=5)
-
         btn_productSearch.place(x=1110, y=5)
 
+        self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 136)
         # Design of the search bottom area for products  -  end
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
@@ -511,6 +517,113 @@ class InventorySales:
                 else:
                     print("this value doesn't exists")
         self.calculateAndDisplayTotalBillAmt()
+
+    def display_SearchProductsDetailArea(self, split_open_window, startx, starty, xwidth, xheight):
+        self.searchproductDeatilsArea.destroy()
+        self.searchproductDeatilsArea = Frame(split_open_window, relief=GROOVE, width=1290, height=150, bd=2)
+        self.searchproductDeatilsArea.place(x=startx, y=starty)
+
+        mycanvas = Canvas(self.searchproductDeatilsArea)
+        frame = Frame(mycanvas, width=200, height=100, bg='light yellow')
+        myscrollbar = Scrollbar(self.searchproductDeatilsArea, orient="vertical", command=mycanvas.yview)
+        mycanvas.configure(yscrollcommand=myscrollbar.set)
+
+        myscrollbar.pack(side="right", fill="y")
+        mycanvas.pack(side="left")
+        mycanvas.create_window((0, 0), window=frame, anchor='nw')
+
+        result = partial(self.myfunction, xwidth, xheight, mycanvas)
+
+        frame.bind("<Configure>", result)
+
+        label_Sno = Label(frame, text="S.No", width=10, height=1, anchor='center',
+                          justify=CENTER,
+                          font=('times new roman', 13, 'normal'),
+                          bg='light yellow', relief='ridge')
+
+        label_barcode = Label(frame, text="Id/Barcode", width=13, height=1, anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow', relief='ridge')
+
+        label_productName = Label(frame, text="Product Name", width=30, height=1, anchor='center',
+                                  justify=CENTER,
+                                  font=('times new roman', 13, 'normal'),
+                                  bg='light yellow', relief='ridge')
+
+        label_OwnerName = Label(frame, text="Manufacturer", width=30, height=1,
+                                anchor='center',
+                                justify=CENTER,
+                                font=('times new roman', 13, 'normal'),
+                                bg='light yellow', relief='ridge')
+
+        label_unitMRP = Label(frame, text="Unit MRP(Rs.)", width=20, height=1,
+                              anchor='center',
+                              justify=CENTER,
+                              font=('times new roman', 13, 'normal'),
+                              bg='light yellow', relief='ridge')
+        label_quantity = Label(frame, text="Quantity", width=15, height=1,
+                               anchor='center',
+                               justify=CENTER,
+                               font=('times new roman', 13, 'normal'),
+                               bg='light yellow', relief='ridge')
+        label_atRack = Label(frame, text="At Rack", width=16, height=1,
+                             anchor='center',
+                             justify=CENTER,
+                             font=('times new roman', 13, 'normal'),
+                             bg='light yellow', relief='ridge')
+
+        label_Sno.grid(row=0, column=1, padx=1, pady=1)
+        label_barcode.grid(row=0, column=2, padx=1, pady=1)
+        label_productName.grid(row=0, column=3, padx=1, pady=1)
+        label_OwnerName.grid(row=0, column=4, padx=1, pady=1)
+        label_unitMRP.grid(row=0, column=5, padx=1, pady=1)
+        label_quantity.grid(row=0, column=6, padx=1, pady=1)
+        label_atRack.grid(row=0, column=7, padx=1, pady=1)
+
+        for row_index in range(0, len(self.list_productDetails)):
+            for column_index in range(1, 8):
+                if column_index == 1:
+                    width_column = 10
+                elif column_index == 2:
+                    width_column = 13
+                elif column_index == 3:
+                    width_column = 30
+                elif column_index == 4:
+                    width_column = 30
+                elif column_index == 5:
+                    width_column = 20
+                elif column_index == 6:
+                    width_column = 15
+                elif column_index == 7:
+                    width_column = 16
+                else:
+                    pass
+
+                label_detail = Label(frame, text="No Data", width=width_column, height=1,
+                                     anchor='center', justify=LEFT, bd=1,
+                                     font=('arial narrow', 13, 'normal'),
+                                     bg='light yellow')
+                label_detail.grid(row=row_index + 1, column=column_index, padx=2, pady=1, sticky=W)
+
+                if column_index == 1:
+                    label_detail['text'] = str(row_index + 1)
+                elif column_index == 2:
+                    label_detail['text'] = self.list_productDetails[row_index][0]
+                elif column_index == 3:
+                    label_detail['text'] = self.list_productDetails[row_index][1]
+                elif column_index == 4:
+                    label_detail['text'] = self.list_productDetails[row_index][2]
+                elif column_index == 5:
+                    label_detail['text'] = self.list_productDetails[row_index][3]
+                elif column_index == 6:
+                    label_detail['text'] = self.list_productDetails[row_index][4]
+                elif column_index == 7:
+                    label_detail['text'] = self.list_productDetails[row_index][5]
+                else:
+                    print("this value doesn't exists")
+        # clear the products list once table is drawn
+        self.list_productDetails = []
 
     def change_quantity_display(self):
         change_quantity_window = Toplevel(self.dataSearchFrame)
@@ -742,7 +855,7 @@ class InventorySales:
         print(" Cart items :", self.list_InvoicePrint)
         invoice_id = self.generate_StockPurchase_invoiceID()
         # reading the cart and modifying the database with new quantity
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
         for cartLoop in range(0, len(self.list_InvoicePrint)):
             print("Purchase step 1  -  Modifying Quantity of Item :", self.list_InvoicePrint[cartLoop][1])
             # Creating a cursor object using the cursor() method
@@ -866,7 +979,7 @@ class InventorySales:
         self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
 
     def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -959,7 +1072,7 @@ class InventorySales:
                 item_name.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -973,7 +1086,7 @@ class InventorySales:
 
                 # establishing the connection
                 print("debug 1")
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
                 print("debug 2")
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -1033,7 +1146,7 @@ class InventorySales:
         itemId = item_idforSearch.get()
         bItemExists = self.validate_itemId(itemId)
         if bItemExists:
-            conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+            conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
             # Creating a cursor object using the cursor() method
             cursor = conn.cursor()
@@ -1064,8 +1177,45 @@ class InventorySales:
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
 
+    def display_productDeatils(self, item_idforSearch, item_name):
+        # search started -------------
+        print("display_productDeatils--> Start for barcode/id: ", item_idforSearch.get(), "Name :", item_name.get())
+        itemId = item_idforSearch.get()
+
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
+        bSearchValid = True
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+        bSearchValid = True
+        itemName = item_name.get()
+        if item_name.get() != "" and item_idforSearch.get() != "":
+            print("Case 1")
+            bItemExist = cursor.execute("SELECT * FROM inventory_stock WHERE Item_Id =%s  Item_name=%s",
+                                        (itemId, item_name.get()))
+        elif item_name.get() != "" and item_idforSearch.get() == "":
+            print("Case 2")
+            bItemExist = cursor.execute("SELECT * FROM inventory_stock WHERE Item_name LIKE %s ",
+                                        ("%" + itemName + "%",))
+        elif item_name.get() == "" and item_idforSearch.get() != "":
+            print("Case 3")
+            bItemExist = cursor.execute("SELECT * FROM inventory_stock WHERE Item_Id = %s", (itemId,))
+        else:
+            bSearchValid = False
+
+        if bSearchValid:
+            result = cursor.fetchall()
+            print("display_productDeatils result : \n", result)
+            for iLoop in range(0, len(result)):
+                arr_productDetails = [result[iLoop][1], result[iLoop][2], result[iLoop][3], result[iLoop][4],
+                                      result[iLoop][6], result[iLoop][7]]
+                self.list_productDetails.append(arr_productDetails)
+            conn.close()
+            self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 136)
+        else:
+            messagebox.showwarning("Not Available", "Item doesn't exists!!!")
+
     def generate_itemId(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1077,7 +1227,7 @@ class InventorySales:
     def validate_itemName(self, itemName, localCenterName):
         itemId = ""
         print("validate_itemName--> Start for item name: ", itemName)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1091,7 +1241,7 @@ class InventorySales:
     def isQuantityValid(self, itemdId, quantity_requested):
         print("isQuantityValid--> Start for item id: ", itemdId)
         b_QuantityValid = True
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1107,7 +1257,7 @@ class InventorySales:
 
     def validate_itemId(self, itemId):
         print("validate_itemId--> Start for item Id : ", itemId)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1119,7 +1269,7 @@ class InventorySales:
         return result[0]
 
     def generate_authorId(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1130,7 +1280,7 @@ class InventorySales:
 
     def validate_author(self, name_text):
         print("validate_author--> validate for Name : ", name_text)
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1158,7 +1308,7 @@ class InventorySales:
                 name_text.configure(bd=2, fg='red')
                 return
             else:
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -1171,7 +1321,7 @@ class InventorySales:
                     serial_no = total_records + 1
 
                 # establishing the connection
-                conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+                conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
                 # Creating a cursor object using the cursor() method
                 cursor = conn.cursor()
@@ -1199,7 +1349,7 @@ class InventorySales:
     def get_authorNames(self):
         print("get_authorNames--> Start for item name: ")
         # establishing the database connection
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1215,7 +1365,7 @@ class InventorySales:
 
     def get_centerNames(self):
         # establishing the database connection
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1232,7 +1382,7 @@ class InventorySales:
         return result
 
     def generate_StockPurchase_invoiceID(self):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
@@ -1249,7 +1399,7 @@ class InventorySales:
         return str(finalId)
 
     def get_currentStockQuantity(self, item_id):
-        conn = sql_db.connect(user='root', host='192.168.1.109', port=3306, database='inventorydb')
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
