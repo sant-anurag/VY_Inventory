@@ -14,12 +14,12 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1300x510+240+150')
+        self.sales_window.geometry('1300x700+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
-        canvas_width, canvas_height = 1300, 520
+        canvas_width, canvas_height = 1300, 700
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
             PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg"))
@@ -114,7 +114,9 @@ class InventorySales:
         self.dataSearchFrame = Frame(self.sales_window, width=1140, height=400, bd=2, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-
+        frameProductSearch = Frame(self.sales_window, width=1290, height=190, bd=2, relief='ridge',
+                                   bg='snow')
+        frameProductSearch.pack()
         frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=2, relief='ridge',
                             bg='snow')
         frameSearch.pack()
@@ -350,7 +352,7 @@ class InventorySales:
         search_result = partial(self.search_itemId, item_idforSearch, item_name, author_menu,
                                 item_price,
                                 item_borrowfee,
-                                item_quantity,quantity_entry, OPERATION_SEARCH)
+                                item_quantity, quantity_entry, OPERATION_SEARCH)
 
         btn_search.configure(command=search_result)
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
@@ -368,8 +370,29 @@ class InventorySales:
                                item_quantity, )
         self.btn_reset.configure(command=reset_result)
 
+        # Design of the search bottom area for products  -  start
+        frameProductSearch.place(x=5, y=506)
+        product_SearchIdlbl = Label(frameProductSearch, text="Barcode/Item Id", width=15, anchor=W, justify=LEFT,
+                              font=XL_FONT,
+                              bg='snow')
+        product_SearchIdTxt = Entry(frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
+        product_namelbl = Label(frameProductSearch, text="Product Name", width=15, anchor=W, justify=LEFT,
+                              font=XL_FONT,
+                              bg='snow')
+        product_NameTxt = Entry(frameProductSearch, width=25, font=XL_FONT, bg='light cyan')
+        btn_productSearch = Button(frameProductSearch, text="Search Item/s", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
+                                  bg='RosyBrown1', command=deatils_result)
+        product_SearchIdlbl.place(x=5, y=5)
+        product_SearchIdTxt.place(x=200, y=5)
+        product_namelbl.place(x=570, y=5)
+        product_NameTxt.place(x=750, y=5)
+
+        btn_productSearch.place(x=1110, y=5)
+
+        # Design of the search bottom area for products  -  end
+
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
-        self.sales_window.bind('<+>', lambda event=None: self.btn_addToCart.invoke())
+        self.sales_window.bind('<Alt-F1>', lambda event=None: self.btn_addToCart.invoke())
         self.sales_window.bind('<Alt-b>', lambda event=None: self.btn_submit.invoke())
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_exit.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
@@ -1003,7 +1026,7 @@ class InventorySales:
     def search_itemId(self, item_idforSearch, item_name, author_menu,
                       item_price,
                       item_author,
-                      item_quantity,quantity_entry, op_type):
+                      item_quantity, quantity_entry, op_type):
 
         # search started -------------
         print("search_itemId--> Start for item name: ", item_idforSearch.get())
