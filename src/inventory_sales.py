@@ -260,10 +260,10 @@ class InventorySales:
                          font=NORM_FONT,
                          bg='light cyan', textvariable=self.default_text1)
         self.default_text1.trace("w", self.enable_PaymentMethodView)
-        pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+        self.pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                   font=NORM_FONT,
                                   bg='light cyan')
-        remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+        self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
 
@@ -340,9 +340,9 @@ class InventorySales:
         purchase_moplbl.place(x=10, y=70)
         mop_text.place(x=120, y=70)
         purchase_pointsEarnedlbl.place(x=10, y=105)
-        pointsEarned_text.place(x=120, y=105)
+        self.pointsEarned_text.place(x=120, y=105)
         purchase_rempointslbl.place(x=10, y=140)
-        remPoints_text.place(x=120, y=140)
+        self.remPoints_text.place(x=120, y=140)
 
         purchase_billAmtlbl.place(x=250, y=35)
         self.billAmount_text.place(x=385, y=35)
@@ -785,19 +785,11 @@ class InventorySales:
 
     def apply_tax(self, taxAmt_entry, tax_labelAmt, tax_display_window):
         print("Apply Tax% :", taxAmt_entry.get())
-        total_bill_Amount = 0
-        for iLoop in range(0, len(self.list_InvoicePrint)):
-            total_bill_Amount = total_bill_Amount + (
-                    self.list_InvoicePrint[iLoop][3] * int(self.list_InvoicePrint[iLoop][2]))
-
-        print("Total Bill Amount = ", total_bill_Amount)
-        tax_amount = float(int(taxAmt_entry.get()) / 100) * total_bill_Amount
-        final_price = round(float(total_bill_Amount + tax_amount), 2)
-        print("Gross Amount = ", final_price)
-        print("Gross amount changed")
-        self.finalBillAmt_text['text'] = str(final_price)
+        total_bill_Amount = self.calculateTotalMRP()
+        tax_amount = round(float((int(taxAmt_entry.get()) / 100) * total_bill_Amount),2)
         self.billtax_text['text'] = str(tax_amount)
         self.btn_discount.configure(state=DISABLED, bg='light grey')
+        self.calculateAndDisplayTotalBillAmt()
 
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
@@ -1024,15 +1016,19 @@ class InventorySales:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
 
     def calculateAndDisplayTotalBillAmt(self):
+        total_cart_mrp = self.calculateTotalMRP()
+        self.billAmount_text['text'] = str(total_cart_mrp)
+        self.finalBillAmt_text['text'] = str(
+            float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text")))
+        self.pointsEarned_text['text'] = str(float(self.finalBillAmt_text.cget("text"))/100)
+
+    def calculateTotalMRP(self):
         # calculate the total mrp
         total_cart_mrp = 0
         for iLoop in range(0, len(self.list_InvoicePrint)):
             total_cart_mrp = total_cart_mrp + round((int(self.list_InvoicePrint[iLoop][2]) * float(
                 self.list_InvoicePrint[iLoop][3])), 2)
-
-        self.billAmount_text['text'] = str(total_cart_mrp)
-        self.finalBillAmt_text['text'] = str(
-            float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text")))
+        return total_cart_mrp
 
     # Function for clearing the
     # contents of text entry boxes
@@ -1204,7 +1200,7 @@ class InventorySales:
 
         if bSearchValid:
             result = cursor.fetchall()
-            print("display_productDeatils result : \n", result)
+            print("display_productDetails result : \n", result)
             for iLoop in range(0, len(result)):
                 arr_productDetails = [result[iLoop][1], result[iLoop][2], result[iLoop][3], result[iLoop][4],
                                       result[iLoop][6], result[iLoop][7]]
