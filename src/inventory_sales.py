@@ -706,7 +706,7 @@ class InventorySales:
     def tax_display(self):
         tax_display_window = Toplevel(self.dataSearchFrame)
         tax_display_window.title("Apply Tax %")
-        tax_display_window.geometry('320x150+950+380')
+        tax_display_window.geometry('300x135+950+380')
         tax_display_window.configure(background='wheat')
         tax_display_window.resizable(width=False, height=False)
         tax_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
@@ -717,27 +717,28 @@ class InventorySales:
                                    bg='wheat')
         taxAmt_entry = Entry(tax_display_window, width=15, font=NORM_FONT, bg='light cyan')
 
-        label_tax = Label(tax_display_window, text="Amount(Rs.)", width=8, height=1, anchor=W, justify=LEFT,
+        label_tax = Label(tax_display_window, text="Amount(Rs.)", width=9, height=1, anchor=W, justify=LEFT,
                           font=NORM_FONT,
                           bg='wheat')
         tax_labelAmt = Label(tax_display_window, width=13, font=NORM_FONT, bg='light cyan', text='0')
-        btn_frame = Frame(tax_display_window, width=230, height=50, bd=2, relief='ridge',
+        btn_frame = Frame(tax_display_window, width=185, height=40, bd=2, relief='ridge',
                           bg='purple')
         btn_applytax = Button(btn_frame)
         change_result = partial(self.apply_tax, taxAmt_entry, tax_labelAmt, tax_display_window)
         btn_applytax.configure(text="Apply", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
-                               bg='RosyBrown1', command=change_result)
+                                     bg='RosyBrown1', command=change_result)
         btn_close = Button(btn_frame)
         btn_close.configure(text="Cancel", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
-                            bg='RosyBrown1', command=tax_display_window.destroy)
+                                     bg='RosyBrown1', command=tax_display_window.destroy)
 
         label_itemSerialNo.place(x=30, y=20)
         taxAmt_entry.place(x=130, y=20)
         label_tax.place(x=30, y=55)
         tax_labelAmt.place(x=130, y=55)
         btn_frame.place(x=50, y=90)
-        btn_applytax.place(x=3, y=2)
-        btn_close.place(x=110, y=2)
+        btn_applytax.place(x=1, y=2)
+        btn_close.place(x=88, y=2)
+
         tax_display_window.bind('<Return>', lambda event=None: btn_applytax.invoke())
         tax_display_window.bind('<Escape>', lambda event=None: btn_close.invoke())
 
