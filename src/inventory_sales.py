@@ -14,13 +14,13 @@ class InventorySales:
         self.dateTimeOp = DatetimeOperation()
         self.sales_window = Toplevel(master)
         self.sales_window.title("Sales")
-        self.sales_window.geometry('1300x700+240+150')
+        self.sales_window.geometry('1300x750+240+150')
         self.sales_window.configure(background='wheat')
         self.sales_window.resizable(width=False, height=False)
         self.sales_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
         self.list_InvoicePrint = []
         self.list_productDetails = []
-        canvas_width, canvas_height = 1300, 700
+        canvas_width, canvas_height = 1300, 750
         canvas = Canvas(self.sales_window, width=canvas_width, height=canvas_height)
         myimage = ImageTk.PhotoImage(
             PIL.Image.open("..\\Images\\Logos\\Geometry-Header-1920x1080.jpg"))
@@ -118,7 +118,7 @@ class InventorySales:
         self.dataSearchFrame = Frame(self.sales_window, width=1140, height=400, bd=2, relief='ridge',
                                      bg='snow')
         self.dataSearchFrame.pack()
-        self.frameProductSearch = Frame(self.sales_window, width=1290, height=190, bd=2, relief='ridge',
+        self.frameProductSearch = Frame(self.sales_window, width=1290, height=240, bd=2, relief='ridge',
                                    bg='snow')
         self.frameProductSearch.pack()
         frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=2, relief='ridge',
@@ -394,7 +394,7 @@ class InventorySales:
         product_NameTxt.place(x=750, y=5)
         btn_productSearch.place(x=1110, y=5)
 
-        self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 136)
+        self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 182)
         # Design of the search bottom area for products  -  end
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
@@ -1207,7 +1207,7 @@ class InventorySales:
                                       result[iLoop][6], result[iLoop][7]]
                 self.list_productDetails.append(arr_productDetails)
             conn.close()
-            self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 136)
+            self.display_SearchProductsDetailArea(self.frameProductSearch, 2, 45, 1260, 182)
         else:
             messagebox.showwarning("Not Available", "Item doesn't exists!!!")
 
