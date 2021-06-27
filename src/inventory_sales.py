@@ -119,7 +119,7 @@ class InventorySales:
                                      bg='snow')
         self.dataSearchFrame.pack()
         self.frameProductSearch = Frame(self.sales_window, width=1290, height=240, bd=2, relief='ridge',
-                                   bg='snow')
+                                        bg='snow')
         self.frameProductSearch.pack()
         frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=2, relief='ridge',
                             bg='snow')
@@ -261,11 +261,11 @@ class InventorySales:
                          bg='light cyan', textvariable=self.default_text1)
         self.default_text1.trace("w", self.enable_PaymentMethodView)
         self.pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
-                                  font=NORM_FONT,
-                                  bg='light cyan')
+                                       font=NORM_FONT,
+                                       bg='light cyan')
         self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='light cyan')
+                                    font=NORM_FONT,
+                                    bg='light cyan')
 
         purchase_billAmtlbl = Label(framepurchase, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
                                     font=NORM_FONT, bg='snow')
@@ -726,10 +726,10 @@ class InventorySales:
         btn_applytax = Button(btn_frame)
         change_result = partial(self.apply_tax, taxAmt_entry, tax_labelAmt, tax_display_window)
         btn_applytax.configure(text="Apply", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
-                                     bg='RosyBrown1', command=change_result)
+                               bg='RosyBrown1', command=change_result)
         btn_close = Button(btn_frame)
         btn_close.configure(text="Cancel", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
-                                     bg='RosyBrown1', command=tax_display_window.destroy)
+                            bg='RosyBrown1', command=tax_display_window.destroy)
 
         label_itemSerialNo.place(x=30, y=20)
         taxAmt_entry.place(x=130, y=20)
@@ -787,7 +787,7 @@ class InventorySales:
     def apply_tax(self, taxAmt_entry, tax_labelAmt, tax_display_window):
         print("Apply Tax% :", taxAmt_entry.get())
         total_bill_Amount = self.calculateTotalMRP()
-        tax_amount = round(float((int(taxAmt_entry.get()) / 100) * total_bill_Amount),2)
+        tax_amount = round(float((int(taxAmt_entry.get()) / 100) * total_bill_Amount), 2)
         self.billtax_text['text'] = str(tax_amount)
         self.btn_discount.configure(state=DISABLED, bg='light grey')
         self.calculateAndDisplayTotalBillAmt()
@@ -870,6 +870,8 @@ class InventorySales:
         self.btn_redeempts.configure(state=DISABLED, bg='light grey')
         self.btn_member.configure(state=DISABLED, bg='light grey')
 
+        # write the redemption points earned to database
+        self.creditEarnedRedeemptionPoints(customer_contact)
         # generate Invoice
         self.generateInvoicePage(customer_name,
                                  libMemberId,
@@ -877,6 +879,8 @@ class InventorySales:
                                  customer_contact,
                                  customer_address,
                                  invoice_id)
+        self.list_InvoicePrint = []
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
 
     def generateInvoicePage(self, customer_name,
                             libMemberId,
@@ -953,7 +957,6 @@ class InventorySales:
 
         # update the invoice table
         self.updateInvoiceDatabase(invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact)
-
         # self.obj_commonUtil.clearSales_InvoiceData(file_name,len(self.list_InvoicePrint))
 
     def printInvoice(self, fileToPrint):
@@ -992,9 +995,7 @@ class InventorySales:
 
         logInfo = str(invoice_id) + " purchase" + " success"
         self.obj_commonUtil.logActivity(logInfo)
-        # Clear the cart since , purchase has happened .
-        self.list_InvoicePrint = []
-        # temp list is cleared
+
 
     def enable_PaymentMethodView(self, *args):
         print("Tracing  entry input")
@@ -1021,7 +1022,7 @@ class InventorySales:
         self.billAmount_text['text'] = str(total_cart_mrp)
         self.finalBillAmt_text['text'] = str(
             float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text")))
-        self.pointsEarned_text['text'] = str(float(self.finalBillAmt_text.cget("text"))/100)
+        self.pointsEarned_text['text'] = str(float(self.finalBillAmt_text.cget("text")) / 100)
 
     def calculateTotalMRP(self):
         # calculate the total mrp
@@ -1037,8 +1038,6 @@ class InventorySales:
         # clear the content of text entry box
         name.delete(0, END)
         name.configure(fg='black')
-        # author.delete(0, END)
-        # author.configure(fg='black')
         price.delete(0, END)
         price.configure(fg='black')
         quantity.delete(0, END)
@@ -1351,3 +1350,38 @@ class InventorySales:
         customerAddress_txt.insert(0, result[4])  # address
         customerAcct_txtlabel['text'] = result[1]  # account number
         conn.close()
+
+    def creditEarnedRedeemptionPoints(self, customer_contact):
+        """ earned points on purchase are written to database in individual accounts"""
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+        pointsEarned = self.pointsEarned_text.cget("text")
+        print("Points earned :", pointsEarned, " writing to database")
+        bItemExist = cursor.execute("SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
+                                    (customer_contact.get(),))
+        result = cursor.fetchone()
+        print("Existing Points :", str(result[0]))
+
+        new_total_points = round((float(str(result[0])) + float(pointsEarned)),2)
+        print("New Total Points :", new_total_points)
+        sql = "UPDATE customer_details set customer_redeempoints = %s where customer_contact = %s "
+        values = (str(new_total_points), customer_contact.get())
+        cursor.execute(sql, values)
+        conn.commit()
+        conn.close()
+
+    def getCurrentRedeemptionPoints(self, customer_contact):
+        """ earned points on purchase are written to database in individual accounts"""
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        bItemExist = cursor.execute("SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
+                                    (customer_contact.get(),))
+        result = cursor.fetchone()
+        print("Existing Points :", str(result[0]))
+        conn.close()
+        return str(result[0])

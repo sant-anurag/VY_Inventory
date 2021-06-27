@@ -12,7 +12,6 @@
 import os
 
 from app_defines import *
-from app_common import *
 from app_thread import *
 
 
@@ -591,7 +590,7 @@ class Customer:
                 shopper_name = str(name_txt.get())
                 shopper_contact = str(contact_txt.get())
                 shopper_address = str(address_txt.get())
-                shopper_redeempt = '0'
+                shopper_redeempt = str("0")
                 shopper_gender = authorText.get()
 
                 print("\n", serial_no, shopper_name, shopper_contact, shopper_address, shopper_redeempt,

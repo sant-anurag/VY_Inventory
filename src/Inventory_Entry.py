@@ -10,8 +10,6 @@
 # Version : 1.0
 """
 import os
-
-from app_defines import *
 from app_common import *
 from app_thread import *
 

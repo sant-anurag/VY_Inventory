@@ -13,8 +13,7 @@
 """
 # Import all necessary packages both system , and software defined
 """
-from app_defines import *
-from babel.numbers import *
+
 import ctypes
 from Inventory_Entry import *
 from merchandise import *
@@ -22,7 +21,7 @@ from inventory_sales import *
 from inventory_report import *
 from user_account import *
 from sales_report import *
-import sqlite3
+
 
 """
 # Class definition starts here
