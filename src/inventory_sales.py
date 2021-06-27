@@ -95,7 +95,7 @@ class InventorySales:
                                     font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
         shopper_result = partial(self.customer_operations)
         self.btn_member = Button(self.AdditionalbtnFrame, text="Shopper", fg="Black",
-                                 font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1', command=shopper_result)
+                                 font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1', command=shopper_result)
         self.btn_exit = Button(self.AdditionalbtnFrame, text="Exit", fg="Black",
                                font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
         self.btn_exit.configure(command=self.sales_window.destroy)
@@ -124,6 +124,13 @@ class InventorySales:
         frameSearch = Frame(self.dataSearchFrame, width=520, height=50, bd=2, relief='ridge',
                             bg='snow')
         frameSearch.pack()
+        framedisplay = Frame(self.dataSearchFrame, width=520, height=195, bd=2, relief='ridge',
+                             bg='snow')
+        framedisplay.pack()
+
+        framepurchase = Frame(self.dataSearchFrame, width=520, height=170, bd=2, relief='ridge',
+                              bg='snow')
+        framepurchase.pack()
         btn_search = Button(frameSearch)
         btn_search.configure(text="Search", fg="Black",
                              font=('arial narrow', 12, 'normal'), width=8, state=NORMAL, bg='RosyBrown1')
@@ -170,7 +177,7 @@ class InventorySales:
         customercontact_label = Label(self.frameupper, text="Contact No.", width=10, anchor=W, justify=LEFT,
                                       font=NORM_FONT,
                                       bg='snow')
-        customerContact_txt = Entry(self.frameupper, width=20, font=NORM_FONT, bg='light cyan')
+        self.customerContact_txt = Entry(self.frameupper, width=20, font=NORM_FONT, bg='light cyan')
 
         customerAddress_label = Label(self.frameupper, text="Address", width=10, anchor=W, justify=LEFT,
                                       font=NORM_FONT,
@@ -178,7 +185,9 @@ class InventorySales:
         customerAddress_txt = Entry(self.frameupper, width=28, font=NORM_FONT, bg='light cyan')
         framebtn = Frame(self.frameupper, width=327, height=40, bd=2, relief='ridge',
                          bg='snow')
-        deatils_result = partial(self.getCustomerDetails, customerContact_txt, customerName_txt, customerAddress_txt,
+
+        deatils_result = partial(self.getCustomerDetails, self.customerContact_txt, customerName_txt,
+                                 customerAddress_txt,
                                  customerAcct_txtlabel)
         fetchDetails_btn = Button(framebtn, text="Shopper Details", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
                                   bg='RosyBrown1', command=deatils_result)
@@ -200,7 +209,7 @@ class InventorySales:
         customerName_label.place(x=500, y=10)
         customerName_txt.place(x=600, y=10)
         customercontact_label.place(x=500, y=50)
-        customerContact_txt.place(x=600, y=50)
+        self.customerContact_txt.place(x=600, y=50)
 
         customerAddress_label.place(x=800, y=10)
         customerAddress_txt.place(x=870, y=10)
@@ -209,14 +218,6 @@ class InventorySales:
         fetchDetails_btn.place(x=1, y=1)
         resetCustDeatils_btn.place(x=160, y=1)
         # designing a upper frame --------------------end----------------------------
-
-        framedisplay = Frame(self.dataSearchFrame, width=520, height=195, bd=2, relief='ridge',
-                             bg='snow')
-        framedisplay.pack()
-
-        framepurchase = Frame(self.dataSearchFrame, width=520, height=170, bd=2, relief='ridge',
-                              bg='snow')
-        framepurchase.pack()
 
         item_SearchId = Label(frameSearch, text="Search Item Id", width=11, anchor=W, justify=LEFT,
                               font=NORM_FONT,
@@ -249,9 +250,12 @@ class InventorySales:
                                 font=NORM_FONT, bg='snow')
         purchase_pointsEarnedlbl = Label(framepurchase, text="Pts. Earned", width=13, anchor=W, justify=LEFT,
                                          font=NORM_FONT, bg='snow')
-        purchase_rempointslbl = Label(framepurchase, text="Pts. Rem.", width=13, anchor=W, justify=LEFT,
+        purchase_rempointslbl = Label(framepurchase, text="Tot. Points", width=13, anchor=W, justify=LEFT,
                                       font=NORM_FONT, bg='snow')
-
+        # declaring remining points here to populate as ssoon as shopper details are fetched
+        self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+                                    font=NORM_FONT,
+                                    bg='light cyan')
         cartCount_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
@@ -263,10 +267,6 @@ class InventorySales:
         self.pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
-        self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
-                                    font=NORM_FONT,
-                                    bg='light cyan')
-
         purchase_billAmtlbl = Label(framepurchase, text="Bill Amt.(Rs.)", width=13, anchor=W, justify=LEFT,
                                     font=NORM_FONT, bg='snow')
         self.billAmount_text = Label(framepurchase, width=13, anchor=W, justify=LEFT,
@@ -362,12 +362,13 @@ class InventorySales:
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
                                    cartCount_text, self.billAmount_text)
         self.btn_addToCart.configure(command=addToCart_result)
-        purchase_result = partial(self.purchase_stock_item, customerName_txt, customerContact_txt, customerAddress_txt)
+        purchase_result = partial(self.purchase_stock_item, customerName_txt, self.customerContact_txt,
+                                  customerAddress_txt)
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
         reset_result = partial(self.reset_sales_frm, item_idforSearch, quantity_entry, customerName_txt,
-                               customerContact_txt,
+                               self.customerContact_txt,
                                customerAddress_txt, item_name, author_menu,
                                item_price,
                                item_borrowfee,
@@ -996,7 +997,6 @@ class InventorySales:
         logInfo = str(invoice_id) + " purchase" + " success"
         self.obj_commonUtil.logActivity(logInfo)
 
-
     def enable_PaymentMethodView(self, *args):
         print("Tracing  entry input")
 
@@ -1341,7 +1341,7 @@ class InventorySales:
         cursor = conn.cursor()
 
         bItemExist = cursor.execute("SELECT * FROM customer_details WHERE customer_contact = %s",
-                                    (customerContact_txt.get(),))
+                                    (self.customerContact_txt.get(),))
         result = cursor.fetchone()
         print("result :", result)
         customerName_txt.delete(0, END)
@@ -1349,6 +1349,7 @@ class InventorySales:
         customerAddress_txt.delete(0, END)
         customerAddress_txt.insert(0, result[4])  # address
         customerAcct_txtlabel['text'] = result[1]  # account number
+        self.remPoints_text['text'] = self.getCurrentRedeemptionPoints()
         conn.close()
 
     def creditEarnedRedeemptionPoints(self, customer_contact):
@@ -1364,7 +1365,7 @@ class InventorySales:
         result = cursor.fetchone()
         print("Existing Points :", str(result[0]))
 
-        new_total_points = round((float(str(result[0])) + float(pointsEarned)),2)
+        new_total_points = round((float(str(result[0])) + float(pointsEarned)), 2)
         print("New Total Points :", new_total_points)
         sql = "UPDATE customer_details set customer_redeempoints = %s where customer_contact = %s "
         values = (str(new_total_points), customer_contact.get())
@@ -1372,16 +1373,17 @@ class InventorySales:
         conn.commit()
         conn.close()
 
-    def getCurrentRedeemptionPoints(self, customer_contact):
+    def getCurrentRedeemptionPoints(self):
         """ earned points on purchase are written to database in individual accounts"""
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
-
+        customer_contact = self.customerContact_txt.get()
+        print("Customer contact :", customer_contact)
         bItemExist = cursor.execute("SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
-                                    (customer_contact.get(),))
+                                    (customer_contact,))
         result = cursor.fetchone()
-        print("Existing Points :", str(result[0]))
+        print("Existing Points :", result)
         conn.close()
         return str(result[0])
