@@ -1047,7 +1047,7 @@ class InventorySales:
         total_amtlbl = Label(frame_leftInputMode, text="Total Amount", width=12, height=1, anchor=W, justify=LEFT,
                              font=L_FONT,
                              bg='white')
-        total_amtTxt = Entry(frame_leftInputMode, width=14,font=L_FONT, bg='royalblue', fg="white",
+        total_amtTxt = Entry(frame_leftInputMode, width=14, font=L_FONT, bg='royalblue', fg="white",
                              justify=RIGHT)
 
         frame_left.place(x=1, y=1)
@@ -1063,93 +1063,58 @@ class InventorySales:
         total_amtTxt.place(x=145, y=109)
 
         frame_right = Frame(tender_window, width=293, height=347, bd=2, relief='ridge',
-                           bg='white')
-        frame_right_paymodes = Frame(frame_right, width=285, height=260, bd=2, relief='ridge',
-                           bg='white')
-        cash_lbl = Label(frame_right_paymodes, text="Cash", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        gpay_lbl = Label(frame_right_paymodes, text="Google Pay", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        phonepay_lbl = Label(frame_right_paymodes, text="Phone Pay", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        paytm_lbl = Label(frame_right_paymodes, text="Paytm", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        upi_lbl = Label(frame_right_paymodes, text="UPI(Bhim etc.)", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        cc_lbl = Label(frame_right_paymodes, text="Credit Card", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        debit_lbl = Label(frame_right_paymodes, text="Debit Card", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        sodexo_lbl = Label(frame_right_paymodes, text="Sodexo", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        coupon_lbl = Label(frame_right_paymodes, text="Coupon", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        bank_lbl = Label(frame_right_paymodes, text="Bank Transfer", width=12, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='white')
-        cash_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        gpay_txt = Label(frame_right_paymodes,  width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        phonepay_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        paytm_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        upi_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        cc_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        debit_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        sodexo_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        coupon_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        bank_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT,anchor=W,
-                             font=NORM_FONT, bd=1,
-                             bg='light cyan')
-        
+                            bg='white')
+        frame_right_paymodes = Frame(frame_right, width=285, height=160, bd=2, relief='ridge',
+                                     bg='white')
+        summary_lbl = Label(frame_right_paymodes, text="Tender Summary", width=17, height=1, justify=LEFT, anchor=W,
+                            font=L_FONT, bd=1,fg = 'green',
+                            bg='white')
+        billAmt_lbl = Label(frame_right_paymodes, text="Bill Amt.(Rs.)", width=12, height=1, justify=LEFT, anchor=W,
+                            font=NORM_FONT, bd=1,
+                            bg='white')
+        svtax_lbl = Label(frame_right_paymodes, text="Service Tax(%)", width=12, height=1, justify=LEFT, anchor=W,
+                          font=NORM_FONT, bd=1,
+                          bg='white')
+        paymtMode_lbl = Label(frame_right_paymodes, text="Paymt. Mode", width=12, height=1, justify=LEFT, anchor=W,
+                              font=NORM_FONT, bd=1,
+                              bg='white')
+        grossbill_lbl = Label(frame_right_paymodes, text="Gross Amt.(Rs.)", width=12, height=1, justify=LEFT, anchor=W,
+                              font=NORM_FONT, bd=1,
+                              bg='white')
+        balance_lbl = Label(frame_right, text="Balance(Rs.)", width=11, height=1, justify=LEFT, anchor=W,
+                            font=XL_FONT, bd=1,
+                            bg='white')
+
+        billAmt_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT, anchor=W,
+                            font=NORM_FONT, bd=1,
+                            bg='light cyan')
+        serviceTax_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT, anchor=W,
+                               font=NORM_FONT, bd=1,
+                               bg='light cyan')
+        paymtMode_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT, anchor=W,
+                              font=NORM_FONT, bd=1,
+                              bg='light cyan')
+        grossbill_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT, anchor=W,
+                              font=NORM_FONT, bd=1,
+                              bg='light cyan')
+        balance_txt = Label(frame_right, width=6, height=1, justify=RIGHT, anchor=E,
+                            font=XL_FONT, bd=1, fg="green", text="0.0",
+                            bg='white')
+
         frame_right.place(x=302, y=1)
         frame_right_paymodes.place(x=2, y=1)
-        cash_lbl.place(x=2, y=5)
-        gpay_lbl.place(x=2, y=30)
-        phonepay_lbl.place(x=2, y=55)
-        paytm_lbl.place(x=2, y=80)
-        upi_lbl.place(x=2, y=105)
-        cc_lbl.place(x=2, y=130)
-        debit_lbl.place(x=2, y=155)
-        sodexo_lbl.place(x=2, y=180)
-        coupon_lbl.place(x=2, y=205)
-        bank_lbl.place(x=2, y=230)
+        summary_lbl.place(x=2, y=2)
+        billAmt_lbl.place(x=2, y=35)
+        svtax_lbl.place(x=2, y=65)
+        paymtMode_lbl.place(x=2, y=95)
+        grossbill_lbl.place(x=2, y=125)
+        balance_lbl.place(x=2, y=170)
 
-        cash_txt.place(x=130, y=5)
-        gpay_txt.place(x=130, y=30)
-        phonepay_txt.place(x=130, y=55)
-        paytm_txt.place(x=130, y=80)
-        upi_txt.place(x=130, y=105)
-        cc_txt.place(x=130, y=130)
-        debit_txt.place(x=130, y=155)
-        sodexo_txt.place(x=130, y=180)
-        coupon_txt.place(x=130, y=205)
-        bank_txt.place(x=130, y=230)
+        billAmt_txt.place(x=130, y=35)
+        serviceTax_txt.place(x=130, y=65)
+        paymtMode_txt.place(x=130, y=95)
+        grossbill_txt.place(x=130, y=125)
+        balance_txt.place(x=170, y=170)
 
         '''
         btn_frame = Frame(tender_window, width=230, height=50, bd=2, relief='ridge',
