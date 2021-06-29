@@ -141,6 +141,9 @@ class Inventory:
     def new_inventory_view(self):
         obj_newInventory = NewInventory(root)
 
+    def new_shopper_view(self):
+        obj_newShopper = Customer(root)
+
     def new_center_registration(self):
         obj_newMchd = NewMerchandise(root)
 
@@ -163,6 +166,10 @@ class Inventory:
         # labelFrame.place(x=200, y=10)
         result_btnInv = partial(self.new_inventory_view)
         btn_inventory = Button(master, text="Inventory", fg="Black", command=result_btnInv,
+                               font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
+        # labelFrame.place(x=200, y=10)
+        result_btnShopper = partial(self.new_shopper_view)
+        btn_shopper = Button(master, text="Customer", fg="Black", command=result_btnShopper,
                                font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
         result_sales = partial(self.sales_operations)
@@ -187,14 +194,15 @@ class Inventory:
         btn_exit = Button(master, text="Exit", fg="Black", command=master.destroy,
                           font=XL_FONT, width=20, state=NORMAL, bg='RosyBrown1')
 
-        btn_inventory.place(x=65, y=240)
-        btn_sales.place(x=65, y=295)
+        btn_inventory.place(x=65, y=220)
+        btn_shopper.place(x=65, y=275)
+        btn_sales.place(x=65, y=330)
         if user_category == 'Admin':
-            btn_merchandise.place(x=65, y=350)
-            btn_reports.place(x=65, y=405)
-            btn_salesreports.place(x=65, y=460)
-            btn_usrCtrl.place(x=65, y=515)
-            btn_exit.place(x=65, y=570)
+            btn_merchandise.place(x=65, y=385)
+            btn_reports.place(x=65, y=440)
+            btn_salesreports.place(x=65, y=495)
+            btn_usrCtrl.place(x=65, y=550)
+            btn_exit.place(x=65, y=605)
             master.bind('<M>', lambda event=None: btn_merchandise.invoke())
             master.bind('<m>', lambda event=None: btn_merchandise.invoke())
             master.bind('<R>', lambda event=None: btn_reports.invoke())
@@ -212,6 +220,8 @@ class Inventory:
         master.bind('<i>', lambda event=None: btn_inventory.invoke())
         master.bind('<S>', lambda event=None: btn_sales.invoke())
         master.bind('<s>', lambda event=None: btn_sales.invoke())
+        master.bind('<c>', lambda event=None: btn_shopper.invoke())
+        master.bind('<C>', lambda event=None: btn_shopper.invoke())
 
         mainloop()
 
