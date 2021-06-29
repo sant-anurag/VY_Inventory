@@ -256,7 +256,7 @@ class InventorySales:
         self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                     font=NORM_FONT,
                                     bg='light cyan')
-        cartCount_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
+        cartCount_text = Label(framepurchase, width=12, text="0", anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
         self.default_text1 = StringVar(framepurchase, value='')
@@ -1001,9 +1001,87 @@ class InventorySales:
         print("Tracing  entry input")
 
         if self.default_text1.get() != "":
-            self.discount_display()
+            self.tender_display()
         else:
             pass
+
+    def tender_display(self):
+        tender_window = Toplevel(self.dataSearchFrame)
+        tender_window.title("Tender Screen")
+        tender_window.geometry('600x350+600+200')
+        tender_window.configure(background='white')
+        tender_window.resizable(width=False, height=False)
+        tender_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+        frame_left = Frame(tender_window, width=300, height=347, bd=2, relief='ridge',
+                           bg='white')
+        headline_lbl = Label(frame_left, text="Tender Mode", width=19, height=1, justify=CENTER,
+                             font=XL_FONT, bd=2, relief='ridge',
+                             bg='paleturquoise')
+
+        frame_leftInputMode = Frame(tender_window, width=295, height=150, bd=2, relief='ridge',
+                                    bg='white')
+
+        tender_modelbl = Label(frame_leftInputMode, text="Tender Mode", width=12, height=1, anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='white')
+        tender_modeText = StringVar(frame_leftInputMode)
+        modelist = ['Cash', 'Google Pay', 'Phone Pay', 'Paytm', 'UPI', 'Credit Card', 'Debit Card', 'Sodexo', 'Coupon',
+                    'Bank Transfer']
+        print("Payment Modes - ", modelist)
+        tender_modeText.set(modelist[0])
+        tenderMenu = OptionMenu(frame_leftInputMode, tender_modeText, *modelist)
+        tenderMenu.configure(width=11, font=NORM_FONT, bg='light cyan', anchor=E,
+                             justify=RIGHT)
+        tender_amtlbl = Label(frame_leftInputMode, text="Amount(Rs.)", width=12, height=1, anchor=W, justify=LEFT,
+                              font=NORM_FONT,
+                              bg='white')
+        tender_amtTxt = Entry(frame_leftInputMode, width=15, font=NORM_FONT, bg='light cyan', justify=RIGHT)
+
+        service_chargelbl = Label(frame_leftInputMode, text="Service Tax(%)", width=12, height=1, anchor=W,
+                                  justify=LEFT,
+                                  font=NORM_FONT,
+                                  bg='white')
+        servcie_chargeTxt = Entry(frame_leftInputMode, width=15, font=NORM_FONT, bg='light cyan',
+                                  justify=RIGHT)
+
+        total_amtlbl = Label(frame_leftInputMode, text="Total Amount", width=12, height=1, anchor=W, justify=LEFT,
+                             font=L_FONT,
+                             bg='white')
+        total_amtTxt = Entry(frame_leftInputMode, width=14,font=L_FONT, bg='royalblue', fg="white",
+                             justify=RIGHT)
+
+        frame_left.place(x=1, y=1)
+        headline_lbl.place(x=2, y=1)
+        frame_leftInputMode.place(x=4, y=42)
+        tender_modelbl.place(x=2, y=8)
+        tenderMenu.place(x=145, y=2)
+        tender_amtlbl.place(x=2, y=45)
+        tender_amtTxt.place(x=147, y=45)
+        service_chargelbl.place(x=2, y=77)
+        servcie_chargeTxt.place(x=147, y=77)
+        total_amtlbl.place(x=2, y=109)
+        total_amtTxt.place(x=145, y=109)
+        '''
+        btn_frame = Frame(tender_window, width=230, height=50, bd=2, relief='ridge',
+                          bg='purple')
+        btn_changeQuantity = Button(btn_frame)
+        change_result = partial(self.change_quantity, sno_entry, quantity_entry, tender_window)
+        btn_changeQuantity.configure(text="Change", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1', command=change_result)
+        btn_printQuantity = Button(btn_frame)
+        btn_printQuantity.configure(text="Cancel", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
+                                    bg='RosyBrown1', command=tender_window.destroy)
+
+        label_itemSerialNo.place(x=30, y=20)
+        sno_entry.place(x=130, y=20)
+        label_quantity.place(x=30, y=55)
+        quantity_entry.place(x=130, y=55)
+        btn_frame.place(x=50, y=90)
+        btn_changeQuantity.place(x=3, y=2)
+        btn_printQuantity.place(x=110, y=2)
+        tender_window.bind('<Return>', lambda event=None: btn_changeQuantity.invoke())
+        tender_window.bind('<Escape>', lambda event=None: btn_printQuantity.invoke())
+        '''
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
