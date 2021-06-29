@@ -700,6 +700,8 @@ class InventorySales:
         btn_printdiscount.place(x=88, y=2)
         discount_display_window.bind('<Return>', lambda event=None: btn_changediscount.invoke())
         discount_display_window.bind('<Escape>', lambda event=None: btn_printdiscount.invoke())
+        discount_display_window.focus()
+        discount_display_window.grab_set()
 
     def customer_operations(self):
         objCustomer = Customer(self.sales_window)
@@ -742,6 +744,8 @@ class InventorySales:
 
         tax_display_window.bind('<Return>', lambda event=None: btn_applytax.invoke())
         tax_display_window.bind('<Escape>', lambda event=None: btn_close.invoke())
+        tax_display_window.focus()
+        tax_display_window.grab_set()
 
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
@@ -1008,30 +1012,26 @@ class InventorySales:
     def tender_display(self):
         tender_window = Toplevel(self.dataSearchFrame)
         tender_window.title("Tender Screen")
-        tender_window.geometry('600x350+600+200')
+        tender_window.geometry('600x205+600+200')
         tender_window.configure(background='white')
         tender_window.resizable(width=False, height=False)
         tender_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
-        frame_left = Frame(tender_window, width=300, height=347, bd=2, relief='ridge',
+        frame_left = Frame(tender_window, width=300, height=200, bd=2, relief='ridge',
                            bg='white')
         headline_lbl = Label(frame_left, text="Tender Mode", width=19, height=1, justify=CENTER,
                              font=XL_FONT, bd=2, relief='ridge',
                              bg='paleturquoise')
 
-        frame_leftInputMode = Frame(tender_window, width=295, height=150, bd=2, relief='ridge',
+        frame_leftInputMode = Frame(tender_window, width=295, height=150, relief='ridge',
                                     bg='white')
 
-        tender_modelbl = Label(frame_leftInputMode, text="Tender Mode", width=12, height=1, anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='white')
         tender_modeText = StringVar(frame_leftInputMode)
         modelist = ['Cash', 'Google Pay', 'Phone Pay', 'Paytm', 'UPI', 'Credit Card', 'Debit Card', 'Sodexo', 'Coupon',
                     'Bank Transfer']
         print("Payment Modes - ", modelist)
         tender_modeText.set(modelist[0])
         tenderMenu = OptionMenu(frame_leftInputMode, tender_modeText, *modelist)
-        tenderMenu.configure(width=11, font=NORM_FONT, bg='light cyan', anchor=E,
-                             justify=RIGHT)
+        tenderMenu.configure(width=22, font=('times new roman', 17, 'normal'), bg='light cyan', justify=CENTER)
         tender_amtlbl = Label(frame_leftInputMode, text="Amount(Rs.)", width=12, height=1, anchor=W, justify=LEFT,
                               font=NORM_FONT,
                               bg='white')
@@ -1052,17 +1052,16 @@ class InventorySales:
 
         frame_left.place(x=1, y=1)
         headline_lbl.place(x=2, y=1)
-        frame_leftInputMode.place(x=4, y=42)
-        tender_modelbl.place(x=2, y=8)
-        tenderMenu.place(x=145, y=2)
-        tender_amtlbl.place(x=2, y=45)
-        tender_amtTxt.place(x=147, y=45)
-        service_chargelbl.place(x=2, y=77)
-        servcie_chargeTxt.place(x=147, y=77)
-        total_amtlbl.place(x=2, y=109)
-        total_amtTxt.place(x=145, y=109)
+        frame_leftInputMode.place(x=4, y=45)
+        tenderMenu.place(x=3, y=2)
+        tender_amtlbl.place(x=2, y=50)
+        tender_amtTxt.place(x=147, y=50)
+        service_chargelbl.place(x=2, y=82)
+        servcie_chargeTxt.place(x=147, y=82)
+        total_amtlbl.place(x=2, y=114)
+        total_amtTxt.place(x=145, y=114)
 
-        frame_right = Frame(tender_window, width=293, height=347, bd=2, relief='ridge',
+        frame_right = Frame(tender_window, width=293, height=200, bd=2, relief='ridge',
                             bg='white')
         frame_right_paymodes = Frame(frame_right, width=285, height=160, bd=2, relief='ridge',
                                      bg='white')
@@ -1108,13 +1107,16 @@ class InventorySales:
         svtax_lbl.place(x=2, y=65)
         paymtMode_lbl.place(x=2, y=95)
         grossbill_lbl.place(x=2, y=125)
-        balance_lbl.place(x=2, y=170)
+        balance_lbl.place(x=2, y=162)
 
         billAmt_txt.place(x=130, y=35)
         serviceTax_txt.place(x=130, y=65)
         paymtMode_txt.place(x=130, y=95)
         grossbill_txt.place(x=130, y=125)
-        balance_txt.place(x=170, y=170)
+        balance_txt.place(x=170, y=162)
+
+        tender_window.focus()
+        tender_window.grab_set()
 
         '''
         btn_frame = Frame(tender_window, width=230, height=50, bd=2, relief='ridge',
