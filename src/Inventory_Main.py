@@ -210,7 +210,7 @@ class Inventory:
             master.bind('<u>', lambda event=None: btn_usrCtrl.invoke())
             master.bind('<U>', lambda event=None: btn_usrCtrl.invoke())
         elif user_category == 'User':
-            btn_exit.place(x=65, y=350)
+            btn_exit.place(x=65, y=385)
         else:
             print("Un-reachable code")
 
