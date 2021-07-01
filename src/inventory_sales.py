@@ -49,7 +49,7 @@ class InventorySales:
         self.btn_addToCart.configure(text="Add To Cart", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                      bg='RosyBrown1')
         self.btn_submit = Button(self.MainbtnFrame)
-        self.btn_submit.configure(text="Generate Bill", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
+        self.btn_submit.configure(text="Tender Bill", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                   bg='RosyBrown1')
         self.btn_reset = Button(self.MainbtnFrame, text="Reset Item", fg="Black",
                                 font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
@@ -186,7 +186,7 @@ class InventorySales:
         framebtn = Frame(self.frameupper, width=327, height=40, bd=2, relief='ridge',
                          bg='snow')
 
-        deatils_result = partial(self.getCustomerDetails, self.customerContact_txt, customerName_txt,
+        deatils_result = partial(self.displayCustomerDetails, self.customerContact_txt, customerName_txt,
                                  customerAddress_txt,
                                  customerAcct_txtlabel)
         fetchDetails_btn = Button(framebtn, text="Shopper Details", fg="Black", font=NORM_FONT, width=17, state=NORMAL,
@@ -362,8 +362,12 @@ class InventorySales:
         addToCart_result = partial(self.addToCart, item_idforSearch, item_name, quantity_entry, item_price,
                                    cartCount_text, self.billAmount_text)
         self.btn_addToCart.configure(command=addToCart_result)
+
+        purchase_result = partial(self.tender_display)
+        '''
         purchase_result = partial(self.purchase_stock_item, customerName_txt, self.customerContact_txt,
                                   customerAddress_txt)
+                                  '''
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
@@ -842,10 +846,14 @@ class InventorySales:
             else:
                 messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
 
-    def purchase_stock_item(self, customer_name, customer_contact, customer_address):
+    def purchase_stock_item(self):
         self.btn_addToCart.configure(state=DISABLED, bg='light grey')
-        print("Customer Name :", customer_name.get(), "Contact :", customer_contact.get(), "Address :",
-              customer_address.get())
+        customer_details = self.getCustomerDetails(self.customerContact_txt)
+        customer_name = customer_details[2]
+        customer_contact = customer_details[3]
+        customer_address = customer_details[4]
+        print("Customer Name :", customer_name, "Contact :", customer_contact, "Address :",
+              customer_address)
         libMemberId = "Not Available"
         dateTimeObj = date.today()
         dateOfPurchase = dateTimeObj.strftime("%Y-%m-%d ")
@@ -903,19 +911,19 @@ class InventorySales:
         sheet_obj = wb_obj.active
 
         sheet_obj.cell(row=10, column=1).value = "Address"
-        sheet_obj.cell(row=11, column=1).value = customer_address.get()
+        sheet_obj.cell(row=11, column=1).value = customer_address
         sheet_obj.cell(row=12, column=1).value = "Pin-code : NA"
 
         sheet_obj.cell(row=2, column=6).value = dateOfPurchase
         sheet_obj.cell(row=3, column=6).value = invoice_id
-        sheet_obj.cell(row=9, column=1).value = customer_name.get()
+        sheet_obj.cell(row=9, column=1).value = customer_name
 
-        sheet_obj.cell(row=13, column=1).value = customer_contact.get()
+        sheet_obj.cell(row=13, column=1).value = customer_contact
 
         sheet_obj.cell(row=16, column=1).value = "Admin"
-        sheet_obj.cell(row=16, column=2).value = customer_name.get()
+        sheet_obj.cell(row=16, column=2).value = customer_name
         sheet_obj.cell(row=16, column=3).value = libMemberId
-        sheet_obj.cell(row=16, column=4).value = customer_contact.get()
+        sheet_obj.cell(row=16, column=4).value = customer_contact
 
         final_paymentValue = 0
         # clear the existing sales template
@@ -990,8 +998,8 @@ class InventorySales:
         else:
             serial_no = total_records + 1
 
-        customername = customer_name.get()
-        customercontact = customer_contact.get()
+        customername = customer_name
+        customercontact = customer_contact
         sql = "INSERT INTO invoices VALUES(%s, %s, %s, %s, %s, %s)"
         values = (serial_no, invoice_id, dateOfPurchase, final_paymentValue, customername, customercontact)
         cursor.execute(sql, values)
@@ -1489,7 +1497,7 @@ class InventorySales:
         conn.close()
         return int(result[0])
 
-    def getCustomerDetails(self, customerContact_txt, customerName_txt, customerAddress_txt, customerAcct_txtlabel):
+    def displayCustomerDetails(self, customerContact_txt, customerName_txt, customerAddress_txt, customerAcct_txtlabel):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
 
         # Creating a cursor object using the cursor() method
@@ -1507,6 +1515,19 @@ class InventorySales:
         self.remPoints_text['text'] = self.getCurrentRedeemptionPoints()
         conn.close()
 
+    def getCustomerDetails(self, customerContact_txt):
+        conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        bItemExist = cursor.execute("SELECT * FROM customer_details WHERE customer_contact = %s",
+                                    (customerContact_txt.get(),))
+        result = cursor.fetchone()
+        print("result :", result)
+        conn.close()
+        return result
+
     def creditEarnedRedeemptionPoints(self, customer_contact):
         """ earned points on purchase are written to database in individual accounts"""
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
@@ -1516,7 +1537,7 @@ class InventorySales:
         pointsEarned = self.pointsEarned_text.cget("text")
         print("Points earned :", pointsEarned, " writing to database")
         bItemExist = cursor.execute("SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
-                                    (customer_contact.get(),))
+                                    (customer_contact,))
         result = cursor.fetchone()
         print("Existing Points :", str(result[0]))
 
