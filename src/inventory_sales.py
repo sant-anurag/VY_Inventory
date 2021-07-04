@@ -1020,30 +1020,30 @@ class InventorySales:
     def tender_display(self):
         tender_window = Toplevel(self.dataSearchFrame)
         tender_window.title("Tender Screen")
-        tender_window.geometry('760x250+600+200')
+        tender_window.geometry('760x250+700+300')
         tender_window.configure(background='white')
         tender_window.resizable(width=False, height=False)
         tender_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
 
         # -------Menu buttonframe start--------------------------
         mainMenuFrame = Frame(tender_window, width=153, height=240, bd=2, relief='ridge',
-                                   bg='wheat')
+                              bg='wheat')
         mainmenu_label = Label(mainMenuFrame, text="Main Menu", width=12, justify=CENTER,
                                font=L_FONT,
                                bg='wheat')
-        btn_done = Button(mainMenuFrame,text="Done", fg="Black", command=None,
-                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+        btn_done = Button(mainMenuFrame, text="Done", fg="Black", command=None,
+                          font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         btn_tender = Button(mainMenuFrame, text="Tender Amt.", fg="Black", command=None,
-                                 font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+                            font=L_FONT, width=12, state=DISABLED, bg='light grey')
 
         btn_billgen = Button(mainMenuFrame, text="Generate Bill", fg="Black", command=None,
-                                  font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+                             font=L_FONT, width=12, state=DISABLED, bg='light grey')
 
         btn_printbill = Button(mainMenuFrame, text="Print Bill", fg="Black", command=None,
-                                    font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+                               font=L_FONT, width=12, state=DISABLED, bg='light grey')
 
-        btn_exittender = Button(mainMenuFrame, text="Exit", fg="Black", command=None,
-                                     font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
+        btn_exittender = Button(mainMenuFrame, text="Exit", fg="Black", command=tender_window.destroy,
+                                font=L_FONT, width=12, state=NORMAL, bg='RosyBrown1')
         # Side button panel - end
         mainMenuFrame.place(x=5, y=2)
         mainmenu_label.place(x=2, y=5)
@@ -1060,9 +1060,10 @@ class InventorySales:
                              font=XL_FONT, bd=2, relief='ridge',
                              bg='paleturquoise')
 
-        info_label = Label(frame_left, text="Enter the Service Tax(if applicable)\n and press Enter or Done", width=30, height=2, justify=CENTER,
-                            font=NORM_FONT, bd=1, fg='green',
-                            bg='papayawhip')
+        info_label = Label(frame_left, text="Enter the Service Tax(if applicable)\n and press Enter or Done", width=30,
+                           height=2, justify=CENTER,
+                           font=NORM_FONT, bd=1, fg='green',
+                           bg='papayawhip')
         frame_leftInputMode = Frame(frame_left, width=290, height=150, relief='ridge',
                                     bg='papayawhip')
 
@@ -1145,11 +1146,15 @@ class InventorySales:
         grossbill_txt = Label(frame_right_paymodes, width=15, height=1, justify=LEFT, anchor=W,
                               font=NORM_FONT, bd=1,
                               bg='light cyan')
-        received_txt = Entry(frame_right, width=8, font=L_FONT, bg='royalblue', fg="white",
-                             justify=CENTER)
+        received_txt = Entry(frame_right, width=8, text="0.0", font=L_FONT, bg='light grey', fg="white",
+                             justify=CENTER, state=DISABLED)
+        received_txt["text"] = "0"
         balance_txt = Label(frame_right, width=6, height=1, justify=RIGHT, anchor=E,
                             font=L_FONT, bd=1, fg="green", text="0.0",
                             bg='papayawhip')
+        tender_amtresult = partial(self.enablepayment, received_txt)
+        btn_tender.configure(command=tender_amtresult)
+
         textAmt = (round(float(tender_amtTxt.get()) + float(servcie_chargeTxt.get()), 2))
         balance_txt["text"] = str(textAmt)
 
@@ -1173,24 +1178,44 @@ class InventorySales:
         tender_window.focus()
         tender_window.grab_set()
 
-        done_result = partial(self.apply_serviceCharge, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt,
-                              paymtMode_txt, grossbill_txt, balance_txt, tender_modeText)
+        done_result = partial(self.done_operations, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt,
+                              paymtMode_txt, grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen,
+                              btn_printbill, info_label, received_txt)
         btn_done.configure(command=done_result)
+        btn_billgen.configure(command=done_result)
 
         tender_window.bind('<Return>', lambda event=None: btn_done.invoke())
         tender_window.bind('<Escape>', lambda event=None: btn_exittender.invoke())
 
-    def apply_serviceCharge(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
-                            grossbill_txt, balance_txt, tender_modeText):
-        serviceChg_amt = (float(servcie_chargeTxt.get()) / 100) * float(self.finalBillAmt_text.cget("text"))
-        gross_amount = round(serviceChg_amt + float(self.finalBillAmt_text.cget("text")), 2)
-        total_amtTxt["text"] = str(gross_amount)
-        billAmt_txt["text"] = self.finalBillAmt_text.cget("text")
-        serviceTax_txt["text"] = servcie_chargeTxt.get()
-        paymtMode_txt["text"] = tender_modeText.get()
-        grossbill_txt["text"] = str(gross_amount)
-        balance_amt = round((gross_amount - float(self.finalBillAmt_text.cget("text"))), 2)
-        balance_txt["text"] = str(balance_amt)
+    def done_operations(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
+                            grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen, btn_printbill,
+                            info_label, received_txt):
+        if received_txt.get() == "":
+            serviceChg_amt = (float(servcie_chargeTxt.get()) / 100) * float(self.finalBillAmt_text.cget("text"))
+            gross_amount = round(serviceChg_amt + float(self.finalBillAmt_text.cget("text")), 2)
+            total_amtTxt["text"] = str(gross_amount)
+            billAmt_txt["text"] = self.finalBillAmt_text.cget("text")
+            serviceTax_txt["text"] = servcie_chargeTxt.get()
+            paymtMode_txt["text"] = tender_modeText.get()
+            grossbill_txt["text"] = str(gross_amount)
+            received_txt["text"] = "0.0"
+            # balance is equal to gross amount , before payment is done
+            balance_txt["text"] = str(gross_amount)
+            # enabling the relevant buttons
+            btn_tender.configure(state=NORMAL, bg='RosyBrown1')
+            info_text = "Total Payment amount : " + str(gross_amount)
+            info_label.configure(text=info_text)
+            self.btn_discount.configure(state=DISABLED, bg="light grey")
+            self.btn_tax.configure(state=DISABLED, bg="light grey")
+            self.btn_remItem.configure(state=DISABLED, bg="light grey")
+            self.btn_redeempts.configure(state=DISABLED, bg="light grey")
+        else:
+            # bill generate and print bill options shall be enabled and processed
+            btn_billgen.configure(state=NORMAL, bg='RosyBrown1')
+            btn_printbill.configure(state=NORMAL, bg='RosyBrown1')
+
+    def enablepayment(self, received_txt):
+        received_txt.configure(state=NORMAL, bg='royalblue')
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
