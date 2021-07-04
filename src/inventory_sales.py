@@ -490,22 +490,22 @@ class InventorySales:
         for row_index in range(0, len(self.list_InvoicePrint)):
             for column_index in range(1, 6):
                 if column_index == 4:
-                    width_column = 8
-                elif column_index == 2:
-                    width_column = 28
-                elif column_index == 1:
-                    width_column = 4
-                elif column_index == 5:
                     width_column = 10
+                elif column_index == 2:
+                    width_column = 32
+                elif column_index == 1:
+                    width_column = 5
+                elif column_index == 5:
+                    width_column = 12
                 elif column_index == 3:
-                    width_column = 8
+                    width_column = 10
                 else:
                     pass
 
                 label_detail = Label(frame, text="No Data", width=width_column, height=1,
-                                     anchor='center', justify=LEFT, bd=1, relief='ridge',
+                                     anchor='center', justify=LEFT, bd=1,
                                      font=('arial narrow', 13, 'normal'),
-                                     bg='light yellow')
+                                     bg="light cyan")
                 label_detail.grid(row=row_index + 1, column=column_index, padx=2, pady=1, sticky=W)
 
                 if column_index == 1:
@@ -766,7 +766,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             change_quantity_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
+            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
