@@ -1148,7 +1148,7 @@ class InventorySales:
                               bg='light cyan')
         received_txt = Entry(frame_right, width=8, text="0.0", font=L_FONT, bg='light grey', fg="white",
                              justify=CENTER, state=DISABLED)
-        received_txt["text"] = "0"
+        received_txt.insert(0, "0.0")
         balance_txt = Label(frame_right, width=6, height=1, justify=RIGHT, anchor=E,
                             font=L_FONT, bd=1, fg="green", text="0.0",
                             bg='papayawhip')
@@ -1182,9 +1182,7 @@ class InventorySales:
                               paymtMode_txt, grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen,
                               btn_printbill, info_label, received_txt)
         btn_done.configure(command=done_result)
-        btn_billgen.configure(command=done_result)
-
-        tender_window.bind('<Return>', lambda event=None: btn_done.invoke())
+        tender_window.bind('<Return>', done_result)
         tender_window.bind('<Escape>', lambda event=None: btn_exittender.invoke())
 
     def done_operations(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
@@ -1198,7 +1196,7 @@ class InventorySales:
             serviceTax_txt["text"] = servcie_chargeTxt.get()
             paymtMode_txt["text"] = tender_modeText.get()
             grossbill_txt["text"] = str(gross_amount)
-            received_txt["text"] = "0.0"
+            received_txt.insert(0,"0.0")
             # balance is equal to gross amount , before payment is done
             balance_txt["text"] = str(gross_amount)
             # enabling the relevant buttons
