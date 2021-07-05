@@ -52,10 +52,10 @@ class InventorySales:
         self.btn_submit.configure(text="Tender Bill", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                   bg='RosyBrown1')
         self.btn_reset = Button(self.MainbtnFrame, text="Reset Item", fg="Black",
-                                font=NORM_FONT, width=14, state=DISABLED,  bg='light grey')
+                                font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
         resetcart_result = partial(self.resetcart)
         self.btn_resetCart = Button(self.MainbtnFrame, text="Reset Cart", fg="Black",
-                                    font=NORM_FONT, width=14, command=resetcart_result, state=DISABLED,  bg='light grey')
+                                    font=NORM_FONT, width=14, command=resetcart_result, state=DISABLED, bg='light grey')
         self.btn_print = Button(self.MainbtnFrame, text="Print Invoice", fg="Black",
                                 font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
 
@@ -91,9 +91,10 @@ class InventorySales:
                                bg='light grey', command=tax_result)
         remove_result = partial(self.removeItem_display)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=NORM_FONT, width=14, state=DISABLED,  bg='light grey', command=remove_result)
+                                  font=NORM_FONT, width=14, state=DISABLED, bg='light grey', command=remove_result)
+        redeem_result = partial(self.redeemPoints_display)
         self.btn_redeempts = Button(self.AdditionalbtnFrame, text="Redeem Points", fg="Black",
-                                    font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
+                                    font=NORM_FONT, width=14, state=DISABLED, bg='light grey', command=redeem_result)
         shopper_result = partial(self.customer_operations)
         self.btn_member = Button(self.AdditionalbtnFrame, text="Shopper", fg="Black",
                                  font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1', command=shopper_result)
@@ -241,7 +242,7 @@ class InventorySales:
         purchase_quantitylbl = Label(framedisplay, text="Purchase Quantity", width=15, justify=CENTER,
                                      font=XL_FONT, bg='light green')
         quantity_entry = Entry(framedisplay, width=5, font=XL_FONT, bg='light cyan')
-        quantity_entry.insert(0,"0")
+        quantity_entry.insert(0, "0")
 
         purchase_headline = Label(framepurchase, text="Bill Summary", width=13, anchor=W, justify=LEFT,
                                   font=NORM_FONT, bg='snow', fg='red')
@@ -781,7 +782,8 @@ class InventorySales:
         remItemt_display_window.resizable(width=False, height=False)
         remItemt_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
 
-        label_itemSerialNo = Label(remItemt_display_window, text="Enter the item serial no. to remove :", width=30, height=1, anchor=W,
+        label_itemSerialNo = Label(remItemt_display_window, text="Enter the item serial no. to remove :", width=30,
+                                   height=1, anchor=W,
                                    justify=LEFT,
                                    font=NORM_FONT,
                                    bg='wheat')
@@ -791,12 +793,12 @@ class InventorySales:
         btn_frame = Frame(remItemt_display_window, width=225, height=40, bd=2, relief='ridge',
                           bg='purple')
         btn_remItem = Button(btn_frame)
-        remove_result = partial(self.remove_item,sno_entry,remItemt_display_window)
+        remove_result = partial(self.remove_item, sno_entry, remItemt_display_window)
         btn_remItem.configure(text="Remove", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
-                                     bg='RosyBrown1', command=remove_result)
+                              bg='RosyBrown1', command=remove_result)
         btn_cancel = Button(btn_frame)
         btn_cancel.configure(text="Return", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
-                                    bg='RosyBrown1', command=remItemt_display_window.destroy)
+                             bg='RosyBrown1', command=remItemt_display_window.destroy)
 
         label_itemSerialNo.place(x=20, y=20)
         sno_entry.place(x=280, y=20)
@@ -808,13 +810,49 @@ class InventorySales:
         remItemt_display_window.focus()
         remItemt_display_window.grab_set()
 
+    def redeemPoints_display(self):
+        redeempts_display_window = Toplevel(self.dataSearchFrame)
+        redeempts_display_window.title("Reedem points")
+        redeempts_display_window.geometry('450x95+950+380')
+        redeempts_display_window.configure(background='wheat')
+        redeempts_display_window.resizable(width=False, height=False)
+        redeempts_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_ptsNo = Label(redeempts_display_window, text="Enter total points to redeem :", width=30, height=1,
+                            anchor=W,
+                            justify=LEFT,
+                            font=NORM_FONT,
+                            bg='wheat')
+        points_entry = Entry(redeempts_display_window, width=15, font=NORM_FONT, bg='light cyan')
+        points_entry.focus_set()
+
+        btn_frame = Frame(redeempts_display_window, width=225, height=40, bd=2, relief='ridge',
+                          bg='purple')
+        btn_redeem = Button(btn_frame)
+        remove_result = partial(self.reedem_points, points_entry, redeempts_display_window)
+        btn_redeem.configure(text="Reedem", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+                             bg='RosyBrown1', command=remove_result)
+        btn_cancel = Button(btn_frame)
+        btn_cancel.configure(text="Return", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+                             bg='RosyBrown1', command=redeempts_display_window.destroy)
+
+        label_ptsNo.place(x=20, y=20)
+        points_entry.place(x=280, y=20)
+        btn_frame.place(x=100, y=50)
+        btn_redeem.place(x=1, y=2)
+        btn_cancel.place(x=110, y=2)
+        redeempts_display_window.bind('<Return>', lambda event=None: btn_redeem.invoke())
+        redeempts_display_window.bind('<Escape>', lambda event=None: btn_cancel.invoke())
+        redeempts_display_window.focus()
+        redeempts_display_window.grab_set()
+
     def remove_item(self, serialNo, remitem_quantity_window):
         print("Remove Item  started for the serial no :", serialNo.get())
         bSerialValid = False
         for iLoop in range(0, len(self.list_InvoicePrint)):
             if iLoop + 1 == int(serialNo.get()):
                 bSerialValid = True
-                self.list_InvoicePrint.pop(int(serialNo.get())-1)
+                self.list_InvoicePrint.pop(int(serialNo.get()) - 1)
                 # self.list_InvoicePrint[iLoop][2] = int(newQuanity.get())
                 break
 
@@ -825,6 +863,18 @@ class InventorySales:
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Item", "Check the serial no.")
+
+    def reedem_points(self, pointsToReedem, reedemPts_quantity_window):
+        current_AvailablePts = self.getCurrentRedeemptionPoints()
+        if float(current_AvailablePts) > int(pointsToReedem.get()) or int(current_AvailablePts) == int(
+                pointsToReedem.get()):
+            print("Redeem Points :", pointsToReedem.get())
+            self.finalBillAmt_text['text'] = str(
+                float(self.finalBillAmt_text.cget("text")) - float(pointsToReedem.get()))
+            self.remPoints_text['text'] = str(round(float(current_AvailablePts) - int(pointsToReedem.get()), 1))
+        else:
+            text_total = "Please try <" + str(current_AvailablePts)
+            messagebox.showinfo("Ahh! Too much to en-cash", text_total)
 
     def apply_discount(self, serialNo, discountAmt, discount_window):
         print("Apply discount started for the serial no :", serialNo.get())
@@ -1239,7 +1289,7 @@ class InventorySales:
                               paymtMode_txt, grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen,
                               btn_printbill, info_label, received_txt)
         btn_done.configure(command=done_result)
-        tender_window.bind('<Return>', done_result)
+        tender_window.bind('<Return>', lambda event=None: btn_done.invoke())
         tender_window.bind('<Escape>', lambda event=None: btn_exittender.invoke())
 
     def done_operations(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
