@@ -196,7 +196,7 @@ class Customer:
         self.default_text2.trace("w", self.check_SaveItemBtn_state)
         self.default_text3.trace("w", self.check_SaveItemBtn_state)
 
-        clear_result = partial(self.clear_form_addCustomer, name_txt, authorText, contact_txt, address_txt)
+        clear_result = partial(self.clear_form_addcustomer, name_txt, contact_txt, address_txt)
 
         self.btn_reset.configure(state=NORMAL, bg='RosyBrown1', command=clear_result)
         self.btn_cancel.configure(command=self.newItem_window.destroy)
@@ -531,26 +531,6 @@ class Customer:
         else:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-    def clear_form_addCustomer(self, name, author, price, quantity, borrowFee, rack_location,
-                               receiver_name, order_id, sender_name):
-        # clear the content of text entry box
-        name.delete(0, END)
-        name.configure(fg='black')
-        price.delete(0, END)
-        price.configure(fg='black')
-        quantity.delete(0, END)
-        quantity.configure(fg='black')
-        borrowFee.delete(0, END)
-        borrowFee.configure(fg='black')
-        rack_location.delete(0, END)
-        rack_location.configure(fg='black')
-        receiver_name.delete(0, END)
-        receiver_name.configure(fg='black')
-        order_id.delete(0, END)
-        order_id.configure(fg='black')
-        sender_name.delete(0, END)
-        sender_name.configure(fg='black')
-
     def shopper_add_operations(self, name_txt, contact_txt, authorText, cal, address_txt, op_type):
         dateTimeObj = cal.get_date()
 
@@ -651,9 +631,9 @@ class Customer:
             self.messageLabel['text'] = messageText
             self.btn_submit.configure(state=DISABLED, bg='light grey')
             self.display_currentShopperList(self.dataModifyFrame, 10, 247, 553, 175)
-            self.clear_form_addcustomer(name_txt, shopper_gender, contact_txt, address_txt)
+            self.clear_form_addcustomer(name_txt, contact_txt, address_txt)
 
-    def clear_form_addcustomer(self, name_txt, authorText, contact_txt, address_txt):
+    def clear_form_addcustomer(self, name_txt, contact_txt, address_txt):
         # clear the content of text entry box
         name_txt.delete(0, END)
         name_txt.configure(fg='black')

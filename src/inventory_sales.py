@@ -847,7 +847,7 @@ class InventorySales:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
 
-    def apply_tax(self, taxAmt_entry, tax_labelAmt, tax_display_window):
+    def apply_tax(self, taxAmt_entry):
         print("Apply Tax% :", taxAmt_entry.get())
         total_bill_Amount = self.calculateTotalMRP()
         tax_amount = round(float((int(taxAmt_entry.get()) / 100) * total_bill_Amount), 2)
