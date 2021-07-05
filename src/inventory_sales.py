@@ -89,8 +89,9 @@ class InventorySales:
         tax_result = partial(self.tax_display)
         self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
                                bg='RosyBrown1', command=tax_result)
+        remove_result = partial(self.removeItem_display)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
+                                  font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1', command=remove_result)
         self.btn_redeempts = Button(self.AdditionalbtnFrame, text="Redeem Points", fg="Black",
                                     font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
         shopper_result = partial(self.customer_operations)
@@ -771,6 +772,59 @@ class InventorySales:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
 
+    def removeItem_display(self):
+        remItemt_display_window = Toplevel(self.dataSearchFrame)
+        remItemt_display_window.title("Remove Item")
+        remItemt_display_window.geometry('450x95+950+380')
+        remItemt_display_window.configure(background='wheat')
+        remItemt_display_window.resizable(width=False, height=False)
+        remItemt_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_itemSerialNo = Label(remItemt_display_window, text="Enter the item serial no. to remove :", width=30, height=1, anchor=W,
+                                   justify=LEFT,
+                                   font=NORM_FONT,
+                                   bg='wheat')
+        sno_entry = Entry(remItemt_display_window, width=15, font=NORM_FONT, bg='light cyan')
+        sno_entry.focus_set()
+
+        btn_frame = Frame(remItemt_display_window, width=225, height=40, bd=2, relief='ridge',
+                          bg='purple')
+        btn_remItem = Button(btn_frame)
+        remove_result = partial(self.remove_item,sno_entry,remItemt_display_window)
+        btn_remItem.configure(text="Remove", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+                                     bg='RosyBrown1', command=remove_result)
+        btn_cancel = Button(btn_frame)
+        btn_cancel.configure(text="Return", fg="Black", font=NORM_FONT, width=11, state=NORMAL,
+                                    bg='RosyBrown1', command=remItemt_display_window.destroy)
+
+        label_itemSerialNo.place(x=20, y=20)
+        sno_entry.place(x=280, y=20)
+        btn_frame.place(x=100, y=50)
+        btn_remItem.place(x=1, y=2)
+        btn_cancel.place(x=110, y=2)
+        remItemt_display_window.bind('<Return>', lambda event=None: btn_remItem.invoke())
+        remItemt_display_window.bind('<Escape>', lambda event=None: btn_cancel.invoke())
+        remItemt_display_window.focus()
+        remItemt_display_window.grab_set()
+
+    def remove_item(self, serialNo, remitem_quantity_window):
+        print("Remove Item  started for the serial no :", serialNo.get())
+        bSerialValid = False
+        for iLoop in range(0, len(self.list_InvoicePrint)):
+            if iLoop + 1 == int(serialNo.get()):
+                bSerialValid = True
+                self.list_InvoicePrint.pop(int(serialNo.get())-1)
+                # self.list_InvoicePrint[iLoop][2] = int(newQuanity.get())
+                break
+
+        if bSerialValid:
+            print("Item has been removed form cart")
+            remitem_quantity_window.destroy()
+            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+        else:
+            print("Invalid Serial no")
+            messagebox.showwarning("Invalid Item", "Check the serial no.")
+
     def apply_discount(self, serialNo, discountAmt, discount_window):
         print("Apply discount started for the serial no :", serialNo.get())
         bSerialValid = False
@@ -804,7 +858,6 @@ class InventorySales:
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
         bItemExists = False
-        bValidQuantity = True
         # validate if item already exists in cart
         for iLoop in range(0, len(self.list_InvoicePrint)):
             if item_idforSearch.get() == self.list_InvoicePrint[iLoop][0]:
@@ -1186,8 +1239,8 @@ class InventorySales:
         tender_window.bind('<Escape>', lambda event=None: btn_exittender.invoke())
 
     def done_operations(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
-                            grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen, btn_printbill,
-                            info_label, received_txt):
+                        grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen, btn_printbill,
+                        info_label, received_txt):
         if received_txt.get() == "":
             serviceChg_amt = (float(servcie_chargeTxt.get()) / 100) * float(self.finalBillAmt_text.cget("text"))
             gross_amount = round(serviceChg_amt + float(self.finalBillAmt_text.cget("text")), 2)
@@ -1196,7 +1249,7 @@ class InventorySales:
             serviceTax_txt["text"] = servcie_chargeTxt.get()
             paymtMode_txt["text"] = tender_modeText.get()
             grossbill_txt["text"] = str(gross_amount)
-            received_txt.insert(0,"0.0")
+            received_txt.insert(0, "0.0")
             # balance is equal to gross amount , before payment is done
             balance_txt["text"] = str(gross_amount)
             # enabling the relevant buttons
