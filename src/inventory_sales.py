@@ -249,11 +249,11 @@ class InventorySales:
 
         purchase_cartCountlbl = Label(framepurchase, text="Cart Count", width=13, anchor=W, justify=LEFT,
                                       font=NORM_FONT, bg='snow')
-        purchase_moplbl = Label(framepurchase, text="Paymt.Mode", width=13, anchor=W, justify=LEFT,
+        purchase_moplbl = Label(framepurchase, text="Pts. Redeemed", width=13, anchor=W, justify=LEFT,
                                 font=NORM_FONT, bg='snow')
         purchase_pointsEarnedlbl = Label(framepurchase, text="Pts. Earned", width=13, anchor=W, justify=LEFT,
                                          font=NORM_FONT, bg='snow')
-        purchase_rempointslbl = Label(framepurchase, text="Tot. Points", width=13, anchor=W, justify=LEFT,
+        purchase_rempointslbl = Label(framepurchase, text="Rem. Points", width=13, anchor=W, justify=LEFT,
                                       font=NORM_FONT, bg='snow')
         # declaring remining points here to populate as ssoon as shopper details are fetched
         self.remPoints_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
@@ -262,11 +262,10 @@ class InventorySales:
         cartCount_text = Label(framepurchase, width=12, text="0", anchor=W, justify=LEFT,
                                font=NORM_FONT,
                                bg='light cyan')
-        self.default_text1 = StringVar(framepurchase, value='')
-        mop_text = Entry(framepurchase, width=12, justify=LEFT,
-                         font=NORM_FONT,
-                         bg='light cyan', textvariable=self.default_text1)
-        self.default_text1.trace("w", self.enable_PaymentMethodView)
+
+        self.mop_text = Label(framepurchase, width=12, text="0", anchor=W, justify=LEFT,
+                               font=NORM_FONT,
+                               bg='light cyan')
         self.pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
@@ -340,12 +339,12 @@ class InventorySales:
         purchase_headline.place(x=10, y=5)
         purchase_cartCountlbl.place(x=10, y=35)
         cartCount_text.place(x=120, y=35)
-        purchase_moplbl.place(x=10, y=70)
-        mop_text.place(x=120, y=70)
+        purchase_moplbl.place(x=10, y=140)
+        self.mop_text.place(x=120, y=140)
         purchase_pointsEarnedlbl.place(x=10, y=105)
         self.pointsEarned_text.place(x=120, y=105)
-        purchase_rempointslbl.place(x=10, y=140)
-        self.remPoints_text.place(x=120, y=140)
+        purchase_rempointslbl.place(x=10, y=70)
+        self.remPoints_text.place(x=120, y=70)
 
         purchase_billAmtlbl.place(x=250, y=35)
         self.billAmount_text.place(x=385, y=35)
@@ -866,12 +865,13 @@ class InventorySales:
 
     def reedem_points(self, pointsToReedem, reedemPts_quantity_window):
         current_AvailablePts = self.getCurrentRedeemptionPoints()
-        if float(current_AvailablePts) > int(pointsToReedem.get()) or int(current_AvailablePts) == int(
+        if float(current_AvailablePts) > float(pointsToReedem.get()) or float(current_AvailablePts) == float(
                 pointsToReedem.get()):
             print("Redeem Points :", pointsToReedem.get())
             self.finalBillAmt_text['text'] = str(
                 float(self.finalBillAmt_text.cget("text")) - float(pointsToReedem.get()))
             self.remPoints_text['text'] = str(round(float(current_AvailablePts) - int(pointsToReedem.get()), 1))
+            self.mop_text["text"] =  pointsToReedem.get()
         else:
             text_total = "Please try <" + str(current_AvailablePts)
             messagebox.showinfo("Ahh! Too much to en-cash", text_total)
@@ -1324,7 +1324,6 @@ class InventorySales:
 
     def check_SaveItemBtn_state(self, *args):
         print("Tracing  entry input")
-
         if self.default_text1.get() != "" and \
                 self.default_text3.get() != "" and \
                 self.default_text4.get() != "" and \
