@@ -52,10 +52,10 @@ class InventorySales:
         self.btn_submit.configure(text="Tender Bill", fg="Black", font=NORM_FONT, width=14, state=NORMAL,
                                   bg='RosyBrown1')
         self.btn_reset = Button(self.MainbtnFrame, text="Reset Item", fg="Black",
-                                font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1')
+                                font=NORM_FONT, width=14, state=DISABLED,  bg='light grey')
         resetcart_result = partial(self.resetcart)
         self.btn_resetCart = Button(self.MainbtnFrame, text="Reset Cart", fg="Black",
-                                    font=NORM_FONT, width=14, command=resetcart_result, state=DISABLED, bg='RosyBrown1')
+                                    font=NORM_FONT, width=14, command=resetcart_result, state=DISABLED,  bg='light grey')
         self.btn_print = Button(self.MainbtnFrame, text="Print Invoice", fg="Black",
                                 font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
 
@@ -80,20 +80,20 @@ class InventorySales:
         self.btn_chgQuantity = Button(self.AdditionalbtnFrame)
         chngQuantity_result = partial(self.change_quantity_display)
         self.btn_chgQuantity.configure(text="Change Quantity", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
-                                       bg='RosyBrown1', command=chngQuantity_result)
+                                       bg='light grey', command=chngQuantity_result)
         self.btn_discount = Button(self.AdditionalbtnFrame)
         discount_result = partial(self.discount_display)
         self.btn_discount.configure(text="Discount %", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
-                                    bg='RosyBrown1', command=discount_result)
+                                    bg='light grey', command=discount_result)
         self.btn_tax = Button(self.AdditionalbtnFrame)
         tax_result = partial(self.tax_display)
         self.btn_tax.configure(text="Tax %", fg="Black", font=NORM_FONT, width=14, state=DISABLED,
-                               bg='RosyBrown1', command=tax_result)
+                               bg='light grey', command=tax_result)
         remove_result = partial(self.removeItem_display)
         self.btn_remItem = Button(self.AdditionalbtnFrame, text="Remove Item", fg="Black",
-                                  font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1', command=remove_result)
+                                  font=NORM_FONT, width=14, state=DISABLED,  bg='light grey', command=remove_result)
         self.btn_redeempts = Button(self.AdditionalbtnFrame, text="Redeem Points", fg="Black",
-                                    font=NORM_FONT, width=14, state=DISABLED, bg='RosyBrown1')
+                                    font=NORM_FONT, width=14, state=DISABLED, bg='light grey')
         shopper_result = partial(self.customer_operations)
         self.btn_member = Button(self.AdditionalbtnFrame, text="Shopper", fg="Black",
                                  font=NORM_FONT, width=14, state=NORMAL, bg='RosyBrown1', command=shopper_result)
@@ -241,6 +241,7 @@ class InventorySales:
         purchase_quantitylbl = Label(framedisplay, text="Purchase Quantity", width=15, justify=CENTER,
                                      font=XL_FONT, bg='light green')
         quantity_entry = Entry(framedisplay, width=5, font=XL_FONT, bg='light cyan')
+        quantity_entry.insert(0,"0")
 
         purchase_headline = Label(framepurchase, text="Bill Summary", width=13, anchor=W, justify=LEFT,
                                   font=NORM_FONT, bg='snow', fg='red')
@@ -404,7 +405,7 @@ class InventorySales:
         # Design of the search bottom area for products  -  end
 
         self.sales_window.bind('<Return>', lambda event=None: btn_search.invoke())
-        self.sales_window.bind('<Alt-F1>', lambda event=None: self.btn_addToCart.invoke())
+        self.sales_window.bind('<F1>', lambda event=None: self.btn_addToCart.invoke())
         self.sales_window.bind('<Alt-b>', lambda event=None: self.btn_submit.invoke())
         self.sales_window.bind('<Escape>', lambda event=None: self.btn_exit.invoke())
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
@@ -868,7 +869,7 @@ class InventorySales:
             # check for valid quantity availability
             bValidQuantity = self.isQuantityValid(item_idforSearch.get(), quantity_entry.get())
             print("Valid Quantity :", bValidQuantity)
-            if bValidQuantity:
+            if bValidQuantity and int(quantity_entry.get()) > 0:
                 # prepare the cart locally and retain it as long as purchase button is pressed
                 # this implementation list of array strategy to store the temporary cart items
                 # cart items are flushed out once "Buy" event is executed
@@ -897,7 +898,10 @@ class InventorySales:
                 print("Added to Cart Item Id :", item_idforSearch)
                 self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
             else:
-                messagebox.showwarning("Invalid Quantity !", "Quantity is Invalid")
+                if int(quantity_entry.get()) == 0:
+                    messagebox.showwarning("Invalid Quantity !", "Purchase Quantity is Invalid")
+                else:
+                    messagebox.showwarning("Invalid Quantity !", "In-sufficient quantity for purchase")
 
     def purchase_stock_item(self):
         self.btn_addToCart.configure(state=DISABLED, bg='light grey')
