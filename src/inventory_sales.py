@@ -1668,9 +1668,11 @@ class InventorySales:
                     self.btn_redeempts.configure(state=NORMAL, bg='RosyBrown1')
             else:
                 messagebox.showwarning("Invalid Data", "Ahh, This contact is not registered")
-            conn.close()
+                self.btn_redeempts.configure(state=DISABLED, bg='light grey')
         else:
             messagebox.showwarning("No data", "OOPS! Contact No. is empty")
+            self.btn_redeempts.configure(state=DISABLED, bg='light grey')
+        conn.close()
 
     def getCustomerDetails(self, customerContact_txt):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
