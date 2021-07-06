@@ -264,8 +264,8 @@ class InventorySales:
                                bg='light cyan')
 
         self.mop_text = Label(framepurchase, width=12, text="0", anchor=W, justify=LEFT,
-                               font=NORM_FONT,
-                               bg='light cyan')
+                              font=NORM_FONT,
+                              bg='light cyan')
         self.pointsEarned_text = Label(framepurchase, width=12, anchor=W, justify=LEFT,
                                        font=NORM_FONT,
                                        bg='light cyan')
@@ -366,10 +366,7 @@ class InventorySales:
         self.btn_addToCart.configure(command=addToCart_result)
 
         purchase_result = partial(self.tender_display)
-        '''
-        purchase_result = partial(self.purchase_stock_item, customerName_txt, self.customerContact_txt,
-                                  customerAddress_txt)
-                                  '''
+
         self.btn_submit.configure(command=purchase_result)
         self.btn_submit.configure(state=DISABLED, bg='light grey')
 
@@ -871,7 +868,7 @@ class InventorySales:
             self.finalBillAmt_text['text'] = str(
                 float(self.finalBillAmt_text.cget("text")) - float(pointsToReedem.get()))
             self.remPoints_text['text'] = str(round(float(current_AvailablePts) - int(pointsToReedem.get()), 1))
-            self.mop_text["text"] =  pointsToReedem.get()
+            self.mop_text["text"] = pointsToReedem.get()
         else:
             text_total = "Please try <" + str(current_AvailablePts)
             messagebox.showinfo("Ahh! Too much to en-cash", text_total)
@@ -942,10 +939,9 @@ class InventorySales:
                 self.btn_chgQuantity.configure(state=NORMAL, bg='RosyBrown1')
                 self.btn_remItem.configure(state=NORMAL, bg='RosyBrown1')
                 self.btn_discount.configure(state=NORMAL, bg='RosyBrown1')
-                self.btn_redeempts.configure(state=NORMAL, bg='RosyBrown1')
                 self.btn_member.configure(state=NORMAL, bg='RosyBrown1')
 
-                print("Added to Cart Item Id :", item_idforSearch)
+                print("Added to Cart Item Id :", item_idforSearch.get())
                 self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
             else:
                 if int(quantity_entry.get()) == 0:
@@ -1318,7 +1314,7 @@ class InventorySales:
             # bill generate and print bill options shall be enabled and processed
             btn_billgen.configure(state=NORMAL, bg='RosyBrown1')
             btn_printbill.configure(state=NORMAL, bg='RosyBrown1')
-            balance_txt["text"] = str(float(gross_amount)-float(received_txt.get()))
+            balance_txt["text"] = str(float(gross_amount) - float(received_txt.get()))
 
     def enablepayment(self, received_txt):
         received_txt.configure(state=NORMAL, bg='royalblue')
@@ -1656,18 +1652,25 @@ class InventorySales:
 
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
-
-        bItemExist = cursor.execute("SELECT * FROM customer_details WHERE customer_contact = %s",
-                                    (self.customerContact_txt.get(),))
-        result = cursor.fetchone()
-        print("result :", result)
-        customerName_txt.delete(0, END)
-        customerName_txt.insert(0, result[2])  # name
-        customerAddress_txt.delete(0, END)
-        customerAddress_txt.insert(0, result[4])  # address
-        customerAcct_txtlabel['text'] = result[1]  # account number
-        self.remPoints_text['text'] = self.getCurrentRedeemptionPoints()
-        conn.close()
+        if self.customerContact_txt.get() != "":
+            bItemExist = cursor.execute("SELECT * FROM customer_details WHERE customer_contact = %s",
+                                        (self.customerContact_txt.get(),))
+            result = cursor.fetchone()
+            print("result :", result)
+            if result is not None:
+                customerName_txt.delete(0, END)
+                customerName_txt.insert(0, result[2])  # name
+                customerAddress_txt.delete(0, END)
+                customerAddress_txt.insert(0, result[4])  # address
+                customerAcct_txtlabel['text'] = result[1]  # account number
+                self.remPoints_text['text'] = self.getCurrentRedeemptionPoints()
+                if float(self.getCurrentRedeemptionPoints()) > 0:
+                    self.btn_redeempts.configure(state=NORMAL, bg='RosyBrown1')
+            else:
+                messagebox.showwarning("Invalid Data", "Ahh, This contact is not registered")
+            conn.close()
+        else:
+            messagebox.showwarning("No data", "OOPS! Contact No. is empty")
 
     def getCustomerDetails(self, customerContact_txt):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
@@ -1711,9 +1714,15 @@ class InventorySales:
         cursor = conn.cursor()
         customer_contact = self.customerContact_txt.get()
         print("Customer contact :", customer_contact)
-        bItemExist = cursor.execute("SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
-                                    (customer_contact,))
-        result = cursor.fetchone()
-        print("Existing Points :", result)
-        conn.close()
-        return str(result[0])
+        # if customer contact is not empty
+        if customer_contact != "":
+            bItemExist = cursor.execute(
+                "SELECT customer_redeempoints FROM customer_details WHERE customer_contact = %s",
+                (customer_contact,))
+            result = cursor.fetchone()
+            print("Existing Points :", result)
+            conn.close()
+            return str(result[0])
+        else:
+            text_to_return = "0.0"
+            return text_to_return
