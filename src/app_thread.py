@@ -42,11 +42,9 @@ class myThread(threading.Thread):
 
         if self.name == "loadingvyoam":
             window = Tk()
-            # self.src_name.mainloop()
 
             time.sleep(3)
             window.destroy()
-            # window.mainloop()
 
         elif self.name == "stockinfoThread":
             if self.btnToEnable1 != "Dummy":

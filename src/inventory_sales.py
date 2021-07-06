@@ -1295,9 +1295,9 @@ class InventorySales:
     def done_operations(self, servcie_chargeTxt, total_amtTxt, billAmt_txt, serviceTax_txt, paymtMode_txt,
                         grossbill_txt, balance_txt, tender_modeText, btn_tender, btn_billgen, btn_printbill,
                         info_label, received_txt):
+        serviceChg_amt = (float(servcie_chargeTxt.get()) / 100) * float(self.finalBillAmt_text.cget("text"))
+        gross_amount = round(serviceChg_amt + float(self.finalBillAmt_text.cget("text")), 2)
         if received_txt.get() == "":
-            serviceChg_amt = (float(servcie_chargeTxt.get()) / 100) * float(self.finalBillAmt_text.cget("text"))
-            gross_amount = round(serviceChg_amt + float(self.finalBillAmt_text.cget("text")), 2)
             total_amtTxt["text"] = str(gross_amount)
             billAmt_txt["text"] = self.finalBillAmt_text.cget("text")
             serviceTax_txt["text"] = servcie_chargeTxt.get()
@@ -1318,6 +1318,7 @@ class InventorySales:
             # bill generate and print bill options shall be enabled and processed
             btn_billgen.configure(state=NORMAL, bg='RosyBrown1')
             btn_printbill.configure(state=NORMAL, bg='RosyBrown1')
+            balance_txt["text"] = str(float(gross_amount)-float(received_txt.get()))
 
     def enablepayment(self, received_txt):
         received_txt.configure(state=NORMAL, bg='royalblue')
