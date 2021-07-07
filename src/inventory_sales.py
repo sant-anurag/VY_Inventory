@@ -4,7 +4,8 @@ from app_defines import *
 from app_common import *
 from app_thread import *
 from customer_details import *
-
+import smtplib
+from email.message import EmailMessage
 
 class InventorySales:
 
@@ -1728,3 +1729,28 @@ class InventorySales:
         else:
             text_to_return = "0.0"
             return text_to_return
+
+    def prepare_bill(self):
+        pass
+
+    def send_bill(self):
+        msg = EmailMessage()
+        msg['Subject'] = 'Your bill '
+        msg['From'] = "sant.vihangam@gmail.com"
+        msg['To'] = "deo_santanurag@mail.com"  # receiver email
+        global x
+        file_name = "..\\Library_Stock\\Invoices\\2021\\2.pdf"
+        msg.set_content('This is your Total bill\nyour Reference.No is: Bill')
+        with open(file_name, 'rb') as content_file:
+            content = content_file.read()
+
+        msg.add_attachment(content,maintype='application', subtype='octet-stream', filename=file_name)
+        qsend = messagebox.askyesno("Billing System", "Do you want to send the bill?")
+        if qsend > 0:
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login("sant.vihangam@gmail.com", "Akshar@22102010")
+                smtp.send_message(msg)
+            qsmsg = messagebox.showinfo("Information", "Bill send successfully")
+        else:
+            qnmsg = messagebox.showinfo("Information", "Bill not send")
+
