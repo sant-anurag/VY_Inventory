@@ -77,6 +77,9 @@ OPERATION_EDIT = 2
 OPERATION_SEARCH = 3
 REGULAR_STOCK = 1
 CRITICAL_STOCK = 2
+DISCOUNT_TYPE = 1
+TAX_TYPE = 2
+BILL_NONE = 3
 
 # defining fonts for usage in project
 MEDIUM_FONT = ('times new roman', 12, 'normal')

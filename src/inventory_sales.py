@@ -7,6 +7,7 @@ from customer_details import *
 import smtplib
 from email.message import EmailMessage
 
+
 class InventorySales:
 
     # constructor for Library class
@@ -409,7 +410,7 @@ class InventorySales:
         self.sales_window.bind('<Alt-r>', lambda event=None: self.btn_reset.invoke())
         self.sales_window.bind('<Alt-p>', lambda event=None: self.btn_reset.invoke())
         # self.initialize_billArea()
-        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
         self.sales_window.focus()
         self.sales_window.grab_set()
         mainloop()
@@ -436,7 +437,7 @@ class InventorySales:
         item_borrowfee['text'] = ""
         item_quantity['text'] = ""
 
-    def display_billArea(self, split_open_window, startx, starty, xwidth, xheight):
+    def display_billArea(self, split_open_window, startx, starty, xwidth, xheight,bill_type):
         self.billAreaFrame.destroy()
         self.billAreaFrame = Frame(split_open_window, relief=GROOVE, width=520, height=407, bd=2)
         self.billAreaFrame.place(x=startx, y=starty)
@@ -521,7 +522,7 @@ class InventorySales:
                         self.list_InvoicePrint[row_index][3])), 2)
                 else:
                     print("this value doesn't exists")
-        self.calculateAndDisplayTotalBillAmt()
+        self.calculateAndDisplayTotalBillAmt(bill_type)
 
     def display_SearchProductsDetailArea(self, split_open_window, startx, starty, xwidth, xheight):
         self.searchproductDeatilsArea.destroy()
@@ -731,7 +732,7 @@ class InventorySales:
         btn_frame = Frame(tax_display_window, width=185, height=40, bd=2, relief='ridge',
                           bg='purple')
         btn_applytax = Button(btn_frame)
-        change_result = partial(self.apply_tax, taxAmt_entry, tax_labelAmt, tax_display_window)
+        change_result = partial(self.apply_tax, taxAmt_entry)
         btn_applytax.configure(text="Apply", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
                                bg='RosyBrown1', command=change_result)
         btn_close = Button(btn_frame)
@@ -751,6 +752,41 @@ class InventorySales:
         tax_display_window.focus()
         tax_display_window.grab_set()
 
+    def sendEmail_display(self):
+        sendEmail_display_window = Toplevel(self.dataSearchFrame)
+        sendEmail_display_window.title("Send Email")
+        sendEmail_display_window.geometry('300x135+950+380')
+        sendEmail_display_window.configure(background='wheat')
+        sendEmail_display_window.resizable(width=False, height=False)
+        sendEmail_display_window.protocol('WM_DELETE_WINDOW', self.obj_commonUtil.donothing)
+
+        label_itemSerialNo = Label(sendEmail_display_window, text="Email To:", width=7, height=1, anchor=W,
+                                   justify=LEFT,
+                                   font=NORM_FONT,
+                                   bg='wheat')
+        sendEmailTo_entry = Entry(sendEmail_display_window, width=15, font=NORM_FONT, bg='light cyan')
+
+        btn_frame = Frame(sendEmail_display_window, width=185, height=40, bd=2, relief='ridge',
+                          bg='purple')
+        btn_applysendEmail = Button(btn_frame)
+        change_result = partial(self.send_bill, sendEmailTo_entry, sendEmail_display_window)
+        btn_applysendEmail.configure(text="Apply", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
+                                     bg='RosyBrown1', command=change_result)
+        btn_close = Button(btn_frame)
+        btn_close.configure(text="Cancel", fg="Black", font=NORM_FONT, width=9, state=NORMAL,
+                            bg='RosyBrown1', command=sendEmail_display_window.destroy)
+
+        label_itemSerialNo.place(x=30, y=20)
+        sendEmailTo_entry.place(x=130, y=20)
+        btn_frame.place(x=50, y=70)
+        btn_applysendEmail.place(x=1, y=2)
+        btn_close.place(x=88, y=2)
+
+        sendEmail_display_window.bind('<Return>', lambda event=None: btn_applysendEmail.invoke())
+        sendEmail_display_window.bind('<Escape>', lambda event=None: btn_close.invoke())
+        sendEmail_display_window.focus()
+        sendEmail_display_window.grab_set()
+
     def myfunction(self, xwidth, yheight, mycanvas, event):
         mycanvas.configure(scrollregion=mycanvas.bbox("all"), width=xwidth, height=yheight)
 
@@ -766,7 +802,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             change_quantity_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -856,7 +892,7 @@ class InventorySales:
         if bSerialValid:
             print("Item has been removed form cart")
             remitem_quantity_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Item", "Check the serial no.")
@@ -891,7 +927,7 @@ class InventorySales:
         if bSerialValid:
             print("Quantity has been changed")
             discount_window.destroy()
-            self.display_billArea(self.dataSearchFrame, 572, 5, 575, 378)
+            self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,DISCOUNT_TYPE)
         else:
             print("Invalid Serial no")
             messagebox.showwarning("Invalid Quantity", "Check the serial no.")
@@ -902,7 +938,7 @@ class InventorySales:
         tax_amount = round(float((int(taxAmt_entry.get()) / 100) * total_bill_Amount), 2)
         self.billtax_text['text'] = str(tax_amount)
         self.btn_discount.configure(state=DISABLED, bg='light grey')
-        self.calculateAndDisplayTotalBillAmt()
+        self.calculateAndDisplayTotalBillAmt(TAX_TYPE)
 
     def addToCart(self, item_idforSearch, item_name, quantity_entry, item_price, cartCount_text, billAmount_text):
         print("Adding to Cart Item Id :", item_idforSearch.get())
@@ -943,7 +979,7 @@ class InventorySales:
                 self.btn_member.configure(state=NORMAL, bg='RosyBrown1')
 
                 print("Added to Cart Item Id :", item_idforSearch.get())
-                self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+                self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
             else:
                 if int(quantity_entry.get()) == 0:
                     messagebox.showwarning("Invalid Quantity !", "Purchase Quantity is Invalid")
@@ -997,7 +1033,7 @@ class InventorySales:
                                  customer_address,
                                  invoice_id)
         self.list_InvoicePrint = []
-        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
 
     def generateInvoicePage(self, customer_name,
                             libMemberId,
@@ -1089,7 +1125,7 @@ class InventorySales:
         self.btn_reset.configure(state=DISABLED, bg='light grey')
         self.btn_resetCart.configure(state=DISABLED, bg='light grey')
 
-        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378)
+        self.display_billArea(self.dataSearchFrame, 532, 5, 575, 378,BILL_NONE)
 
     def updateInvoiceDatabase(self, invoice_id, dateOfPurchase, final_paymentValue, customer_name, customer_contact):
         conn = sql_db.connect(user='root', host=SQL_SERVER, port=3306, database='inventorydb')
@@ -1331,11 +1367,13 @@ class InventorySales:
         else:
             self.btn_submit.configure(state=DISABLED, bg='light grey')
 
-    def calculateAndDisplayTotalBillAmt(self):
-        total_cart_mrp = self.calculateTotalMRP()
-        self.billAmount_text['text'] = str(total_cart_mrp)
+    def calculateAndDisplayTotalBillAmt(self, bill_type):
+        if bill_type == BILL_NONE:
+            total_cart_mrp = self.calculateTotalMRP()
+            self.billAmount_text['text'] = str(total_cart_mrp)
+
         self.finalBillAmt_text['text'] = str(
-            float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text")))
+            float(self.billAmount_text.cget("text")) + float(self.billtax_text.cget("text"))-float(self.billdiscount_text.cget("text")))
         self.pointsEarned_text['text'] = str(float(self.finalBillAmt_text.cget("text")) / 100)
 
     def calculateTotalMRP(self):
@@ -1733,7 +1771,7 @@ class InventorySales:
     def prepare_bill(self):
         pass
 
-    def send_bill(self):
+    def send_bill(self, sendEmailTo_entry, sendEmail_display_window):
         msg = EmailMessage()
         msg['Subject'] = 'Your bill '
         msg['From'] = "sant.vihangam@gmail.com"
@@ -1744,7 +1782,7 @@ class InventorySales:
         with open(file_name, 'rb') as content_file:
             content = content_file.read()
 
-        msg.add_attachment(content,maintype='application', subtype='octet-stream', filename=file_name)
+        msg.add_attachment(content, maintype='application', subtype='octet-stream', filename=file_name)
         qsend = messagebox.askyesno("Billing System", "Do you want to send the bill?")
         if qsend > 0:
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -1753,4 +1791,3 @@ class InventorySales:
             qsmsg = messagebox.showinfo("Information", "Bill send successfully")
         else:
             qnmsg = messagebox.showinfo("Information", "Bill not send")
-

@@ -1,36 +1,40 @@
-import curses
+import subprocess
 
-classes = ["The sneaky thief", "The smarty wizard", "The proletariat"]
+data = subprocess.check_output(['netsh', 'wlan', 'show',
+                                'profiles']).decode('utf-8').split('\n')
 
+print(data)
 
-def character(stdscr):
-    attributes = {}
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
-    attributes['normal'] = curses.color_pair(1)
+profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
 
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    attributes['highlighted'] = curses.color_pair(2)
+for i in profiles:
+    results = subprocess.check_output(['netsh', 'wlan', 'show', 'profile', i,
+                                       'key=clear']).decode('utf-8').split('\n')
+    results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+    try:
+        print("{:<30}|  {:<}".format(i, results[0]))
+    except IndexError:
+        print("{:<30}|  {:<}".format(i, ""))
 
-    c = 0  # last character read
-    option = 0  # the current option that is marked
-    while c != 10:  # Enter in ascii
-        stdscr.erase()
-        stdscr.addstr("What is your class?\n", curses.A_UNDERLINE)
-        for i in range(len(classes)):
-            if i == option:
-                attr = attributes['highlighted']
-            else:
-                attr = attributes['normal']
-            stdscr.addstr("{0}. ".format(i + 1))
-            stdscr.addstr(classes[i] + '\n', attr)
-        c = stdscr.getch()
-        if c == curses.KEY_UP and option > 0:
-            option -= 1
-        elif c == curses.KEY_DOWN and option < len(classes) - 1:
-            option += 1
+input("")
 
-    stdscr.addstr("You chose {0}".format(classes[option]))
-    stdscr.getch()
-
-
-curses.wrapper(character)
+def send_bill():
+    msg = EmailMessage()
+    msg['Subject'] = 'Your bill '
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = EMAIL_ADDRESS       #receiver email
+    global x
+    fileref = str(x) + '.txt'
+    msg.set_content('This is your Total bill\nyour Reference.No is: Bill' + str(x))
+    with open(os.path.join(path, fileref), "rb") as f:
+        file_data = f.read()
+        file_name = "RestaurentBill"
+    msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+    qsend = messagebox.askyesno("Billing System", "Do you want to send the bill?")
+    if qsend > 0:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+        qsmsg = messagebox.showinfo("Information", "Bill send successfully")
+    else:
+        qnmsg = messagebox.showinfo("Information", "Bill not send")
